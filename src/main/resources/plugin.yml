@@ -6,4 +6,4 @@ authors: [Architetto]
 description: Automatizza l'evento 'Resta In Vetta'
 commands:
   rivevent:
-    description: Permette di automatizzare l'evento 'Resta In Vetta'.
+    description: Automatizza l'evento 'Resta in Vetta'.

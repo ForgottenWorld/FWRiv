@@ -1,26 +1,22 @@
 package me.architetto.rivevent;
 
-import me.architetto.rivevent.command.admin.Create;
-import me.architetto.rivevent.listener.LeftClickBlockEvent;
-import org.bukkit.plugin.Plugin;
+import me.architetto.rivevent.command.CommandManager;
+import me.architetto.rivevent.listener.LeftClickOnBlock;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class RIVevent extends JavaPlugin {
 
-    private static Plugin plugin;
-
+    /*
+    ---> SOTTOLINEO CHE E' TUTTO WIP ! <---
+     */
 
     @Override
     public void onEnable() {
         // Plugin startup logic
 
-        plugin = this;
+        getCommand("rivevent").setExecutor(new CommandManager());
 
-        //Comandi
-        getCommand("rivevent").setExecutor(new Create());
-
-        //Listener
-        this.getServer ().getPluginManager ().registerEvents ( new LeftClickBlockEvent(),this);
+        getServer().getPluginManager().registerEvents(new LeftClickOnBlock(),this);
 
     }
 
@@ -28,4 +24,7 @@ public final class RIVevent extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
     }
+
+
+
 }
