@@ -4,13 +4,13 @@ import org.bukkit.entity.Player;
 
 public abstract class SubCommand {
 
-    //name of the subcommand ex. /prank <subcommand> <-- that
+    //name of the subcommand
     public abstract String getName();
 
-    //ex. "This is a subcommand that let's a shark eat someone"
+    
     public abstract String getDescription();
 
-    //How to use me.architetto.rivevent.command ex. /prank freeze <player>
+    //How to use command ex. /rivevent create <preset_name>
     public abstract String getSyntax();
 
     //code for the subcommand
