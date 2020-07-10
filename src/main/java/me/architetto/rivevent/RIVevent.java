@@ -1,28 +1,61 @@
 package me.architetto.rivevent;
 
 import me.architetto.rivevent.command.CommandManager;
+import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.*;
+
 public final class RIVevent extends JavaPlugin {
 
-    /*
-    ---> SOTTOLINEO CHE E' TUTTO WIP ! <---
-     */
+    private static final String pathPreset = "plugins/Rivevent/preset.txt";
 
     @Override
     public void onEnable() {
         // Plugin startup logic
+        getConfig ().options ().copyDefaults ();
+        saveDefaultConfig ();
 
         getCommand("rivevent").setExecutor(new CommandManager());
 
         getServer().getPluginManager().registerEvents(new LeftClickOnBlock(),this);
+
+        File presetFile = new File(pathPreset);
+
+        try{
+            if(!presetFile.createNewFile ())
+                CreateCommand.riveventPreset = load();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static <T extends Object> void save(T obj)
+            throws Exception {
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(
+                pathPreset));
+        oos.writeObject(obj);
+        oos.flush();
+        oos.close();
+    }
+
+    public static <T extends Object> T load() throws Exception {
+        ObjectInputStream
+                ois =
+                new ObjectInputStream(
+                        new FileInputStream(
+                                pathPreset));
+        @SuppressWarnings("unchecked")
+        T result = (T) ois.readObject();
+        ois.close();
+        return result;
     }
 
 

@@ -1,18 +1,18 @@
-package me.architetto.rivevent.command.subcommand;
+package me.architetto.rivevent.command.subcommand.admin;
 
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.UUID;
 
 public class CreateCommand extends SubCommand{
 
-    public static HashMap<String, HashMap<LeftClickOnBlock.LOC, Location>> riveventPreset = new HashMap<>();
+    public static TreeMap<String, HashMap<LeftClickOnBlock.LOC,String>> riveventPreset = new TreeMap<>();
     public static HashMap<UUID, String> listenerActivator = new HashMap<>();
 
     @Override
@@ -49,7 +49,7 @@ public class CreateCommand extends SubCommand{
             return;
         }
 
-        riveventPreset.put(args[1], new HashMap<LeftClickOnBlock.LOC, Location>());
+        riveventPreset.put(args[1], new HashMap<LeftClickOnBlock.LOC, String>());
         player.sendMessage(ChatMessages.PosMessage("1/6", LeftClickOnBlock.LOC.SPAWN1));
         listenerActivator.put(player.getUniqueId(), args[1]);
 
