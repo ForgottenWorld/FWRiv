@@ -14,7 +14,7 @@ public class DeleteCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return "Elimina un preset.";
+        return "Deleta a preset.";
     }
 
     @Override
