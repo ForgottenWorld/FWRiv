@@ -33,6 +33,13 @@ public class StopCommand extends SubCommand{
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
         }else{
             InitCommand.presetSum = "";
+
+            //ToDo: se si vuole rispedirli alle loro posizioni prima del /join  , vanno prima rispediti indietro.
+
+            InitCommand.playerJoined.clear();
+            InitCommand.playersSpectate.clear();
+            SetupCommand.setupDone=false;
+            SetupCommand.setupStart=false;
             player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
             //TODO: non è completo, ci saranno anche altre variabili da azzerare come la lista dei player che hanno joinato.
             //TODO: Broadcast message ?

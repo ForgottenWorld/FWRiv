@@ -4,29 +4,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.UUID;
+
 public class LocSerialization{
 
 
-    public static String getLiteStringFromLocation(Location loc) {
-        if (loc == null) {
-            return "";
-        }
-        return loc.getWorld().getName() + " : " + loc.getBlockX() + " : " + loc.getBlockY() + " : " + loc.getBlockZ() ;
+    public static String getSerializedLocation(Location loc) { //Location -> String
+        return loc.getX() + ":" + loc.getY() + ":" + loc.getZ() + ":" + loc.getWorld().getUID();
+
     }
 
-    public static Location getLiteLocationFromString(String s) {
-        if (s == null || s.trim().equals("")) {
-            return null;
-        }
-        final String[] parts = s.split(":");
-        if (parts.length == 4) {
-            World w = Bukkit.getServer().getWorld(parts[0]);
-            double x = Double.parseDouble(parts[1]);
-            double y = Double.parseDouble(parts[2]);
-            double z = Double.parseDouble(parts[3]);
-            return new Location(w, x, y, z);
-        }
-        return null;
+    public static Location getDeserializedLocation(String s) {//String -> Location
+        String [] parts = s.split(":");
+        double x = Double.parseDouble(parts[0]);
+        double y = Double.parseDouble(parts[1]);
+        double z = Double.parseDouble(parts[2]);
+        UUID u = UUID.fromString(parts[3]);
+        World w = Bukkit.getServer().getWorld(u);
+        return new Location(w, x, y, z);
     }
 
 }

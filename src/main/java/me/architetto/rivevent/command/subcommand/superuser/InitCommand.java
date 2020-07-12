@@ -4,7 +4,12 @@ import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class InitCommand extends SubCommand{
     @Override
@@ -23,6 +28,9 @@ public class InitCommand extends SubCommand{
     }
 
     public static String presetSum = "";
+    public static HashMap<UUID,Location> playerJoined = new HashMap<>();
+    public static HashMap<UUID,Location> playersSpectate = new HashMap<>();
+
 
     @Override
     public void perform(Player player, String[] args){
@@ -44,9 +52,11 @@ public class InitCommand extends SubCommand{
                 player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
             }else{
                 presetSum = args[1];
+                playerJoined.clear();
+                playersSpectate.clear();
                 player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
                 //TODO : Broadcast message ?
-                //TODO : Per sicurezza clear pure delle eventuali liste di player (lista ancora non aggiunta)
+                //TODO : Potrebbe contenere un chat event che se cliccato fa joinare il palyer
             }
         }
     }

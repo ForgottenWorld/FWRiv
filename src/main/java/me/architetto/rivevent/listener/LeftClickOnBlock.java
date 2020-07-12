@@ -46,7 +46,7 @@ public class LeftClickOnBlock implements Listener{
                     event.getClickedBlock().setType(Material.GOLD_BLOCK);
                     player.playSound(player.getLocation (), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getLiteStringFromLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
                     CreateCommand.riveventPreset.put(CreateCommand.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
 
                     RIVevent.save(CreateCommand.riveventPreset);
@@ -63,7 +63,7 @@ public class LeftClickOnBlock implements Listener{
                     event.getClickedBlock().setType(Material.GOLD_BLOCK);
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPECTATE, LocSerialization.getLiteStringFromLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPECTATE, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
                     player.sendMessage(ChatMessages.PosMessage("6/6", LOC.TOWER));
                     return;
 
@@ -72,7 +72,7 @@ public class LeftClickOnBlock implements Listener{
                     event.getClickedBlock().setType(Material.GOLD_BLOCK);
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN4, LocSerialization.getLiteStringFromLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN4, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
                     player.sendMessage(ChatMessages.PosMessage("5/6", LOC.SPECTATE));
                     return;
 
@@ -81,7 +81,7 @@ public class LeftClickOnBlock implements Listener{
                     event.getClickedBlock().setType(Material.GOLD_BLOCK);
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN3, LocSerialization.getLiteStringFromLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN3, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
                     player.sendMessage(ChatMessages.PosMessage("4/6", LOC.SPAWN4));
                     return;
 
@@ -90,7 +90,7 @@ public class LeftClickOnBlock implements Listener{
                     event.getClickedBlock().setType(Material.GOLD_BLOCK);
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN2, LocSerialization.getLiteStringFromLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN2, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
                     player.sendMessage(ChatMessages.PosMessage("3/6", LOC.SPAWN3));
                     return;
 
@@ -99,7 +99,7 @@ public class LeftClickOnBlock implements Listener{
                     event.getClickedBlock().setType(Material.GOLD_BLOCK);
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN1, LocSerialization.getLiteStringFromLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN1, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
 
                     player.sendMessage(ChatMessages.PosMessage("2/6", LOC.SPAWN2));
 
