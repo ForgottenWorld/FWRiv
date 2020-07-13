@@ -2,6 +2,7 @@ package me.architetto.rivevent;
 
 import me.architetto.rivevent.command.CommandManager;
 import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
+import me.architetto.rivevent.listener.FoodLevelListener;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,6 +21,7 @@ public final class RIVevent extends JavaPlugin {
         getCommand("rivevent").setExecutor(new CommandManager());
 
         getServer().getPluginManager().registerEvents(new LeftClickOnBlock(),this);
+        getServer().getPluginManager().registerEvents(new FoodLevelListener(),this);
 
         File presetFile = new File(pathPreset);
 
