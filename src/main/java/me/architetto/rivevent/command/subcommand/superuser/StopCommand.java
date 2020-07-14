@@ -1,5 +1,6 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
+import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
@@ -29,17 +30,19 @@ public class StopCommand extends SubCommand{
             return;
         }
 
-        if (InitCommand.presetSum.isEmpty()){
+        GlobalVar global = GlobalVar.getInstance();
+
+        if (global.presetSum.isEmpty()){
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
         }else{
-            InitCommand.presetSum = "";
+            global.presetSum = "";
 
             //ToDo: se si vuole rispedirli alle loro posizioni prima del /join  , vanno prima rispediti indietro.
 
-            InitCommand.playerJoined.clear();
-            InitCommand.playersSpectate.clear();
-            SetupCommand.setupDone=false;
-            SetupCommand.setupStart=false;
+            global.playerJoined.clear();
+            global.playersSpectate.clear();
+            global.setupDone=false;
+            global.setupStart=false;
             player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
             //TODO: non è completo, ci saranno anche altre variabili da azzerare come la lista dei player che hanno joinato.
             //TODO: Broadcast message ?

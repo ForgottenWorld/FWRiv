@@ -6,7 +6,7 @@ import me.architetto.rivevent.command.subcommand.superuser.InitCommand;
 import me.architetto.rivevent.command.subcommand.superuser.ListCommand;
 import me.architetto.rivevent.command.subcommand.superuser.SetupCommand;
 import me.architetto.rivevent.command.subcommand.superuser.StopCommand;
-import me.architetto.rivevent.command.user.JoinCommand;
+import me.architetto.rivevent.command.subcommand.user.JoinCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.command.Command;

@@ -1,6 +1,7 @@
 package me.architetto.rivevent;
 
 import me.architetto.rivevent.command.CommandManager;
+import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.listener.FoodLevelListener;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
@@ -12,11 +13,15 @@ public final class RIVevent extends JavaPlugin {
 
     private static final String pathPreset = "plugins/Rivevent/preset.txt";
 
+
+
     @Override
     public void onEnable() {
         // Plugin startup logic
         getConfig ().options ().copyDefaults ();
         saveDefaultConfig ();
+
+
 
         getCommand("rivevent").setExecutor(new CommandManager());
 
@@ -25,9 +30,14 @@ public final class RIVevent extends JavaPlugin {
 
         File presetFile = new File(pathPreset);
 
+        GlobalVar global = GlobalVar.getInstance();
+
+
         try{
-            if(!presetFile.createNewFile ())
-                CreateCommand.riveventPreset = load();
+            if(!presetFile.createNewFile ()){
+                //CreateCommand.riveventPreset = load();
+                global.riveventPreset = load();
+            }
         }catch(Exception e){
             e.printStackTrace();
         }

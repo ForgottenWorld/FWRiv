@@ -1,5 +1,6 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
+import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.util.ChatMessages;
@@ -27,9 +28,9 @@ public class InitCommand extends SubCommand{
         return "/rivevent init <preset_name>";
     }
 
-    public static String presetSum = "";
-    public static HashMap<UUID,Location> playerJoined = new HashMap<>();
-    public static HashMap<UUID,Location> playersSpectate = new HashMap<>();
+    //public static String presetSum = "";
+    //public static HashMap<UUID,Location> playerJoined = new HashMap<>();
+    //public static HashMap<UUID,Location> playersSpectate = new HashMap<>();
 
 
     @Override
@@ -43,17 +44,18 @@ public class InitCommand extends SubCommand{
         if(args.length!=2){
             player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
         }else{
-            if(!presetSum.isEmpty()){
-                player.sendMessage(ChatMessages.RED(Messages.ERR_EVENT) + " [ " + presetSum + " ] ");
+            GlobalVar global = GlobalVar.getInstance();
+            if(!global.presetSum.isEmpty()){
+                player.sendMessage(ChatMessages.RED(Messages.ERR_EVENT) + " [ " + global.presetSum + " ] ");
                 return;
             }
 
-            if(!CreateCommand.riveventPreset.containsKey(args[1])){
+            if(!global.riveventPreset.containsKey(args[1])){
                 player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
             }else{
-                presetSum = args[1];
-                playerJoined.clear();
-                playersSpectate.clear();
+                global.presetSum = args[1];
+                global.playerJoined.clear();
+                global.playersSpectate.clear();
                 player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
                 //TODO : Broadcast message ?
                 //TODO : Potrebbe contenere un chat event che se cliccato fa joinare il palyer

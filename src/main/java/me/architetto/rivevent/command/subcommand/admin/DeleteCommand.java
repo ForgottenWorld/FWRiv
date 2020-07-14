@@ -1,6 +1,7 @@
 package me.architetto.rivevent.command.subcommand.admin;
 
 import me.architetto.rivevent.RIVevent;
+import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
@@ -35,20 +36,22 @@ public class DeleteCommand extends SubCommand{
 
 
         }else{
-            if(CreateCommand.riveventPreset.isEmpty()){
+            GlobalVar global = GlobalVar.getInstance();
+
+            if(global.riveventPreset.isEmpty()){
                 player.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
                 return;
             }
-            if(!CreateCommand.riveventPreset.containsKey(args[1])){
+            if(!global.riveventPreset.containsKey(args[1])){
                 player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
                 return;
             }
 
 
-            CreateCommand.riveventPreset.remove(args[1]);
+            global.riveventPreset.remove(args[1]);
 
             try{
-                RIVevent.save(CreateCommand.riveventPreset);
+                RIVevent.save(global.riveventPreset);
             }catch(Exception e){
                 e.printStackTrace();
             }

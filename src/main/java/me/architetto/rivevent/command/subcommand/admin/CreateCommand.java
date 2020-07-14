@@ -1,5 +1,6 @@
 package me.architetto.rivevent.command.subcommand.admin;
 
+import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
 import me.architetto.rivevent.util.ChatMessages;
@@ -12,8 +13,8 @@ import java.util.UUID;
 
 public class CreateCommand extends SubCommand{
 
-    public static TreeMap<String, HashMap<LeftClickOnBlock.LOC,String>> riveventPreset = new TreeMap<>();
-    public static HashMap<UUID, String> listenerActivator = new HashMap<>();
+    //public static HashMap<String, HashMap<LeftClickOnBlock.LOC,String>> riveventPreset = new HashMap<>();
+    //public static HashMap<UUID, String> listenerActivator = new HashMap<>();
 
     @Override
     public String getName(){
@@ -42,16 +43,23 @@ public class CreateCommand extends SubCommand{
             player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
             return;
         }
+        GlobalVar global = GlobalVar.getInstance();
 
 
-        if (riveventPreset.containsKey(args[1])){
+        if (global.riveventPreset.containsKey(args[1])){
             player.sendMessage(ChatMessages.RED(Messages.ERR_PRESET));
             return;
         }
 
-        riveventPreset.put(args[1], new HashMap<LeftClickOnBlock.LOC, String>());
+
+        global.riveventPreset.put(args[1], new HashMap<LeftClickOnBlock.LOC, String>());
+        global.listenerActivator.put(player.getUniqueId(), args[1]);
+
+        //riveventPreset.put(args[1], new HashMap<LeftClickOnBlock.LOC, String>());
+        //listenerActivator.put(player.getUniqueId(), args[1]);
+
         player.sendMessage(ChatMessages.PosMessage("1/6", LeftClickOnBlock.LOC.SPAWN1));
-        listenerActivator.put(player.getUniqueId(), args[1]);
+
 
 
     }

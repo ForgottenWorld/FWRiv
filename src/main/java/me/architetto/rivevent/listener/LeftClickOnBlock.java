@@ -1,6 +1,7 @@
 package me.architetto.rivevent.listener;
 
 import me.architetto.rivevent.RIVevent;
+import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 public class LeftClickOnBlock implements Listener{
 
+    GlobalVar global = GlobalVar.getInstance();
     private final  HashMap<UUID, HashMap<LOC, String>> tempHashMap = new HashMap<UUID, HashMap<LOC, String>>();
     public enum LOC {
         SPAWN1,
@@ -33,7 +35,7 @@ public class LeftClickOnBlock implements Listener{
         Player player = event.getPlayer();
 
 
-        if(CreateCommand.listenerActivator.containsKey(player.getUniqueId()) && event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+        if(global.listenerActivator.containsKey(player.getUniqueId()) && event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             if(!tempHashMap.containsKey(player.getUniqueId())){
                 tempHashMap.put(player.getUniqueId(), new HashMap<LOC, String>());
             }
@@ -47,11 +49,17 @@ public class LeftClickOnBlock implements Listener{
                     player.playSound(player.getLocation (), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
-                    CreateCommand.riveventPreset.put(CreateCommand.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
 
-                    RIVevent.save(CreateCommand.riveventPreset);
 
-                    CreateCommand.listenerActivator.remove(player.getUniqueId());
+                    //global.riveventPreset.put(CreateCommand.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
+                    //RIVevent.save(CreateCommand.riveventPreset);
+                    //CreateCommand.listenerActivator.remove(player.getUniqueId());
+
+                    global.riveventPreset.put(global.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
+                    RIVevent.save(global.riveventPreset);
+                    global.listenerActivator.remove(player.getUniqueId());
+
+
                     tempHashMap.remove(player.getUniqueId());
                     player.sendMessage(ChatMessages.GREEN(Messages.OKPRESET));
 
