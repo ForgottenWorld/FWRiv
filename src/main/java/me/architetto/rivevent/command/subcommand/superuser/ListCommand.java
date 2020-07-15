@@ -29,24 +29,30 @@ public class ListCommand extends SubCommand{
     @Override
     public void perform(Player player, String[] args){
 
-        if (!player.hasPermission("rivevent.list")){
+        if (!player.hasPermission("rivevent.list")) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
-        if (args.length > 2){
+        if (args.length > 2) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
             return;
         }
 
         GlobalVar global = GlobalVar.getInstance();
 
-        if(args.length == 2 ){
+        if (global.riveventPreset.isEmpty()) {
+            player.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
+            return;
+        }
 
-            if(!global.riveventPreset.containsKey(args[1])){
+        if (args.length == 2 ) {
+
+            if (!global.riveventPreset.containsKey(args[1])) {
                 player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
                 return;
             }
+
             player.sendMessage(ChatColor.DARK_AQUA + "PRESET NAME : " + ChatColor.RESET + ChatColor.ITALIC + args[1] +
                     "\n" + "------------------------------" +
                     "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPECTATE : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.SPECTATE) +
@@ -56,19 +62,10 @@ public class ListCommand extends SubCommand{
                     "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 4 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.SPAWN4) +
                     "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "TOWER : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.TOWER));
 
-
             return;
         }
 
-        if(global.riveventPreset.isEmpty()){
-            player.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
-            return;
-        }
         player.sendMessage(global.riveventPreset.keySet().toString());
-
-
-
-
 
     }
 }

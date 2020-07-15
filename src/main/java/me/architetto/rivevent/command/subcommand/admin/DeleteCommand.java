@@ -26,27 +26,26 @@ public class DeleteCommand extends SubCommand{
     @Override
     public void perform(Player player, String[] args) {
 
-        if (!player.hasPermission("rivevent.delete")){
+        if (!player.hasPermission("rivevent.delete")) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
-        if (args.length != 2 ){
+        GlobalVar global = GlobalVar.getInstance();
+
+        if (args.length != 2 ) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
-
-
         }else{
-            GlobalVar global = GlobalVar.getInstance();
 
-            if(global.riveventPreset.isEmpty()){
+            if (global.riveventPreset.isEmpty()) {
                 player.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
                 return;
             }
-            if(!global.riveventPreset.containsKey(args[1])){
+
+            if (!global.riveventPreset.containsKey(args[1])) {
                 player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
                 return;
             }
-
 
             global.riveventPreset.remove(args[1]);
 
@@ -55,13 +54,8 @@ public class DeleteCommand extends SubCommand{
             }catch(Exception e){
                 e.printStackTrace();
             }
+
             player.sendMessage(ChatMessages.GREEN(Messages.SUCCESS_DELETE));
-
-
         }
-
-
-
-
     }
 }

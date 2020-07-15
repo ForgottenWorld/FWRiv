@@ -2,7 +2,6 @@ package me.architetto.rivevent.listener;
 
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GlobalVar;
-import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
@@ -35,14 +34,14 @@ public class LeftClickOnBlock implements Listener{
         Player player = event.getPlayer();
 
 
-        if(global.listenerActivator.containsKey(player.getUniqueId()) && event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-            if(!tempHashMap.containsKey(player.getUniqueId())){
+        if (global.listenerActivator.containsKey(player.getUniqueId()) && event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            if (!tempHashMap.containsKey(player.getUniqueId())) {
                 tempHashMap.put(player.getUniqueId(), new HashMap<LOC, String>());
             }
 
             //Manca tutta la parte relativa al caricare e salvare l'hashmap
 
-            switch(tempHashMap.get(player.getUniqueId()).size()){
+            switch (tempHashMap.get(player.getUniqueId()).size()) {
 
                 case 5:
                     event.getClickedBlock().setType(Material.GOLD_BLOCK);
@@ -50,10 +49,6 @@ public class LeftClickOnBlock implements Listener{
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
 
-
-                    //global.riveventPreset.put(CreateCommand.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
-                    //RIVevent.save(CreateCommand.riveventPreset);
-                    //CreateCommand.listenerActivator.remove(player.getUniqueId());
 
                     global.riveventPreset.put(global.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
                     RIVevent.save(global.riveventPreset);
@@ -112,10 +107,6 @@ public class LeftClickOnBlock implements Listener{
                     player.sendMessage(ChatMessages.PosMessage("2/6", LOC.SPAWN2));
 
             }
-
         }
     }
-
-
-
 }

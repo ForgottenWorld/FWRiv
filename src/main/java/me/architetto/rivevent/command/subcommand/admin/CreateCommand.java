@@ -13,9 +13,6 @@ import java.util.UUID;
 
 public class CreateCommand extends SubCommand{
 
-    //public static HashMap<String, HashMap<LeftClickOnBlock.LOC,String>> riveventPreset = new HashMap<>();
-    //public static HashMap<UUID, String> listenerActivator = new HashMap<>();
-
     @Override
     public String getName(){
         return "create";
@@ -34,29 +31,25 @@ public class CreateCommand extends SubCommand{
     @Override
     public void perform(Player player, String[] args){
 
-        if (!player.hasPermission("rivevent.create")){
+        if (!player.hasPermission("rivevent.create")) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
-        if (args.length != 2){
+        if (args.length != 2) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
             return;
         }
+
         GlobalVar global = GlobalVar.getInstance();
 
-
-        if (global.riveventPreset.containsKey(args[1])){
+        if (global.riveventPreset.containsKey(args[1])) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_PRESET));
             return;
         }
 
-
         global.riveventPreset.put(args[1], new HashMap<LeftClickOnBlock.LOC, String>());
         global.listenerActivator.put(player.getUniqueId(), args[1]);
-
-        //riveventPreset.put(args[1], new HashMap<LeftClickOnBlock.LOC, String>());
-        //listenerActivator.put(player.getUniqueId(), args[1]);
 
         player.sendMessage(ChatMessages.PosMessage("1/6", LeftClickOnBlock.LOC.SPAWN1));
 

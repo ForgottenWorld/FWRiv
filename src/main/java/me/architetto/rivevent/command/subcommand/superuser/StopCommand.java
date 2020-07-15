@@ -25,29 +25,25 @@ public class StopCommand extends SubCommand{
     @Override
     public void perform(Player player, String[] args){
 
-        if (!player.hasPermission("rivevent.stop")){
+        if (!player.hasPermission("rivevent.stop")) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         GlobalVar global = GlobalVar.getInstance();
 
-        if (global.presetSum.isEmpty()){
+        if (global.presetSummon.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
         }else{
-            global.presetSum = "";
-
-            //ToDo: se si vuole rispedirli alle loro posizioni prima del /join  , vanno prima rispediti indietro.
+            global.presetSummon = "";
 
             global.playerJoined.clear();
             global.playersSpectate.clear();
             global.setupDone=false;
             global.setupStart=false;
             player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
-            //TODO: non è completo, ci saranno anche altre variabili da azzerare come la lista dei player che hanno joinato.
-            //TODO: Broadcast message ?
+
 
         }
-
     }
 }

@@ -2,7 +2,6 @@ package me.architetto.rivevent;
 
 import me.architetto.rivevent.command.CommandManager;
 import me.architetto.rivevent.command.GlobalVar;
-import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.listener.FoodLevelListener;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,15 +12,11 @@ public final class RIVevent extends JavaPlugin {
 
     private static final String pathPreset = "plugins/Rivevent/preset.txt";
 
-
-
     @Override
     public void onEnable() {
-        // Plugin startup logic
-        getConfig ().options ().copyDefaults ();
+
+        getConfig().options().copyDefaults();
         saveDefaultConfig ();
-
-
 
         getCommand("rivevent").setExecutor(new CommandManager());
 
@@ -29,16 +24,12 @@ public final class RIVevent extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FoodLevelListener(),this);
 
         File presetFile = new File(pathPreset);
-
         GlobalVar global = GlobalVar.getInstance();
 
-
         try{
-            if(!presetFile.createNewFile ()){
-                //CreateCommand.riveventPreset = load();
+            if (!presetFile.createNewFile ())
                 global.riveventPreset = load();
-            }
-        }catch(Exception e){
+        }catch (Exception e){
             e.printStackTrace();
         }
 

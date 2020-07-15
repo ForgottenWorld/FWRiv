@@ -15,6 +15,7 @@ public class Messages{
     public static final String ERR_SETUP_DONE = "Setup gia' effettuato.";
 
     public static final String ERR_JOIN = "Sei gia' presente nella lista dei partecipanti.";
+    public static final String ERR_JOIN2 = "L'evento è gia iniziato, usa /rivenet spectate per guardarlo.";
 
 
 

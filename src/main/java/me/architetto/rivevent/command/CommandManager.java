@@ -33,27 +33,26 @@ public class CommandManager implements CommandExecutor{
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!(sender instanceof Player)){
+        if (!(sender instanceof Player)) {
             sender.sendMessage(ChatMessages.RED(Messages.NO_CONSOLE));
             return true;
         }
 
         Player p = (Player) sender;
 
-        if (args.length > 0){
+        if (args.length > 0) {
             for (int i = 0; i < getSubcommands().size(); i++){
                 if (args[0].equalsIgnoreCase(getSubcommands().get(i).getName())){
                         getSubcommands().get(i).perform(p, args);
                 }
             }
-        }else if(args.length == 0){
+        }else if (args.length == 0) {
             p.sendMessage("--------------------------------");
             for (int i = 0; i < getSubcommands().size(); i++){
                 p.sendMessage(getSubcommands().get(i).getSyntax() + " - " + getSubcommands().get(i).getDescription());
             }
             p.sendMessage("--------------------------------");
         }
-
 
         return true;
     }
