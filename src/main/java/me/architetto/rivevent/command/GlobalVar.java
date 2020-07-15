@@ -15,7 +15,7 @@ public class GlobalVar{
 
     public String presetSummon = "";
     public HashMap<UUID, Location> playerJoined = new HashMap<>();
-    public HashMap<UUID,Location> playersSpectate = new HashMap<>();
+    public HashMap<UUID,Location> playerSpectate = new HashMap<>();
 
     public boolean setupStart = false;
     public boolean setupDone = false;
@@ -31,8 +31,4 @@ public class GlobalVar{
 
         return instance;
     }
-
-
-
-
 }

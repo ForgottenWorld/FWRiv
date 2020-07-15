@@ -1,7 +1,6 @@
 package me.architetto.rivevent.listener;
 
 import me.architetto.rivevent.command.GlobalVar;
-import me.architetto.rivevent.command.subcommand.superuser.InitCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

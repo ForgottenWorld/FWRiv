@@ -19,6 +19,7 @@ import java.util.UUID;
 public class LeftClickOnBlock implements Listener{
 
     GlobalVar global = GlobalVar.getInstance();
+
     private final  HashMap<UUID, HashMap<LOC, String>> tempHashMap = new HashMap<UUID, HashMap<LOC, String>>();
     public enum LOC {
         SPAWN1,
@@ -38,8 +39,6 @@ public class LeftClickOnBlock implements Listener{
             if (!tempHashMap.containsKey(player.getUniqueId())) {
                 tempHashMap.put(player.getUniqueId(), new HashMap<LOC, String>());
             }
-
-            //Manca tutta la parte relativa al caricare e salvare l'hashmap
 
             switch (tempHashMap.get(player.getUniqueId()).size()) {
 

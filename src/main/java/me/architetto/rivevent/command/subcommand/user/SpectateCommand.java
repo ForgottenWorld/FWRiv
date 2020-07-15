@@ -37,12 +37,13 @@ public class SpectateCommand extends SubCommand{
             return;
         }
 
-        if (global.playersSpectate.containsKey(player.getUniqueId())) {
+        if (global.playerSpectate.containsKey(player.getUniqueId())) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_JOIN));
 
         }else{
 
-            global.playersSpectate.put(player.getUniqueId(), player.getLocation());
+
+            global.playerSpectate.put(player.getUniqueId(), player.getLocation());
             global.playerJoined.remove(player.getUniqueId());
             player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
 

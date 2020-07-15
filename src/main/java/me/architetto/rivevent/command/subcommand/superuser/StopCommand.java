@@ -4,7 +4,10 @@ import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class StopCommand extends SubCommand{
     @Override
@@ -37,12 +40,32 @@ public class StopCommand extends SubCommand{
         }else{
             global.presetSummon = "";
 
-            global.playerJoined.clear();
-            global.playersSpectate.clear();
+            if (!global.playerJoined.isEmpty()) {
+                for (UUID key : global.playerJoined.keySet()) {
+
+                    Player target = Bukkit.getPlayer(key);
+                    target.teleport(global.playerJoined.get(key));
+
+                }
+
+                global.playerJoined.clear();
+            }
+
+            if (!global.playerSpectate.isEmpty()) {
+                for (UUID key : global.playerSpectate.keySet()) {
+
+                    Player target = Bukkit.getPlayer(key);
+                    target.teleport(global.playerSpectate.get(key));
+
+                }
+
+                global.playerSpectate.clear();
+            }
+
             global.setupDone=false;
             global.setupStart=false;
-            player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
 
+            player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
 
         }
     }
