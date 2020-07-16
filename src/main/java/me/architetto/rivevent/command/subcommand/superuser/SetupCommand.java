@@ -10,8 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -60,7 +58,7 @@ public class SetupCommand extends SubCommand{
                 randomNum = ThreadLocalRandom.current().nextInt(1, 4 + 1);
                 Player target = Bukkit.getPlayer(key);
                 if (target.isOnline()) {
-                    //target.sendMessage(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1));
+
                     switch(randomNum) {
                         case 1:
                             target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1)));
@@ -106,9 +104,6 @@ public class SetupCommand extends SubCommand{
                         Block block = middle.getRelative(x, y, z).getLocation().getBlock();
 
                         global.doorsToOpen.add(block);
-
-                        System.out.println("Trovata porta : " + middle.getRelative(x, y, z).getLocation());
-
 
                         return;
 

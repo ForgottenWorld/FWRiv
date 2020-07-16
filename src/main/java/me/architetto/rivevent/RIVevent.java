@@ -4,6 +4,7 @@ import me.architetto.rivevent.command.CommandManager;
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.listener.FoodLevelListener;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -11,9 +12,12 @@ import java.io.*;
 public final class RIVevent extends JavaPlugin {
 
     private static final String pathPreset = "plugins/Rivevent/preset.txt";
+    public static Plugin plugin;
 
     @Override
     public void onEnable() {
+
+        plugin = this;
 
         getConfig().options().copyDefaults();
         saveDefaultConfig ();
