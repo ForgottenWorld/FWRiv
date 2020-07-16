@@ -1,5 +1,6 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
@@ -7,6 +8,7 @@ import me.architetto.rivevent.util.Messages;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Iterator;
 
@@ -46,18 +48,41 @@ public class StartCommand extends SubCommand{
             return;
         }
 
-        for(org.bukkit.block.Block block : global.doorsToOpen){
+        player.sendMessage( ChatMessages.GREEN("Le porte stanno per aprirsi, preparatevi !"));
 
-            BlockData data = block.getBlockData();
-            Openable door = (Openable) data;
-            door.setOpen(true);
-            block.setBlockData(door, true);
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+
+                for(org.bukkit.block.Block block : global.doorsToOpen){
+
+                    BlockData data = block.getBlockData();
+                    Openable door = (Openable) data;
+                    door.setOpen(true);
+                    block.setBlockData(door, true);
 
 
-        }
+                }
+            }
+        }.runTaskLater(RIVevent.plugin, 200);
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+
+                for(org.bukkit.block.Block block : global.doorsToOpen){
+
+                    BlockData data = block.getBlockData();
+                    Openable door = (Openable) data;
+                    door.setOpen(false);
+                    block.setBlockData(door, true);
 
 
-
+                }
+            }
+        }.runTaskLater(RIVevent.plugin, 400);
 
 
     }
