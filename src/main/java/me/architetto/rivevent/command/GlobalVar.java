@@ -2,8 +2,12 @@ package me.architetto.rivevent.command;
 
 import me.architetto.rivevent.listener.LeftClickOnBlock;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class GlobalVar{
@@ -19,6 +23,8 @@ public class GlobalVar{
 
     public boolean setupStart = false;
     public boolean setupDone = false;
+
+    public List<Block> doorsToOpen = new ArrayList<Block>();
 
 
     private GlobalVar(){

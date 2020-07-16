@@ -2,7 +2,6 @@ package me.architetto.rivevent.command.subcommand.superuser;
 
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;

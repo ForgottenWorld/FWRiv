@@ -7,6 +7,11 @@ import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Tag;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -55,7 +60,7 @@ public class SetupCommand extends SubCommand{
                 randomNum = ThreadLocalRandom.current().nextInt(1, 4 + 1);
                 Player target = Bukkit.getPlayer(key);
                 if (target.isOnline()) {
-                    target.sendMessage(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1));
+                    //target.sendMessage(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1));
                     switch(randomNum) {
                         case 1:
                             target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1)));
@@ -76,9 +81,45 @@ public class SetupCommand extends SubCommand{
                 }
             }
 
+            doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1)));
+            doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN2)));
+            doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN3)));
+            doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN4)));
+
             global.setupDone = true;
 
         }
     }
+
+    public void doorDetector(Location loc) {
+
+        //TEST DETECT DOOR
+
+        int raduis = 6;
+        Block middle = loc.getBlock();
+        GlobalVar global = GlobalVar.getInstance();
+        for (int x = raduis; x >= -raduis; x--) {
+            for (int y = raduis; y >= -raduis; y--){
+                for(int z = raduis; z >= -raduis; z--){
+                    if (Tag.DOORS.getValues().contains(middle.getRelative(x, y, z).getType())){
+
+                        Block block = middle.getRelative(x, y, z).getLocation().getBlock();
+
+                        global.doorsToOpen.add(block);
+
+                        System.out.println("Trovata porta : " + middle.getRelative(x, y, z).getLocation());
+
+
+                        return;
+
+                    }
+                }
+            }
+        }
+    }
+
+
+
 }
+
 

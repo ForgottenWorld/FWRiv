@@ -43,6 +43,8 @@ public class SpectateCommand extends SubCommand{
         }else{
 
 
+
+
             global.playerSpectate.put(player.getUniqueId(), player.getLocation());
             global.playerJoined.remove(player.getUniqueId());
             player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));

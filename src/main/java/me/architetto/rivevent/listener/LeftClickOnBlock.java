@@ -5,8 +5,13 @@ import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.Tag;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,6 +81,7 @@ public class LeftClickOnBlock implements Listener{
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN4, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
                     player.sendMessage(ChatMessages.PosMessage("5/6", LOC.SPECTATE));
+
                     return;
 
                 case 2:
@@ -85,6 +91,7 @@ public class LeftClickOnBlock implements Listener{
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN3, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
                     player.sendMessage(ChatMessages.PosMessage("4/6", LOC.SPAWN4));
+
                     return;
 
                 case 1:
@@ -94,6 +101,7 @@ public class LeftClickOnBlock implements Listener{
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN2, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
                     player.sendMessage(ChatMessages.PosMessage("3/6", LOC.SPAWN3));
+
                     return;
 
                 case 0:

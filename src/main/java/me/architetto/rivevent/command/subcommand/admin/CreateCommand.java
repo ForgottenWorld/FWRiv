@@ -8,8 +8,6 @@ import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.TreeMap;
-import java.util.UUID;
 
 public class CreateCommand extends SubCommand{
 

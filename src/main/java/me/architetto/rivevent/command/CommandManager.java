@@ -2,10 +2,7 @@ package me.architetto.rivevent.command;
 
 import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.command.subcommand.admin.DeleteCommand;
-import me.architetto.rivevent.command.subcommand.superuser.InitCommand;
-import me.architetto.rivevent.command.subcommand.superuser.ListCommand;
-import me.architetto.rivevent.command.subcommand.superuser.SetupCommand;
-import me.architetto.rivevent.command.subcommand.superuser.StopCommand;
+import me.architetto.rivevent.command.subcommand.superuser.*;
 import me.architetto.rivevent.command.subcommand.user.JoinCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
@@ -28,6 +25,7 @@ public class CommandManager implements CommandExecutor{
         subcommands.add(new StopCommand());
         subcommands.add(new SetupCommand());
         subcommands.add(new JoinCommand());
+        subcommands.add(new StartCommand());
     }
 
     @Override
