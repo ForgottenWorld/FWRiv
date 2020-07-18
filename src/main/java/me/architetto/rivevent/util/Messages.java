@@ -19,12 +19,19 @@ public class Messages{
     public static final String ERR_SETUP_NOTREADY = "Setup non effettuato o non ancora terminato.";
 
     public static final String ERR_JOIN = "Sei gia' presente nella lista dei partecipanti.";
-    public static final String ERR_JOIN2 = "L'evento è gia iniziato, usa /rivenet spectate per guardarlo.";
+    public static final String ERR_SPECTATE = "Sei gia' presente nella lista dei spettatori.";
+
+    public static final String NO_EVENT_JOINED = "Non stai partecipando a nessun evento!";
 
     public static final String STOP_EVENT = "Evento cancellato.";
 
     public static final String OKPRESET = "Il preset è stato correttamente inserito.";
     public static final String OK_INIT = "Evento inizializzato. I player possono joinare con il comando /rivevent join .";
     public static final String OK_JOIN = "Sei stato inserito nella lista dei partecipanti.";
+    public static final String OK_SPECTATE = "Sei stato inserito nella lista dei spettatori.";
+
+    public static final String USE_SPECTATE = "L'evento e' gia' iniziato! Usa /rivevent spectate per guardare l'evento.";
+
+    public static final String OK_LEAVE = "Grazie per aver partecipato all'evento!";
 
 }

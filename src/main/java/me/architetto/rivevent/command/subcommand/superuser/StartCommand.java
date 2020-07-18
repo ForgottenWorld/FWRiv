@@ -5,6 +5,10 @@ import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.Tag;
+import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
@@ -57,15 +61,25 @@ public class StartCommand extends SubCommand{
 
                 for(org.bukkit.block.Block block : global.doorsToOpen){
 
+                    if (!Tag.DOORS.getValues().contains(block.getType())
+                            && !Tag.DOORS.getValues().contains(block.getType())
+                            && !Tag.FENCE_GATES.getValues().contains(block.getType())){
+                        continue;
+                    }
+
                     BlockData data = block.getBlockData();
                     Openable door = (Openable) data;
                     door.setOpen(true);
                     block.setBlockData(door, true);
+                    player.playSound(block.getLocation(),Sound.BLOCK_WOODEN_DOOR_OPEN,3,1);
 
 
                 }
+
+                player.sendMessage( ChatMessages.GREEN("Le porte si chiuderanno tra 30 secondi."));
             }
         }.runTaskLater(RIVevent.plugin, 200);
+
 
         new BukkitRunnable() {
 
@@ -74,15 +88,22 @@ public class StartCommand extends SubCommand{
 
                 for(org.bukkit.block.Block block : global.doorsToOpen){
 
+                    if (!Tag.DOORS.getValues().contains(block.getType())
+                            && !Tag.DOORS.getValues().contains(block.getType())
+                            && !Tag.FENCE_GATES.getValues().contains(block.getType())){
+                        continue;
+                    }
+
                     BlockData data = block.getBlockData();
                     Openable door = (Openable) data;
                     door.setOpen(false);
                     block.setBlockData(door, true);
+                    player.playSound(block.getLocation(),Sound.BLOCK_WOODEN_DOOR_CLOSE,3,1);
 
 
                 }
             }
-        }.runTaskLater(RIVevent.plugin, 400);
+        }.runTaskLater(RIVevent.plugin, 600);
 
 
     }

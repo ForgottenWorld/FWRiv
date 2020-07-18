@@ -41,26 +41,33 @@ public class JoinCommand extends SubCommand{
             return;
         }
 
-        if (global.playerJoined.containsKey(player.getUniqueId()) || global.playerSpectate.containsKey(player.getUniqueId())) {
+
+        if (global.playerJoined.containsKey(player.getUniqueId())) {
+
             player.sendMessage(ChatMessages.RED(Messages.ERR_JOIN));
 
         }else{
 
-            if(global.setupStart){
-                global.playerSpectate.put(player.getUniqueId(), player.getLocation());
-                player.getInventory().clear();
-                player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPECTATE)));
-                player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
-                player.sendMessage("...................");
+            if (global.setupStart) {
+
+                player.sendMessage(ChatMessages.RED(Messages.USE_SPECTATE));
                 return;
+
             }
 
-            global.playerJoined.put(player.getUniqueId(), player.getLocation());
-            global.playerSpectate.remove(player.getUniqueId());
-            player.getInventory().clear();
+            if (global.playerSpectate.containsKey(player.getUniqueId())) {
 
-            player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPECTATE)));
-            player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
+                global.playerJoined.put(player.getUniqueId(),global.playerSpectate.get(player.getUniqueId()));
+                global.playerSpectate.remove(player.getUniqueId());
+
+            }else{
+
+                global.playerJoined.put(player.getUniqueId(), player.getLocation());
+                player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPECTATE)));
+                player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
+
+            }
+
             player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
 
         }

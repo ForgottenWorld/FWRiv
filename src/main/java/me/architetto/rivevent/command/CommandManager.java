@@ -4,6 +4,7 @@ import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
 import me.architetto.rivevent.command.subcommand.admin.DeleteCommand;
 import me.architetto.rivevent.command.subcommand.superuser.*;
 import me.architetto.rivevent.command.subcommand.user.JoinCommand;
+import me.architetto.rivevent.command.subcommand.user.LeaveCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.command.Command;
@@ -26,6 +27,7 @@ public class CommandManager implements CommandExecutor{
         subcommands.add(new SetupCommand());
         subcommands.add(new JoinCommand());
         subcommands.add(new StartCommand());
+        subcommands.add(new LeaveCommand());
     }
 
     @Override

@@ -3,7 +3,6 @@ package me.architetto.rivevent.command;
 import me.architetto.rivevent.listener.LeftClickOnBlock;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
