@@ -5,27 +5,31 @@ import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.Tag;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Shulker;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-public class LeftClickOnBlock implements Listener{
+public class LeftClickListener implements Listener{
 
     GlobalVar global = GlobalVar.getInstance();
 
-    private final  HashMap<UUID, HashMap<LOC, String>> tempHashMap = new HashMap<UUID, HashMap<LOC, String>>();
+    private final  HashMap<UUID, HashMap<LOC, String>> tempHashMap = new HashMap<>();
     public enum LOC {
         SPAWN1,
         SPAWN2,
@@ -42,22 +46,22 @@ public class LeftClickOnBlock implements Listener{
 
         if (global.listenerActivator.containsKey(player.getUniqueId()) && event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             if (!tempHashMap.containsKey(player.getUniqueId())) {
-                tempHashMap.put(player.getUniqueId(), new HashMap<LOC, String>());
+                tempHashMap.put(player.getUniqueId(), new HashMap<>());
             }
 
             switch (tempHashMap.get(player.getUniqueId()).size()) {
 
                 case 5:
-                    event.getClickedBlock().setType(Material.GOLD_BLOCK);
-                    player.playSound(player.getLocation (), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
+
+                    player.playSound(player.getLocation (), Sound.ENTITY_PLAYER_LEVELUP, 4, 1);
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
 
+                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
 
                     global.riveventPreset.put(global.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
                     RIVevent.save(global.riveventPreset);
                     global.listenerActivator.remove(player.getUniqueId());
-
 
                     tempHashMap.remove(player.getUniqueId());
                     player.sendMessage(ChatMessages.GREEN(Messages.OKPRESET));
@@ -67,53 +71,108 @@ public class LeftClickOnBlock implements Listener{
 
                 case 4:
 
-                    event.getClickedBlock().setType(Material.GOLD_BLOCK);
-                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.SPECTATE, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+
+                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+
                     player.sendMessage(ChatMessages.PosMessage("6/6", LOC.TOWER));
                     return;
 
                 case 3:
 
-                    event.getClickedBlock().setType(Material.GOLD_BLOCK);
-                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN4, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+
+                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+
                     player.sendMessage(ChatMessages.PosMessage("5/6", LOC.SPECTATE));
 
                     return;
 
                 case 2:
 
-                    event.getClickedBlock().setType(Material.GOLD_BLOCK);
-                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN3, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+
+                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+
                     player.sendMessage(ChatMessages.PosMessage("4/6", LOC.SPAWN4));
 
                     return;
 
                 case 1:
 
-                    event.getClickedBlock().setType(Material.GOLD_BLOCK);
-                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN2, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+
+                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+
                     player.sendMessage(ChatMessages.PosMessage("3/6", LOC.SPAWN3));
 
                     return;
 
                 case 0:
 
-                    event.getClickedBlock().setType(Material.GOLD_BLOCK);
-                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+                    player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
                     tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN1, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+
+                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("2/6", LOC.SPAWN2));
 
             }
         }
+    }
+
+    public void selectBlockEffect (Location loc) {
+
+        /*  BELLO, LO TENGO QUI PER RICORDO
+        loc.add(0.5,0,0.5);
+
+        Shulker entity = (Shulker) loc.getWorld().spawnEntity(loc, EntityType.SHULKER);
+        entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,70,1));
+        entity.setInvulnerable(true);
+        entity.setGlowing(true);
+        entity.setAI(false);
+
+        new BukkitRunnable() {
+
+
+            @Override
+            public void run(){
+
+                entity.remove();
+
+            }
+        }.runTaskLater(RIVevent.plugin,60);
+
+        loc.add(0,1.5,0);
+
+         */
+
+        loc.add(0.5,1.5,0.5);
+        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(0, 127, 210), 2);
+
+        new BukkitRunnable() {
+
+            private int count = 0;
+
+            @Override
+            public void run(){
+
+
+                count++;
+                loc.getWorld().spawnParticle(Particle.REDSTONE,loc,10,dustOptions);
+                if (count == 5) {
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(RIVevent.plugin,0,18);
     }
 }

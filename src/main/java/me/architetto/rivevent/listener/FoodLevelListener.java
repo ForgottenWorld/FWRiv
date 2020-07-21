@@ -14,8 +14,8 @@ public class FoodLevelListener implements Listener{
     public void foodStasi(FoodLevelChangeEvent event){
         Player entity = (Player) event.getEntity();
 
-        if (global.playerJoined.containsKey(entity.getUniqueId())
-                || global.playerSpectate.containsKey(entity.getUniqueId()) ) {
+        if (global.playerJoined.contains(entity.getUniqueId())
+                || global.playerSpectate.contains(entity.getUniqueId()) ) {
 
             if (entity.isOnline()  && entity.getFoodLevel()<=10) {
                 event.setFoodLevel(18); //se scende sotto i 10 lo setta a 18 (per non dare l'effeto regen)

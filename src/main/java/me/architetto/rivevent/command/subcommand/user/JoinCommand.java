@@ -2,7 +2,7 @@ package me.architetto.rivevent.command.subcommand.user;
 
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LeftClickOnBlock;
+import me.architetto.rivevent.listener.LeftClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
@@ -41,35 +41,33 @@ public class JoinCommand extends SubCommand{
             return;
         }
 
-
-        if (global.playerJoined.containsKey(player.getUniqueId())) {
+        if (global.playerJoined.contains(player.getUniqueId())) {
 
             player.sendMessage(ChatMessages.RED(Messages.ERR_JOIN));
-
-        }else{
-
-            if (global.setupStart) {
-
-                player.sendMessage(ChatMessages.RED(Messages.USE_SPECTATE));
-                return;
-
-            }
-
-            if (global.playerSpectate.containsKey(player.getUniqueId())) {
-
-                global.playerJoined.put(player.getUniqueId(),global.playerSpectate.get(player.getUniqueId()));
-                global.playerSpectate.remove(player.getUniqueId());
-
-            }else{
-
-                global.playerJoined.put(player.getUniqueId(), player.getLocation());
-                player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPECTATE)));
-                player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
-
-            }
-
-            player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
+            return;
 
         }
+
+        if (global.playerSpectate.contains(player.getUniqueId())) {
+
+            //TODO: Va inserito un messaggio apposito
+            //Leavare l'evento ed entrare come spettatore.
+            player.sendMessage(ChatMessages.RED(Messages.ERR_JOIN));
+            return;
+
+        }
+
+        if (global.setupStart) {
+
+            player.sendMessage(ChatMessages.RED(Messages.USE_SPECTATE));
+            return;
+
+        }
+
+        global.playerJoined.add(player.getUniqueId());
+        player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPECTATE)));
+        player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
+        player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
+
     }
 }

@@ -2,14 +2,11 @@ package me.architetto.rivevent.command.subcommand.superuser;
 
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LeftClickOnBlock;
+import me.architetto.rivevent.listener.LeftClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ListCommand extends SubCommand{
@@ -57,12 +54,12 @@ public class ListCommand extends SubCommand{
 
             player.sendMessage(ChatColor.DARK_AQUA + "PRESET NAME : " + ChatColor.RESET + ChatColor.ITALIC + args[1] +
                     "\n" + "------------------------------" +
-                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPECTATE : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.SPECTATE) +
-                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 1 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.SPAWN1) +
-                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 2 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.SPAWN2) +
-                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 3 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.SPAWN3) +
-                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 4 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.SPAWN4) +
-                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "TOWER : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickOnBlock.LOC.TOWER));
+                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPECTATE : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickListener.LOC.SPECTATE) +
+                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 1 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickListener.LOC.SPAWN1) +
+                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 2 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickListener.LOC.SPAWN2) +
+                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 3 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickListener.LOC.SPAWN3) +
+                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN 4 : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickListener.LOC.SPAWN4) +
+                    "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "TOWER : " + ChatColor.RESET + global.riveventPreset.get(args[1]).get(LeftClickListener.LOC.TOWER));
 
             return;
         }

@@ -38,35 +38,15 @@ public class StopCommand extends SubCommand{
         if (global.presetSummon.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
         }else{
-            global.presetSummon = "";
 
-            if (!global.playerJoined.isEmpty()) {
-                for (UUID key : global.playerJoined.keySet()) {
+            //TODO: Vanno tippati a SPES eventuali player joinati.
 
-                    Player target = Bukkit.getPlayer(key);
-                    target.teleport(global.playerJoined.get(key));
-
-                }
-
-                global.playerJoined.clear();
-            }
-
-            if (!global.playerSpectate.isEmpty()) {
-                for (UUID key : global.playerSpectate.keySet()) {
-
-                    Player target = Bukkit.getPlayer(key);
-                    target.teleport(global.playerSpectate.get(key));
-
-                }
-
-                global.playerSpectate.clear();
-            }
-
-            global.setupDone=false;
-            global.setupStart=false;
-
+            global.clearVar();
             player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
 
         }
     }
+
+
+
 }

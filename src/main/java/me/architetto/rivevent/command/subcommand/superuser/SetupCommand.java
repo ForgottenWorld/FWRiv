@@ -3,7 +3,7 @@ package me.architetto.rivevent.command.subcommand.superuser;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LeftClickOnBlock;
+import me.architetto.rivevent.listener.LeftClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
@@ -25,7 +25,7 @@ public class SetupCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return null;
+        return "Teleport players in spawns position.";
     }
 
     @Override
@@ -52,59 +52,53 @@ public class SetupCommand extends SubCommand{
 
         if (global.presetSummon.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
-        }else{
-            global.setupStart = true;
+            return;
+        }
+
+        global.setupStart = true;
+
+        for(UUID key : global.playerJoined){
 
             new BukkitRunnable(){
 
-                private int i = 1;
-
+                @Override
                 public void run(){
-                    //Tippa tutti i player joinati nei vari punti di spawn.
-                    for(UUID key : global.playerJoined.keySet()){
 
-                        randomNum = ThreadLocalRandom.current().nextInt(1, 4 + 1);
-                        Player target = Bukkit.getPlayer(key);
+                    randomNum = ThreadLocalRandom.current().nextInt(1, 4 + 1);
 
-                        if (target.isOnline()){
+                    Player target = Bukkit.getPlayer(key);
 
-                            target.getInventory().clear();
+                    if (target.isOnline()){
 
-                            switch(randomNum){
-                                case 1:
-                                    target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1)));
-                                    continue;
-                                case 2:
-                                    target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN2)));
-                                    continue;
-                                case 3:
-                                    target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN3)));
-                                    continue;
-                                case 4:
-                                    target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN4)));
-                                    continue;
-                                default:
-                                    target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1)));
+                        target.getInventory().clear();
 
-                            }
+                        switch(randomNum){
+                            case 1:
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN1)));
+                            case 2:
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN2)));
+                            case 3:
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN3)));
+                            case 4:
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN4)));
+                            default:
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN1)));
                         }
                     }
-                    if(i==global.playerJoined.keySet().size()){
-                        cancel();
-                    }
-                    i++;
                 }
-            }.runTaskTimer(RIVevent.plugin, 0L, 20L);
-
-            doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN1)));
-            doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN2)));
-            doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN3)));
-            doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickOnBlock.LOC.SPAWN4)));
-
-            global.setupDone = true;
-
+            }.runTaskLater(RIVevent.plugin, 20);
         }
+
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN1)));
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN2)));
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN3)));
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN4)));
+
+        global.setupDone = true;
+
+
     }
+
 
     public void doorDetector(Location loc) {
 
@@ -133,5 +127,9 @@ public class SetupCommand extends SubCommand{
 
 
 }
+
+
+
+
 
 
