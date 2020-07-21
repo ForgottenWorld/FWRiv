@@ -6,20 +6,11 @@ import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Openable;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Shulker;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -157,7 +148,7 @@ public class LeftClickListener implements Listener{
          */
 
         loc.add(0.5,1.5,0.5);
-        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(0, 127, 210), 2);
+        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(0, 127, 215), 2);
 
         new BukkitRunnable() {
 
@@ -175,4 +166,6 @@ public class LeftClickListener implements Listener{
             }
         }.runTaskTimer(RIVevent.plugin,0,18);
     }
+
+
 }

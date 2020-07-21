@@ -1,6 +1,7 @@
 package me.architetto.rivevent.command;
 
 import me.architetto.rivevent.listener.LeftClickListener;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.potion.PotionEffectType;
 
@@ -21,25 +22,41 @@ public class GlobalVar{
     public boolean setupDone = false;
 
     public List<Block> doorsToOpen = new ArrayList<>();
-    public List<PotionEffectType> positiveEffects = new ArrayList<>();
-    public List<PotionEffectType> negativeEffects = new ArrayList<>();
+    public List<PotionEffectType> positivePotionEffects = new ArrayList<>();
+    public List<PotionEffectType> negativePotionEffects = new ArrayList<>();
+    public List<Material> itemList = new ArrayList<>();
 
 
     private GlobalVar(){
 
-        positiveEffects.add(PotionEffectType.REGENERATION);
-        positiveEffects.add(PotionEffectType.DAMAGE_RESISTANCE);
-        positiveEffects.add(PotionEffectType.INCREASE_DAMAGE);
-        positiveEffects.add(PotionEffectType.INVISIBILITY);
-        positiveEffects.add(PotionEffectType.HEAL);
-        positiveEffects.add(PotionEffectType.HEALTH_BOOST);
+        positivePotionEffects.add(PotionEffectType.REGENERATION);
+        positivePotionEffects.add(PotionEffectType.DAMAGE_RESISTANCE);
+        positivePotionEffects.add(PotionEffectType.INCREASE_DAMAGE);
+        positivePotionEffects.add(PotionEffectType.INVISIBILITY);
+        positivePotionEffects.add(PotionEffectType.HEAL);
+        positivePotionEffects.add(PotionEffectType.HEALTH_BOOST);
 
-        negativeEffects.add(PotionEffectType.BLINDNESS);
-        negativeEffects.add(PotionEffectType.CONFUSION);
-        negativeEffects.add(PotionEffectType.POISON);
-        negativeEffects.add(PotionEffectType.WEAKNESS);
-        negativeEffects.add(PotionEffectType.WITHER);
-        negativeEffects.add(PotionEffectType.SLOW);
+        negativePotionEffects.add(PotionEffectType.BLINDNESS);
+        negativePotionEffects.add(PotionEffectType.CONFUSION);
+        negativePotionEffects.add(PotionEffectType.POISON);
+        negativePotionEffects.add(PotionEffectType.WEAKNESS);
+        negativePotionEffects.add(PotionEffectType.WITHER);
+        negativePotionEffects.add(PotionEffectType.SLOW);
+
+        itemList.add(Material.MILK_BUCKET);
+        itemList.add(Material.GOLDEN_APPLE);
+        itemList.add(Material.WOODEN_HOE);
+        itemList.add(Material.LEATHER_CHESTPLATE);
+        itemList.add(Material.LEATHER_HELMET);
+        itemList.add(Material.LEATHER_BOOTS);
+        itemList.add(Material.LEATHER_LEGGINGS);
+        itemList.add(Material.EMERALD);
+        itemList.add(Material.COOKED_PORKCHOP);
+        itemList.add(Material.SUGAR);
+        itemList.add(Material.GLOWSTONE_DUST);
+        itemList.add(Material.BAKED_POTATO);
+        itemList.add(Material.POISONOUS_POTATO);
+
 
     }
 
