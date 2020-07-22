@@ -5,16 +5,13 @@ import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.Tag;
-import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Iterator;
 
 public class StartCommand extends SubCommand{
     @Override
@@ -65,7 +62,7 @@ public class StartCommand extends SubCommand{
                             && !Tag.DOORS.getValues().contains(block.getType())
                             && !Tag.FENCE_GATES.getValues().contains(block.getType())){
                         continue;
-                    }
+                    } //Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
 
                     BlockData data = block.getBlockData();
                     Openable door = (Openable) data;
@@ -92,7 +89,7 @@ public class StartCommand extends SubCommand{
                             && !Tag.DOORS.getValues().contains(block.getType())
                             && !Tag.FENCE_GATES.getValues().contains(block.getType())){
                         continue;
-                    }
+                    }//Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
 
                     BlockData data = block.getBlockData();
                     Openable door = (Openable) data;

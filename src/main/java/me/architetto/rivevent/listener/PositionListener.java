@@ -1,5 +1,6 @@
 package me.architetto.rivevent.listener;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
@@ -9,10 +10,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TopOfTowerListener implements Listener{
+public class PositionListener implements Listener{
+
+    public ArrayList<String> cooldown = new ArrayList<>();
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event){
@@ -22,11 +27,15 @@ public class TopOfTowerListener implements Listener{
         if (global.playerJoined.contains(event.getPlayer().getUniqueId())){
 
             if (event.getPlayer().getLocation().distance(LocSerialization  //Probabilmente sostituirò 'distance' con qualcosa di più leggero.
-                    .getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.TOWER))) <= 1) {  //Magari check solo della y
+                    .getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.TOWER))) <= 1
+                    && !cooldown.contains(event.getPlayer().getName())) {  //Magari check solo della y
 
 
                 Player player = event.getPlayer();
 
+                cooldown.add(player.getName());
+
+                addCD(player);
 
                 Material material = randomItem();
 
@@ -34,9 +43,8 @@ public class TopOfTowerListener implements Listener{
 
                 player.getInventory().addItem(itemStack);
 
-                //MESSAGGIO PER IL PLAYER
+                player.sendMessage(ChatMessages.AQUA("Hai ricevuto : " + itemStack.getI18NDisplayName())); //TODO:
 
-                //TODO: INSERIRE COOLDOWN
 
             }
         }
@@ -55,13 +63,30 @@ public class TopOfTowerListener implements Listener{
 
     public int randomAmount(Material material) {
 
-        if (material.getMaxStackSize()==1)
+        if (material.getMaxStackSize()==1 || material.equals(Material.GOLDEN_APPLE))
             return 1;
+
 
         int randomNum = 10;
         randomNum = ThreadLocalRandom.current().nextInt(1, randomNum+1);
 
         return randomNum;
+
+    }
+
+    public void addCD (Player player) {
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                cooldown.remove(player.getName());
+
+            }
+        }.runTaskLater(RIVevent.plugin,1200);
+
+
 
     }
 

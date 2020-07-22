@@ -2,7 +2,7 @@ package me.architetto.rivevent.command.subcommand.admin;
 
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LeftClickListener;
+import me.architetto.rivevent.listener.LClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
@@ -47,10 +47,11 @@ public class CreateCommand extends SubCommand{
             return;
         }
 
+
         global.riveventPreset.put(args[1], new HashMap<>());
         global.listenerActivator.put(player.getUniqueId(), args[1]);
 
-        player.sendMessage(ChatMessages.PosMessage("1/6", LeftClickListener.LOC.SPAWN1));
+        player.sendMessage(ChatMessages.PosMessage("1/6", LClickListener.LOC.SPAWN1));
 
 
 

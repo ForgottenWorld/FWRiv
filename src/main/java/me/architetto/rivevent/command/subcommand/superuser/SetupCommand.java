@@ -3,12 +3,13 @@ package me.architetto.rivevent.command.subcommand.superuser;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LeftClickListener;
+import me.architetto.rivevent.listener.LClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -61,10 +62,13 @@ public class SetupCommand extends SubCommand{
 
             new BukkitRunnable(){
 
+                int count =1;
+
                 @Override
                 public void run(){
 
                     randomNum = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+
 
                     Player target = Bukkit.getPlayer(key);
 
@@ -74,28 +78,36 @@ public class SetupCommand extends SubCommand{
 
                         switch(randomNum){
                             case 1:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN1)));
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)));
+                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
                             case 2:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN2)));
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN2)));
+                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
                             case 3:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN3)));
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN3)));
+                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
                             case 4:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN4)));
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN4)));
+                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
                             default:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN1)));
+                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)));
+                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
                         }
                     }
+
+                    if (count == global.playerJoined.size()) {
+                        global.setupDone = true;
+                        player.sendMessage(ChatMessages.GREEN(Messages.OK_SETUP));
+                    } else
+                        count++;
                 }
             }.runTaskLater(RIVevent.plugin, 20);
         }
 
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN1)));
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN2)));
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN3)));
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPAWN4)));
-
-        global.setupDone = true;
-
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)));
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN2)));
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN3)));
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN4)));
 
     }
 

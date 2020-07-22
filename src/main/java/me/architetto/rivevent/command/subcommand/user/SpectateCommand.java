@@ -2,7 +2,7 @@ package me.architetto.rivevent.command.subcommand.user;
 
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LeftClickListener;
+import me.architetto.rivevent.listener.LClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
@@ -57,7 +57,7 @@ public class SpectateCommand extends SubCommand{
         }
 
         global.playerSpectate.add(player.getUniqueId());
-        player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPECTATE)));
+        player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPECTATE)));
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
         player.sendMessage(ChatMessages.GREEN(Messages.OK_SPECTATE));
 

@@ -1,6 +1,6 @@
 package me.architetto.rivevent.command;
 
-import me.architetto.rivevent.listener.LeftClickListener;
+import me.architetto.rivevent.listener.LClickListener;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.potion.PotionEffectType;
@@ -11,7 +11,7 @@ public class GlobalVar{
 
     private static GlobalVar instance;
 
-    public HashMap<String, HashMap<LeftClickListener.LOC,String>> riveventPreset = new HashMap<>();
+    public HashMap<String, HashMap<LClickListener.LOC,String>> riveventPreset = new HashMap<>();
     public HashMap<UUID, String> listenerActivator = new HashMap<>();
 
     public String presetSummon = "";
@@ -28,6 +28,8 @@ public class GlobalVar{
 
 
     private GlobalVar(){
+
+        //SI PUO' SICURAMENTE USARE QUALCOS'ALTRO ---- WIP
 
         positivePotionEffects.add(PotionEffectType.REGENERATION);
         positivePotionEffects.add(PotionEffectType.DAMAGE_RESISTANCE);

@@ -39,7 +39,7 @@ public class StopCommand extends SubCommand{
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
         }else{
 
-            //TODO: Vanno tippati a SPES eventuali player joinati.
+            //TODO: Vanno tippati a SPES eventuali player joinati. (E ripuliti tutti gli inventari)
 
             global.clearVar();
             player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));

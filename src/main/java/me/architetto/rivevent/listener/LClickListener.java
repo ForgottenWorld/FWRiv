@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class LeftClickListener implements Listener{
+public class LClickListener implements Listener{
 
     GlobalVar global = GlobalVar.getInstance();
 

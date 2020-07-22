@@ -22,28 +22,28 @@ public class DeathListener implements Listener{
 
             global.playerSpectate.add(event.getEntity().getUniqueId());
             global.playerJoined.remove(event.getEntity().getUniqueId());
-            event.getEntity().teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftClickListener.LOC.SPECTATE)));
 
             if (global.playerJoined.size()==1){
 
                 Player player = Bukkit.getPlayer(global.playerJoined.get(0)); //Il player vincitore !
 
-            } else
+            } else if (global.playerJoined.size()>=4)   //Applica effeto random
                 randomEffect();
-
         }
     }
 
     public void randomEffect() {
 
         //effetto random che si attiva ad un partecipante alla morte di qualche altro partecipante
+        //SI POTREBBE APPLICARE A TUTTI I PARTECIPANTI
+        //E OPPORTUNO INSERIRE ANCHE UN COOLDOWN
 
         GlobalVar global = GlobalVar.getInstance();
         int randomNum = global.playerJoined.size();
 
-        randomNum = ThreadLocalRandom.current().nextInt(1, randomNum+1);
+        randomNum = ThreadLocalRandom.current().nextInt(0, randomNum-1);
         // pesca a caso tra i partecipanti
-        Player target = Bukkit.getPlayer(global.playerJoined.get(randomNum-1));
+        Player target = Bukkit.getPlayer(global.playerJoined.get(randomNum));
 
         randomNum = ThreadLocalRandom.current().nextInt(1, global.positivePotionEffects.size()+1);
 
