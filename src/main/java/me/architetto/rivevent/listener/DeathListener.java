@@ -1,12 +1,14 @@
 package me.architetto.rivevent.listener;
 
 import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -18,10 +20,14 @@ public class DeathListener implements Listener{
 
         GlobalVar global = GlobalVar.getInstance();
 
+
         if (global.setupDone && global.playerJoined.contains(event.getEntity().getUniqueId())) {
+
 
             global.playerSpectate.add(event.getEntity().getUniqueId());
             global.playerJoined.remove(event.getEntity().getUniqueId());
+            event.getEntity().sendMessage(ChatMessages.GREEN("Hai perso, ma hai giocato bene ! Sarai più fortunato la prossima volta ."
+                    + "\n" + "Se vuoi abbandonare l'evento fai /rivevent leave ." ));
 
             if (global.playerJoined.size()==1){
 

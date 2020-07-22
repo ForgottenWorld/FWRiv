@@ -47,6 +47,11 @@ public class CreateCommand extends SubCommand{
             return;
         }
 
+        if (global.listenerActivator.containsKey(player.getUniqueId())) {
+            player.sendMessage(ChatMessages.RED("Stai già creando un preset !"));  //TODO .. inserire in Messages
+            return;
+        }
+
 
         global.riveventPreset.put(args[1], new HashMap<>());
         global.listenerActivator.put(player.getUniqueId(), args[1]);

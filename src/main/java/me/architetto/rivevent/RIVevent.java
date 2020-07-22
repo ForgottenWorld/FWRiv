@@ -2,10 +2,7 @@ package me.architetto.rivevent;
 
 import me.architetto.rivevent.command.CommandManager;
 import me.architetto.rivevent.command.GlobalVar;
-import me.architetto.rivevent.listener.DeathListener;
-import me.architetto.rivevent.listener.FoodLevelListener;
-import me.architetto.rivevent.listener.LClickListener;
-import me.architetto.rivevent.listener.PositionListener;
+import me.architetto.rivevent.listener.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,6 +27,7 @@ public final class RIVevent extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FoodLevelListener(),this);
         getServer().getPluginManager().registerEvents(new DeathListener(),this);
         getServer().getPluginManager().registerEvents(new PositionListener(),this);
+        getServer().getPluginManager().registerEvents(new SpawnListener(),this);
 
         File presetFile = new File(pathPreset);
         GlobalVar global = GlobalVar.getInstance();

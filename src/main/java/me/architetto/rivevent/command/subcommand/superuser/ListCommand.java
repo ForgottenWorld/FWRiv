@@ -8,6 +8,8 @@ import me.architetto.rivevent.util.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.*;
+
 
 public class ListCommand extends SubCommand{
     @Override
