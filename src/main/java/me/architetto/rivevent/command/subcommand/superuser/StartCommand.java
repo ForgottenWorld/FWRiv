@@ -3,14 +3,23 @@ package me.architetto.rivevent.command.subcommand.superuser;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
+import me.architetto.rivevent.listener.LClickListener;
 import me.architetto.rivevent.util.ChatMessages;
+import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class StartCommand extends SubCommand{
@@ -51,6 +60,35 @@ public class StartCommand extends SubCommand{
 
         player.sendMessage( ChatMessages.GREEN("Le porte stanno per aprirsi, preparatevi !"));
 
+        openDoors(200);
+
+        closeDoors(600);
+
+        int towerY = LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.TOWER)).getBlockY();
+
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                checkPlayerPosition(towerY);
+
+               if (global.playerJoined.size()<=1) {
+                   cancel();
+               }
+
+            }
+        }.runTaskTimer(RIVevent.plugin,1200,1200);
+
+
+
+    }
+
+    public void openDoors (long delay) {
+
+        GlobalVar global = GlobalVar.getInstance();
+
         new BukkitRunnable() {
 
             @Override
@@ -68,15 +106,16 @@ public class StartCommand extends SubCommand{
                     Openable door = (Openable) data;
                     door.setOpen(true);
                     block.setBlockData(door, true);
-                    player.playSound(block.getLocation(),Sound.BLOCK_WOODEN_DOOR_OPEN,3,1);
-
+                    sendTitle(Messages.START_TITLE,Messages.START_SUBTITLE);
 
                 }
-
-                player.sendMessage( ChatMessages.GREEN("Le porte si chiuderanno tra 30 secondi."));
             }
-        }.runTaskLater(RIVevent.plugin, 200);
+        }.runTaskLater(RIVevent.plugin, delay);
+    }
 
+    public void closeDoors (long delay) {
+
+        GlobalVar global = GlobalVar.getInstance();
 
         new BukkitRunnable() {
 
@@ -95,13 +134,80 @@ public class StartCommand extends SubCommand{
                     Openable door = (Openable) data;
                     door.setOpen(false);
                     block.setBlockData(door, true);
-                    player.playSound(block.getLocation(),Sound.BLOCK_WOODEN_DOOR_CLOSE,3,1);
-
 
                 }
             }
-        }.runTaskLater(RIVevent.plugin, 600);
+        }.runTaskLater(RIVevent.plugin, delay);
 
 
     }
+
+    public void sendTitle (String title,String subtitle) {
+
+        GlobalVar global = GlobalVar.getInstance();
+
+        for (UUID key : global.playerJoined) {
+
+            Player player = Bukkit.getPlayer(key);
+            player.sendTitle(title,subtitle,2,65,2);
+
+
+        }
+
+
+
+    }
+
+    public void checkPlayerPosition (int towerY) {
+
+        GlobalVar global = GlobalVar.getInstance();
+
+        for(UUID key : global.playerJoined){
+
+            Player target = Bukkit.getPlayer(key);
+
+            if (target.getLocation().getY() >= towerY) {
+
+                Material material = randomItem();
+
+                ItemStack itemStack = new ItemStack(material,randomAmount(material));
+
+                target.getInventory().addItem(itemStack);
+
+                target.sendMessage(ChatMessages.AQUA("Hai ricevuto : " + itemStack.getI18NDisplayName()));
+
+            }
+
+
+        }
+
+    }
+
+    public Material randomItem() {
+
+        GlobalVar global = GlobalVar.getInstance();
+        int randomNum = global.itemList.size();
+
+        randomNum = ThreadLocalRandom.current().nextInt(1, randomNum);
+
+        return global.itemList.get(randomNum);
+
+    }
+
+    public int randomAmount(Material material) {
+
+        if (material.getMaxStackSize()==1 || material.equals(Material.GOLDEN_APPLE))
+            return 1;
+
+
+        int randomNum = 10;
+        randomNum = ThreadLocalRandom.current().nextInt(1, randomNum+1);
+
+        return randomNum;
+
+    }
+
+
+
+
 }

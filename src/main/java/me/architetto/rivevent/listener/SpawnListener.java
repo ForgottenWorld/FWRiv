@@ -20,9 +20,5 @@ public class SpawnListener implements Listener{
 
 
         }
-
-        //TODO: EVENTUALMENTE RIPULIRE L?INVENTARIO DEI PLAYER CHE QUITTANO)
-
     }
-
 }

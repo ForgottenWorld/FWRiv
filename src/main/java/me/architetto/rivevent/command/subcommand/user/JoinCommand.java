@@ -67,7 +67,7 @@ public class JoinCommand extends SubCommand{
         global.playerJoined.add(player.getUniqueId());
         player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPECTATE)));
         player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
-        player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
+        player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));  //TODO : Inserire un messaggio che spiega che all'inizio dell'evento l'inventario verrà cancellato
 
     }
 }

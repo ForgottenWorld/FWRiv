@@ -123,30 +123,6 @@ public class LClickListener implements Listener{
 
     public void selectBlockEffect (Location loc) {
 
-        /*  BELLO, LO TENGO QUI PER RICORDO
-        loc.add(0.5,0,0.5);
-
-        Shulker entity = (Shulker) loc.getWorld().spawnEntity(loc, EntityType.SHULKER);
-        entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,70,1));
-        entity.setInvulnerable(true);
-        entity.setGlowing(true);
-        entity.setAI(false);
-
-        new BukkitRunnable() {
-
-
-            @Override
-            public void run(){
-
-                entity.remove();
-
-            }
-        }.runTaskLater(RIVevent.plugin,60);
-
-        loc.add(0,1.5,0);
-
-         */
-
         loc.add(0.5,1.5,0.5);
         Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(0, 127, 215), 2);
 

@@ -13,6 +13,7 @@ import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -34,7 +35,6 @@ public class SetupCommand extends SubCommand{
         return "/rivevent setup";
     }
 
-    public int randomNum ;
 
     @Override
     public void perform(Player player, String[] args){
@@ -58,70 +58,44 @@ public class SetupCommand extends SubCommand{
 
         global.setupStart = true;
 
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)),6); //L'intenzione e di settare il raggio da config
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN2)),6);
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN3)),6);
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN4)),6);
+
         for(UUID key : global.playerJoined){
 
             new BukkitRunnable(){
 
-                int count =1;
-
                 @Override
                 public void run(){
 
-                    randomNum = ThreadLocalRandom.current().nextInt(1, 4 + 1);
-
-
                     Player target = Bukkit.getPlayer(key);
 
-                    if (target.isOnline()){
+                    assert target != null;
+                    target.getInventory().clear();
 
-                        target.getInventory().clear();
+                    randomTeleport(target);
 
-                        switch(randomNum){
-                            case 1:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)));
-                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
-                            case 2:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN2)));
-                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
-                            case 3:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN3)));
-                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
-                            case 4:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN4)));
-                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
-                            default:
-                                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)));
-                                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
-                        }
-                    }
 
-                    if (count == global.playerJoined.size()) {
-                        global.setupDone = true;
+                    if (key.equals(global.playerJoined.get(global.playerJoined.size()-1))) {
                         player.sendMessage(ChatMessages.GREEN(Messages.OK_SETUP));
-                    } else
-                        count++;
+                        global.setupDone = true;
+                    }
                 }
             }.runTaskLater(RIVevent.plugin, 20);
         }
 
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)));
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN2)));
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN3)));
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN4)));
-
     }
 
 
-    public void doorDetector(Location loc) {
+    public void doorDetector(Location loc,int radius) {
 
-        //TEST DETECT DOOR
-
-        int raduis = 6;
         Block middle = loc.getBlock();
         GlobalVar global = GlobalVar.getInstance();
-        for (int x = raduis; x >= -raduis; x--) {
-            for (int y = raduis; y >= -raduis; y--){
-                for(int z = raduis; z >= -raduis; z--){
+        for (int x = radius; x >= -radius; x--) {
+            for (int y = radius; y >= -radius; y--){
+                for(int z = radius; z >= -radius; z--){
                     if (Tag.DOORS.getValues().contains(middle.getRelative(x, y, z).getType())
                             ||Tag.FENCE_GATES.getValues().contains(middle.getRelative(x, y, z).getType())){
 
@@ -129,11 +103,37 @@ public class SetupCommand extends SubCommand{
 
                         global.doorsToOpen.add(block);
 
-
                     }
                 }
             }
         }
+    }
+
+    public void randomTeleport(Player target) {
+
+        int randomValue = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+
+        GlobalVar global = GlobalVar.getInstance();
+
+        switch(randomValue){
+            case 1:
+                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)));
+                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
+            case 2:
+                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN2)));
+                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
+            case 3:
+                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN3)));
+                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
+            case 4:
+                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN4)));
+                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
+            default:
+                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPAWN1)));
+                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,3,1);
+        }
+
+
     }
 
 

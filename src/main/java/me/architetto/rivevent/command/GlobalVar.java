@@ -38,6 +38,8 @@ public class GlobalVar{
         positivePotionEffects.add(PotionEffectType.HEAL);
         positivePotionEffects.add(PotionEffectType.HEALTH_BOOST);
 
+
+
         negativePotionEffects.add(PotionEffectType.BLINDNESS);
         negativePotionEffects.add(PotionEffectType.CONFUSION);
         negativePotionEffects.add(PotionEffectType.POISON);
@@ -58,6 +60,7 @@ public class GlobalVar{
         itemList.add(Material.GLOWSTONE_DUST);
         itemList.add(Material.BAKED_POTATO);
         itemList.add(Material.POISONOUS_POTATO);
+        itemList.add(Material.SNOWBALL);
 
 
     }

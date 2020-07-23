@@ -26,7 +26,6 @@ public final class RIVevent extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LClickListener(),this);
         getServer().getPluginManager().registerEvents(new FoodLevelListener(),this);
         getServer().getPluginManager().registerEvents(new DeathListener(),this);
-        getServer().getPluginManager().registerEvents(new PositionListener(),this);
         getServer().getPluginManager().registerEvents(new SpawnListener(),this);
 
         File presetFile = new File(pathPreset);

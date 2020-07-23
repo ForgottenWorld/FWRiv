@@ -1,5 +1,8 @@
 package me.architetto.rivevent.util;
 
+import org.bukkit.ChatColor;
+import org.bukkit.util.ChatPaginator;
+
 public class Messages{
 
     //TODO: DA SISTEMARE (PROBABILMENTE CI SONO MESSAGGI CHE NON SERVONO, MENTRE QUALCUNO CHE SERVE NON C'E')
@@ -36,5 +39,9 @@ public class Messages{
     public static final String USE_SPECTATE = "L'evento e' gia' iniziato! Usa /rivevent spectate per guardare l'evento.";
 
     public static final String OK_LEAVE = "Grazie per aver partecipato all'evento!";
+
+
+    public static final String START_TITLE = "3,2,1...." + ChatColor.DARK_RED + "VIA !!!";
+    public static final String START_SUBTITLE = "Conquistate la torre se ne avete la forza !";
 
 }

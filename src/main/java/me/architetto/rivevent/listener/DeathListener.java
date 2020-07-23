@@ -2,13 +2,11 @@ package me.architetto.rivevent.listener;
 
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.util.ChatMessages;
-import me.architetto.rivevent.util.LocSerialization;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.concurrent.ThreadLocalRandom;
