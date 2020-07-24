@@ -74,7 +74,8 @@ public class StartCommand extends SubCommand{
 
                 checkPlayerPosition(towerY);
 
-               if (global.playerJoined.size()<=1) {
+               if (global.playerJoined.size()<=3) {
+                   //TODO:Avvertire che non vi sono più reward a stare in cima.
                    cancel();
                }
 
