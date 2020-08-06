@@ -1,6 +1,6 @@
 package me.architetto.rivevent.command.subcommand.user;
 
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.listener.LeftclickListener;
 import me.architetto.rivevent.util.ChatMessages;
@@ -33,7 +33,7 @@ public class SpectateCommand extends SubCommand{
             return;
         }
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         if (global.presetSummon.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));

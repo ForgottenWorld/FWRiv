@@ -1,6 +1,6 @@
 package me.architetto.rivevent.listener;
 
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.util.LocSerialization;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,7 +11,7 @@ public class SpawnListener implements Listener{
     @EventHandler
     public void onPlayerSpawn(PlayerRespawnEvent event){
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         if (global.playerSpectate.contains(event.getPlayer().getUniqueId())) {
 

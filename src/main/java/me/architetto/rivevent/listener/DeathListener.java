@@ -1,7 +1,7 @@
 package me.architetto.rivevent.listener;
 
 import me.architetto.rivevent.RIVevent;
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.util.ChatMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
@@ -22,7 +22,7 @@ public class DeathListener implements Listener{
     @EventHandler
     public void deathEvent(PlayerDeathEvent event){
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
 
         if (global.playerJoined.contains(event.getEntity().getUniqueId())) {
@@ -88,7 +88,7 @@ public class DeathListener implements Listener{
 
         //todo: cooldown
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
         int randomNum = global.playerJoined.size();
 
         randomNum = ThreadLocalRandom.current().nextInt(0, randomNum-1);

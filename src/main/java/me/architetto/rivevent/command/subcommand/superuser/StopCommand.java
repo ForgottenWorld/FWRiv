@@ -1,7 +1,7 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
 import me.architetto.rivevent.RIVevent;
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
@@ -30,7 +30,6 @@ public class StopCommand extends SubCommand{
         return "/rivevent stop";
     }
 
-    int playerCount = 0;
 
 
     @Override
@@ -41,7 +40,7 @@ public class StopCommand extends SubCommand{
             return;
         }
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         if (global.presetSummon.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
@@ -57,7 +56,7 @@ public class StopCommand extends SubCommand{
             global.clearVar();
 
             if (!mergedList.isEmpty()){
-                tpBackToSpes(mergedList);
+                tpBackToConfigPosition(mergedList);
             }
 
             player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
@@ -77,22 +76,26 @@ public class StopCommand extends SubCommand{
 
     }
 
-    public void tpBackToSpes (List<UUID> playerList) {
+    public void tpBackToConfigPosition(List<UUID> playerList) {
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
-        new BukkitRunnable(){
+
+        new BukkitRunnable() {
+
+            private int playerCount = 0;
 
             @Override
-            public void run(){
+            public void run() {
 
                 Player target = Bukkit.getPlayer(playerList.get(playerCount));
                 assert target != null;
                 target.teleport(global.respawnLoc);
-                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 3, 1);
+                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
 
                 playerCount++;
-                if (playerList.size() - 1 <= playerCount) {
+
+                if (playerList.size() - 1 < playerCount) {
                     playerCount = 0;
                     this.cancel();
                 }

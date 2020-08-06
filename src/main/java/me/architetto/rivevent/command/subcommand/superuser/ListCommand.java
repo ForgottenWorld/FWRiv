@@ -1,6 +1,6 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.listener.LeftclickListener;
 import me.architetto.rivevent.util.ChatMessages;
@@ -42,7 +42,7 @@ public class ListCommand extends SubCommand{
             return;
         }
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         if (global.riveventPreset.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));

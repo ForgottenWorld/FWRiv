@@ -1,7 +1,7 @@
 package me.architetto.rivevent;
 
 import me.architetto.rivevent.command.CommandManager;
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.listener.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -79,7 +79,7 @@ public final class RIVevent extends JavaPlugin {
 
     public void loadPreset () {
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
         File presetFile = new File(pathPreset);
 
         World w = Bukkit.getServer().getWorld(Objects.requireNonNull(getConfig().getString("RESPAWN.w")));

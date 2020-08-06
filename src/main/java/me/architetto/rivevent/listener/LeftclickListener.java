@@ -1,7 +1,7 @@
 package me.architetto.rivevent.listener;
 
 import me.architetto.rivevent.RIVevent;
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
@@ -19,9 +19,9 @@ import java.util.UUID;
 
 public class LeftclickListener implements Listener{
 
-    GlobalVar global = GlobalVar.getInstance();
+    GameHandler global = GameHandler.getInstance();
 
-    private final  HashMap<UUID, HashMap<LOC, String>> tempHashMap = new HashMap<>();
+    private final  HashMap<UUID, HashMap<LOC, String>> playerSelectedLocation = new HashMap<>();
     public enum LOC {
         SPAWN1,
         SPAWN2,
@@ -37,27 +37,27 @@ public class LeftclickListener implements Listener{
 
 
         if (global.listenerActivator.containsKey(player.getUniqueId()) && event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-            if (!tempHashMap.containsKey(player.getUniqueId())) {
-                tempHashMap.put(player.getUniqueId(), new HashMap<>());
+            if (!playerSelectedLocation.containsKey(player.getUniqueId())) {
+                playerSelectedLocation.put(player.getUniqueId(), new HashMap<>());
             }
 
             Location eventLocation = Objects.requireNonNull(event.getClickedBlock()).getLocation().add(0,1,0);
 
-            switch (tempHashMap.get(player.getUniqueId()).size()) {
+            switch (playerSelectedLocation.get(player.getUniqueId()).size()) {
 
                 case 5:
 
                     player.playSound(player.getLocation (), Sound.ENTITY_PLAYER_LEVELUP, 4, 1);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getSerializedLocation(eventLocation));
+                    playerSelectedLocation.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
+                    spawnEffectAtBlock(event.getClickedBlock().getLocation().clone());
 
-                    global.riveventPreset.put(global.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
+                    global.riveventPreset.put(global.listenerActivator.get(player.getUniqueId()), playerSelectedLocation.get(player.getUniqueId()));
                     RIVevent.save(global.riveventPreset);
                     global.listenerActivator.remove(player.getUniqueId());
 
-                    tempHashMap.remove(player.getUniqueId());
+                    playerSelectedLocation.remove(player.getUniqueId());
                     player.sendMessage(ChatMessages.GREEN(Messages.OK_PRESET));
 
                     return;
@@ -67,9 +67,9 @@ public class LeftclickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPECTATE, LocSerialization.getSerializedLocation(eventLocation));
+                    playerSelectedLocation.get(player.getUniqueId()).put(LOC.SPECTATE, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
+                    spawnEffectAtBlock(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("6/6", LOC.TOWER));
                     return;
@@ -78,9 +78,9 @@ public class LeftclickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN4, LocSerialization.getSerializedLocation(eventLocation));
+                    playerSelectedLocation.get(player.getUniqueId()).put(LOC.SPAWN4, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
+                    spawnEffectAtBlock(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("5/6", LOC.SPECTATE));
 
@@ -90,9 +90,9 @@ public class LeftclickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN3, LocSerialization.getSerializedLocation(eventLocation));
+                    playerSelectedLocation.get(player.getUniqueId()).put(LOC.SPAWN3, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
+                    spawnEffectAtBlock(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("4/6", LOC.SPAWN4));
 
@@ -102,9 +102,9 @@ public class LeftclickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN2, LocSerialization.getSerializedLocation(eventLocation));
+                    playerSelectedLocation.get(player.getUniqueId()).put(LOC.SPAWN2, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
+                    spawnEffectAtBlock(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("3/6", LOC.SPAWN3));
 
@@ -114,9 +114,9 @@ public class LeftclickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN1, LocSerialization.getSerializedLocation(eventLocation));
+                    playerSelectedLocation.get(player.getUniqueId()).put(LOC.SPAWN1, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
+                    spawnEffectAtBlock(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("2/6", LOC.SPAWN2));
 
@@ -124,7 +124,7 @@ public class LeftclickListener implements Listener{
         }
     }
 
-    public void selectedBlockEffect(Location loc) {
+    public void spawnEffectAtBlock(Location loc) {
 
         loc.add(0.5,1.5,0.5);
         Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(0, 127, 215), 2);

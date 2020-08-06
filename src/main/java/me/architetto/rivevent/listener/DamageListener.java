@@ -1,6 +1,6 @@
 package me.architetto.rivevent.listener;
 
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +16,7 @@ public class DamageListener implements Listener{
 
         Player player = (Player) event.getDamager();
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         if (!global.startDone && global.playerJoined.contains(player.getUniqueId())) {
             event.setCancelled(true);

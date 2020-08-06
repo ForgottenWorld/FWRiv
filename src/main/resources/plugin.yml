@@ -7,3 +7,29 @@ description: Automatizza l'evento 'Resta In Vetta'
 commands:
   rivevent:
     description: Automatizza l'evento 'Resta in Vetta'.
+
+permissions:
+  rivevent.admin:
+    description: description
+    default: false
+    children:
+      rivevent.create : true
+      rivevent.delete : true
+
+  rivevent.superuser:
+    description: description
+    default: false
+    children:
+      rivevent.init : true
+      rivevent.list : true
+      rivevent.setup : true
+      rivevent.start : true
+      rivevent.stop : true
+
+  rivevent.user:
+    description: description
+    default: true
+    children:
+      rivevent.join : true
+      rivevent.leave : true
+      rivevent.spectate : true

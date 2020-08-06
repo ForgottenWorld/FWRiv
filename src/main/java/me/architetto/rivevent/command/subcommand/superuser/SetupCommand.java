@@ -1,7 +1,7 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
 import me.architetto.rivevent.RIVevent;
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.listener.LeftclickListener;
 import me.architetto.rivevent.util.ChatMessages;
@@ -44,7 +44,7 @@ public class SetupCommand extends SubCommand{
             return;
         }
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         if (global.setupStart) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_SETUP_DONE));
@@ -86,7 +86,7 @@ public class SetupCommand extends SubCommand{
 
                 playerCount++;
 
-                if (global.playerJoined.size() - 1 <= playerCount) {
+                if (global.playerJoined.size() - 1 < playerCount) {
                     player.sendMessage(ChatMessages.GREEN(Messages.OK_SETUP));
                     global.setupDone = true;
                     playerCount = 0;
@@ -102,7 +102,7 @@ public class SetupCommand extends SubCommand{
     public void doorDetector(Location loc,int radius) {
 
         Block middle = loc.getBlock();
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
         for (int x = radius; x >= -radius; x--) {
             for (int y = radius; y >= -radius; y--){
                 for(int z = radius; z >= -radius; z--){
@@ -123,7 +123,7 @@ public class SetupCommand extends SubCommand{
 
         int randomValue = ThreadLocalRandom.current().nextInt(1, 4 + 1);
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         switch(randomValue){
             case 1:

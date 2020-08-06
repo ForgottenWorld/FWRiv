@@ -1,6 +1,5 @@
 package me.architetto.rivevent.command;
 
-import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.listener.LeftclickListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,9 +8,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
-public class GlobalVar{
+public class GameHandler{
 
-    private static GlobalVar instance;
+    private static GameHandler instance;
 
     public HashMap<String, HashMap<LeftclickListener.LOC,String>> riveventPreset = new HashMap<>();
     public HashMap<UUID, String> listenerActivator = new HashMap<>();
@@ -38,7 +37,7 @@ public class GlobalVar{
     // } NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
 
 
-    private GlobalVar(){
+    private GameHandler(){
 
         //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
 
@@ -75,9 +74,9 @@ public class GlobalVar{
 
     }
 
-    public static GlobalVar getInstance(){
+    public static GameHandler getInstance(){
         if(instance==null)
-            instance = new GlobalVar();
+            instance = new GameHandler();
 
         return instance;
     }

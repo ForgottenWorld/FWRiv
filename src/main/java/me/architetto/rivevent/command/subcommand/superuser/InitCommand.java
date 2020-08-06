@@ -1,6 +1,6 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
@@ -31,7 +31,7 @@ public class InitCommand extends SubCommand{
             return;
         }
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         if (args.length!=2) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));

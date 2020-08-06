@@ -1,7 +1,7 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
 import me.architetto.rivevent.RIVevent;
-import me.architetto.rivevent.command.GlobalVar;
+import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
@@ -42,7 +42,7 @@ public class StartCommand extends SubCommand{
             return;
         }
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         if (global.presetSummon.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
@@ -73,7 +73,7 @@ public class StartCommand extends SubCommand{
 
     public void readyAllert () {
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
         for(UUID key : global.playerJoined){
 
             Player target = Bukkit.getPlayer(key);
@@ -86,7 +86,7 @@ public class StartCommand extends SubCommand{
 
     public void openDoors (long delay) {
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         new BukkitRunnable() {
 
@@ -124,7 +124,7 @@ public class StartCommand extends SubCommand{
 
     public void closeDoors (long delay) {
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         new BukkitRunnable() {
 
@@ -155,7 +155,7 @@ public class StartCommand extends SubCommand{
 
     public void antiCamper () {
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
         int acDelay = RIVevent.plugin.getConfig().getInt("AC_DELAY");
         int acPeriod = RIVevent.plugin.getConfig().getInt("AC_PERIOD");
 
@@ -199,7 +199,7 @@ public class StartCommand extends SubCommand{
 
     public void rewardTopTowerPlayerEvent(int towerY) {
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
 
         for(UUID key : global.playerJoined){
 
@@ -225,7 +225,7 @@ public class StartCommand extends SubCommand{
 
     public Material randomItem() {
 
-        GlobalVar global = GlobalVar.getInstance();
+        GameHandler global = GameHandler.getInstance();
         int randomNum = global.itemList.size();
 
         randomNum = ThreadLocalRandom.current().nextInt(1, randomNum);
