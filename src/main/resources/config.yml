@@ -1,10 +1,34 @@
-#WIP
-SPES_TP_LOCATION:
-#------------------------------------------------#
+# -------------------------------------------------- #
+# -----------      [RIV CONFIG FILE]       --------- #
+# --------------  made  by  Architetto  ------------ #
+# -------------------------------------------------- #
 
-#-------------NON ANCORA UTILIZZATI--------------#
+
+RESPAWN:
+  w: 'world'
+  x: 100
+  y: 66
+  z: -179
+
+DOORS_RADIUS_DETECTOR : 10
+
+OPEN_DOORS_DELAY : 10
+CLOSE_DOORS_DELAY : 30
+
+#----------------------------------------------------#
+
+ANTI_CAMPER_TOGGLE : true
+
+AC_DELAY : 1200
+AC_PERIOD : 2400
+
+#----------------------------------------------------#
+
+
+
+
+EXPERIMENTAL_MODE : true
 
 TOGGLE_POSITIVE_POTION_EFFECT : true
 TOGGLE_NEGATIVE_POTION_EFFECT : true
 
-#------------------------------------------------#

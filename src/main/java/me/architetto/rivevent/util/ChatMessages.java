@@ -21,9 +21,9 @@ public class ChatMessages{
     }
 
     public static String PosMessage(String message, Enum LOC) {
-        message = ChatColor.GOLD + "["+ message + "] " + ChatColor.RESET + "Inserisci la posizione di " + ChatColor.DARK_AQUA
+
+        return ChatColor.GOLD + "["+ message + "] " + ChatColor.RESET + "Inserisci la posizione di " + ChatColor.DARK_AQUA
                 + ChatColor.ITALIC +  LOC + ChatColor.RESET + " ...";
-        return message;
     }
 
 }

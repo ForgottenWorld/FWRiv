@@ -14,9 +14,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
-public class LClickListener implements Listener{
+public class LeftclickListener implements Listener{
 
     GlobalVar global = GlobalVar.getInstance();
 
@@ -40,22 +41,24 @@ public class LClickListener implements Listener{
                 tempHashMap.put(player.getUniqueId(), new HashMap<>());
             }
 
+            Location eventLocation = Objects.requireNonNull(event.getClickedBlock()).getLocation().add(0,1,0);
+
             switch (tempHashMap.get(player.getUniqueId()).size()) {
 
                 case 5:
 
                     player.playSound(player.getLocation (), Sound.ENTITY_PLAYER_LEVELUP, 4, 1);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.TOWER, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
 
                     global.riveventPreset.put(global.listenerActivator.get(player.getUniqueId()),tempHashMap.get(player.getUniqueId()));
                     RIVevent.save(global.riveventPreset);
                     global.listenerActivator.remove(player.getUniqueId());
 
                     tempHashMap.remove(player.getUniqueId());
-                    player.sendMessage(ChatMessages.GREEN(Messages.OKPRESET));
+                    player.sendMessage(ChatMessages.GREEN(Messages.OK_PRESET));
 
                     return;
 
@@ -64,9 +67,9 @@ public class LClickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPECTATE, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPECTATE, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("6/6", LOC.TOWER));
                     return;
@@ -75,9 +78,9 @@ public class LClickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN4, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN4, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("5/6", LOC.SPECTATE));
 
@@ -87,9 +90,9 @@ public class LClickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN3, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN3, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("4/6", LOC.SPAWN4));
 
@@ -99,9 +102,9 @@ public class LClickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN2, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN2, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("3/6", LOC.SPAWN3));
 
@@ -111,9 +114,9 @@ public class LClickListener implements Listener{
 
                     player.playSound(player.getLocation (), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4, 2);
 
-                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN1, LocSerialization.getSerializedLocation(event.getClickedBlock().getLocation().add(0,1,0)));
+                    tempHashMap.get(player.getUniqueId()).put(LOC.SPAWN1, LocSerialization.getSerializedLocation(eventLocation));
 
-                    selectBlockEffect(event.getClickedBlock().getLocation().clone());
+                    selectedBlockEffect(event.getClickedBlock().getLocation().clone());
 
                     player.sendMessage(ChatMessages.PosMessage("2/6", LOC.SPAWN2));
 
@@ -121,7 +124,7 @@ public class LClickListener implements Listener{
         }
     }
 
-    public void selectBlockEffect (Location loc) {
+    public void selectedBlockEffect(Location loc) {
 
         loc.add(0.5,1.5,0.5);
         Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(0, 127, 215), 2);
@@ -133,12 +136,12 @@ public class LClickListener implements Listener{
             @Override
             public void run(){
 
-
                 count++;
                 loc.getWorld().spawnParticle(Particle.REDSTONE,loc,10,dustOptions);
                 if (count == 5) {
                     this.cancel();
                 }
+
             }
         }.runTaskTimer(RIVevent.plugin,0,18);
     }

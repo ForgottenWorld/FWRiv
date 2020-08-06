@@ -2,7 +2,7 @@ package me.architetto.rivevent.command.subcommand.user;
 
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LClickListener;
+import me.architetto.rivevent.listener.LeftclickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
@@ -37,8 +37,10 @@ public class JoinCommand extends SubCommand{
         GlobalVar global = GlobalVar.getInstance();
 
         if (global.presetSummon.isEmpty()) {
+
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
+            
         }
 
         if (global.playerJoined.contains(player.getUniqueId())) {
@@ -50,9 +52,7 @@ public class JoinCommand extends SubCommand{
 
         if (global.playerSpectate.contains(player.getUniqueId())) {
 
-            //TODO: Va inserito un messaggio apposito
-            //Leavare l'evento ed entrare come spettatore.
-            player.sendMessage(ChatMessages.RED(Messages.ERR_JOIN));
+            player.sendMessage(ChatMessages.RED(Messages.ERR_JOIN2));
             return;
 
         }
@@ -65,9 +65,9 @@ public class JoinCommand extends SubCommand{
         }
 
         global.playerJoined.add(player.getUniqueId());
-        player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.SPECTATE)));
-        player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
-        player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));  //TODO : Inserire un messaggio che spiega che all'inizio dell'evento l'inventario verrà cancellato
+        player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPECTATE)));
+        player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+        player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
 
     }
 }

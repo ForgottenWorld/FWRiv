@@ -3,18 +3,14 @@ package me.architetto.rivevent.command.subcommand.superuser;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LClickListener;
 import me.architetto.rivevent.util.ChatMessages;
-import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -48,7 +44,7 @@ public class StartCommand extends SubCommand{
 
         GlobalVar global = GlobalVar.getInstance();
 
-        if(global.presetSummon.isEmpty()){
+        if (global.presetSummon.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
         }
@@ -58,31 +54,33 @@ public class StartCommand extends SubCommand{
             return;
         }
 
-        player.sendMessage( ChatMessages.GREEN("Le porte stanno per aprirsi, preparatevi !"));
 
-        openDoors(200);
+        readyAllert();
 
-        closeDoors(600);
+        int openDoorsDelay = RIVevent.getDefaultConfig().getInt("OPEN_DOORS_DELAY") * 20;
+        int closeDoorsDelay = openDoorsDelay + RIVevent.getDefaultConfig().getInt("CLOSE_DOORS_DELAY") * 20;
 
-        int towerY = LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LClickListener.LOC.TOWER)).getBlockY();
+        openDoors(openDoorsDelay);
+        closeDoors(closeDoorsDelay);
 
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run(){
-
-                checkPlayerPosition(towerY);
-
-               if (global.playerJoined.size()<=3) {
-                   //TODO:Avvertire che non vi sono più reward a stare in cima.
-                   cancel();
-               }
-
-            }
-        }.runTaskTimer(RIVevent.plugin,1200,1200);
+        if (RIVevent.plugin.getConfig().getBoolean("ANTI_CAMPER_TOGGLE")) {
+            antiCamper();
+        }
 
 
+
+    }
+
+    public void readyAllert () {
+
+        GlobalVar global = GlobalVar.getInstance();
+        for(UUID key : global.playerJoined){
+
+            Player target = Bukkit.getPlayer(key);
+            assert target != null;
+            target.sendTitle(Messages.START_ALLERT_TITLE,"",20,60,20);
+
+        }
 
     }
 
@@ -107,9 +105,19 @@ public class StartCommand extends SubCommand{
                     Openable door = (Openable) data;
                     door.setOpen(true);
                     block.setBlockData(door, true);
-                    sendTitle(Messages.START_TITLE,Messages.START_SUBTITLE);
+                    global.startDone = true;
 
                 }
+
+                for (UUID key : global.playerJoined) {
+
+                    Player target = Bukkit.getPlayer(key);
+                    assert target != null;
+                    target.sendTitle(Messages.START_TITLE,Messages.START_SUBTITLE,20,40,20);
+
+                }
+
+
             }
         }.runTaskLater(RIVevent.plugin, delay);
     }
@@ -143,23 +151,53 @@ public class StartCommand extends SubCommand{
 
     }
 
-    public void sendTitle (String title,String subtitle) {
+    //--------------------------------------------------//
+
+    public void antiCamper () {
 
         GlobalVar global = GlobalVar.getInstance();
+        int acDelay = RIVevent.plugin.getConfig().getInt("AC_DELAY");
+        int acPeriod = RIVevent.plugin.getConfig().getInt("AC_PERIOD");
 
-        for (UUID key : global.playerJoined) {
+        new BukkitRunnable() {
 
-            Player player = Bukkit.getPlayer(key);
-            player.sendTitle(title,subtitle,2,65,2);
+            @Override
+            public void run(){
 
+                if (global.playerJoined.size()<=1) {
+                    this.cancel();
+                }
 
-        }
+                Player target = Bukkit.getPlayer(global.playerJoined.get(0));
 
+                for (UUID key : global.playerJoined) {
+
+                    if (target.getLocation().getBlockY() > Bukkit.getPlayer(key).getLocation().getBlockY()) {
+
+                        target = Bukkit.getPlayer(key);
+
+                    }
+
+                }
+
+                target.setHealth(target.getHealth()-1);
+                target.sendMessage(ChatMessages.AQUA("Pizzicato !")); //Migliorabile
+
+            }
+        }.runTaskTimer(RIVevent.plugin,acDelay,acPeriod);
 
 
     }
 
-    public void checkPlayerPosition (int towerY) {
+    //--------------------------------------------------//
+
+
+
+
+
+    //---------------NOT IMPLEMENTED-------------------//
+
+    public void rewardTopTowerPlayerEvent(int towerY) {
 
         GlobalVar global = GlobalVar.getInstance();
 
@@ -167,6 +205,7 @@ public class StartCommand extends SubCommand{
 
             Player target = Bukkit.getPlayer(key);
 
+            assert target != null;
             if (target.getLocation().getY() >= towerY) {
 
                 Material material = randomItem();

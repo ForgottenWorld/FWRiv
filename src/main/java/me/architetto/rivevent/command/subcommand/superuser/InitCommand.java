@@ -4,6 +4,7 @@ import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class InitCommand extends SubCommand{
@@ -44,7 +45,9 @@ public class InitCommand extends SubCommand{
                 player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
             }else{
                 global.presetSummon = args[1];
-                player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
+                player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT + " \n "));
+                Bukkit.getServer().broadcastMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT)); //ToDo: Abbellire messaggio annuncio evento
+
             }
         }
     }

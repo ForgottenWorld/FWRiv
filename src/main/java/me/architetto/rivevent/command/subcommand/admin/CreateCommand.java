@@ -2,7 +2,7 @@ package me.architetto.rivevent.command.subcommand.admin;
 
 import me.architetto.rivevent.command.GlobalVar;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LClickListener;
+import me.architetto.rivevent.listener.LeftclickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
@@ -34,7 +34,6 @@ public class CreateCommand extends SubCommand{
             return;
         }
 
-
         if (args.length != 2) {
             player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
             return;
@@ -48,17 +47,15 @@ public class CreateCommand extends SubCommand{
         }
 
         if (global.listenerActivator.containsKey(player.getUniqueId())) {
-            player.sendMessage(ChatMessages.RED("Stai già creando un preset !"));  //TODO .. inserire in Messages
+            player.sendMessage(ChatMessages.RED(Messages.ERR_PRESET2));
             return;
         }
-
 
         global.riveventPreset.put(args[1], new HashMap<>());
         global.listenerActivator.put(player.getUniqueId(), args[1]);
 
-        player.sendMessage(ChatMessages.PosMessage("1/6", LClickListener.LOC.SPAWN1));
-
-
+        //ToDo: Messaggio che spiega come inserire le coordinate (click sinistro)
+        player.sendMessage(ChatMessages.PosMessage("1/6", LeftclickListener.LOC.SPAWN1));
 
     }
 }

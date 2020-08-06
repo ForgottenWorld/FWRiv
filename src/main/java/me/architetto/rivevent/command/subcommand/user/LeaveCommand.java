@@ -40,14 +40,15 @@ public class LeaveCommand extends SubCommand{
 
         if (global.playerSpectate.contains(player.getUniqueId())) {
 
-            // player.teleport(); va tippato allo spawn
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
+            player.teleport(global.respawnLoc);
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
             global.playerSpectate.remove(player.getUniqueId());
 
         } else if (global.playerJoined.contains(player.getUniqueId())) {
 
-            // player.teleport(); va tippato allo spawn
-            player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,5,1);
+            player.getInventory().clear();
+            player.teleport(global.respawnLoc);
+            player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
             global.playerJoined.remove(player.getUniqueId());
 
         } else{

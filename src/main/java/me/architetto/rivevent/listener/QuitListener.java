@@ -16,10 +16,27 @@ public class QuitListener implements Listener{
         GlobalVar global = GlobalVar.getInstance();
         Player player = event.getPlayer();
 
-        if (global.playerJoined.contains(player.getUniqueId())){
+        if (global.playerJoined.contains(player.getUniqueId())) {
 
-            player.setHealth(0);
+            if (global.setupStart) {
 
+                player.getInventory().clear();
+                player.setHealth(0);
+
+            } else {
+
+                player.teleport(global.respawnLoc);
+
+            }
+
+            global.playerJoined.remove(player.getUniqueId());
+            return;
+        }
+
+        if (global.playerSpectate.contains(player.getUniqueId())) {
+
+            player.teleport(global.respawnLoc);
+            global.playerSpectate.remove(player.getUniqueId());
 
         }
     }
