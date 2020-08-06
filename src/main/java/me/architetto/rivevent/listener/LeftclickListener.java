@@ -138,7 +138,7 @@ public class LeftclickListener implements Listener{
 
                 count++;
                 loc.getWorld().spawnParticle(Particle.REDSTONE,loc,10,dustOptions);
-                if (count == 5) {
+                if (count == 6) {
                     this.cancel();
                 }
 
