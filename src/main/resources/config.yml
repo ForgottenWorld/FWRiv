@@ -1,0 +1,33 @@
+# -------------------------------------------------- #
+# -----------      [RIV CONFIG FILE]       --------- #
+# --------------  made  by  Architetto  ------------ #
+# -------------------------------------------------- #
+
+
+RESPAWN:
+  w: 'world'
+  x: 100
+  y: 66
+  z: -179
+
+DOORS_RADIUS_DETECTOR : 10
+
+#in secondi
+OPEN_DOORS_DELAY : 10
+CLOSE_DOORS_DELAY : 30
+
+#----------------------------------------------------#
+
+ANTI_CAMPER_TOGGLE : true
+
+#in tick (todo: da unificare ... secondi o tick ?)
+AC_DELAY : 1200
+AC_PERIOD : 2400
+
+#---- NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE ----#
+
+EXPERIMENTAL_MODE : true
+
+TOGGLE_POSITIVE_POTION_EFFECT : true
+TOGGLE_NEGATIVE_POTION_EFFECT : true
+

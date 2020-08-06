@@ -1,0 +1,9 @@
+name: Rivevent
+version: ${project.version}
+main: me.architetto.rivevent.RIVevent
+api-version: 1.16
+authors: [Architetto]
+description: Automatizza l'evento 'Resta In Vetta'
+commands:
+  rivevent:
+    description: Automatizza l'evento 'Resta in Vetta'.
