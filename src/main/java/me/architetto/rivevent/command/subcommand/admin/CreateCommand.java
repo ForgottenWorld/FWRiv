@@ -54,7 +54,7 @@ public class CreateCommand extends SubCommand{
         global.riveventPreset.put(args[1], new HashMap<>());
         global.listenerActivator.put(player.getUniqueId(), args[1]);
 
-        //ToDo: Messaggio che spiega come inserire le coordinate (click sinistro)
+        player.sendMessage(ChatMessages.GREEN("Usa click sinistro per inserire le coordinate ..."));
         player.sendMessage(ChatMessages.PosMessage("1/6", LeftclickListener.LOC.SPAWN1));
 
     }

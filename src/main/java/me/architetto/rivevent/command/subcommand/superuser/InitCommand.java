@@ -46,7 +46,7 @@ public class InitCommand extends SubCommand{
             }else{
                 global.presetSummon = args[1];
                 player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT + " \n "));
-                Bukkit.getServer().broadcastMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT)); //ToDo: Abbellire messaggio annuncio evento
+                Bukkit.getServer().broadcastMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT));
 
             }
         }

@@ -1,5 +1,6 @@
 package me.architetto.rivevent.command;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.listener.LeftclickListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,14 +28,19 @@ public class GlobalVar{
 
     public Location respawnLoc;
 
+    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
+    public boolean experimentalMode;
+
     public List<PotionEffectType> positivePotionEffects = new ArrayList<>();
     public List<PotionEffectType> negativePotionEffects = new ArrayList<>();
     public List<Material> itemList = new ArrayList<>();
 
+    // } NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
+
 
     private GlobalVar(){
 
-        //WIP
+        //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
 
         positivePotionEffects.add(PotionEffectType.REGENERATION);
         positivePotionEffects.add(PotionEffectType.DAMAGE_RESISTANCE);
@@ -42,8 +48,6 @@ public class GlobalVar{
         positivePotionEffects.add(PotionEffectType.INVISIBILITY);
         positivePotionEffects.add(PotionEffectType.HEAL);
         positivePotionEffects.add(PotionEffectType.HEALTH_BOOST);
-
-
 
         negativePotionEffects.add(PotionEffectType.BLINDNESS);
         negativePotionEffects.add(PotionEffectType.CONFUSION);
@@ -67,6 +71,7 @@ public class GlobalVar{
         itemList.add(Material.POISONOUS_POTATO);
         itemList.add(Material.SNOWBALL);
 
+        // } NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
 
     }
 

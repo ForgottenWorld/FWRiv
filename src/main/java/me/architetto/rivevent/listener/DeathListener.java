@@ -82,12 +82,11 @@ public class DeathListener implements Listener{
 
     }
 
-    //WIP WIP WIP WIP
+    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
+
     public void randomEffect() {
 
-        //effetto random che si attiva ad un partecipante alla morte di qualche altro partecipante
-        //SI POTREBBE APPLICARE A TUTTI I PARTECIPANTI
-        //E OPPORTUNO INSERIRE ANCHE UN COOLDOWN
+        //todo: cooldown
 
         GlobalVar global = GlobalVar.getInstance();
         int randomNum = global.playerJoined.size();
@@ -102,6 +101,8 @@ public class DeathListener implements Listener{
             target.addPotionEffect(new PotionEffect(global.positivePotionEffects.get(randomNum), 200, 1));  //effetto ( va fatto in modo che sia casuale)
 
     }
+
+    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
 
 
 }

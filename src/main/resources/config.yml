@@ -20,14 +20,11 @@ CLOSE_DOORS_DELAY : 30
 
 ANTI_CAMPER_TOGGLE : true
 
-#in tick
+#in tick (todo: da unificare ... secondi o tick ?)
 AC_DELAY : 1200
 AC_PERIOD : 2400
 
-#------------------NOT IMPLEMENTED-------------------#
-
-
-
+#---- NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE ----#
 
 EXPERIMENTAL_MODE : true
 

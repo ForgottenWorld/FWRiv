@@ -26,6 +26,8 @@ public final class RIVevent extends JavaPlugin {
 
         loadConfiguration();
 
+        loadPreset();
+
         Objects.requireNonNull(getCommand("rivevent")).setExecutor(new CommandManager());
 
         getServer().getPluginManager().registerEvents(new LeftclickListener(),this);
@@ -34,9 +36,6 @@ public final class RIVevent extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new QuitListener(),this);
         getServer().getPluginManager().registerEvents(new DamageListener(),this);
         getServer().getPluginManager().registerEvents(new SpawnListener(),this);
-
-        loadPreset();
-
 
 
     }
@@ -84,8 +83,11 @@ public final class RIVevent extends JavaPlugin {
         File presetFile = new File(pathPreset);
 
         World w = Bukkit.getServer().getWorld(Objects.requireNonNull(getConfig().getString("RESPAWN.w")));
+
         global.respawnLoc = new Location(w, getConfig().getInt("RESPAWN.x"), getConfig().getInt("RESPAWN.y"),
                 getConfig().getInt("RESPAWN.z"));
+
+        global.experimentalMode = getConfig().getBoolean("EXPERIMENTAL_MODE");
 
         try{
             if (!presetFile.createNewFile ()) {
