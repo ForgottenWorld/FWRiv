@@ -53,5 +53,5 @@ public class Messages{
             " - Per assistere -> /rivevent spectate" + "\n" +
             "PS: Partecipando l'inventario verra' perso!";
 
-
+    public static final String ANTI_CAMPER_MSG = "I superni si accaniscono su di te perche' sei ultimo!";
 }

@@ -3,7 +3,9 @@ package me.architetto.rivevent.command.subcommand.superuser;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
+import me.architetto.rivevent.listener.LeftclickListener;
 import me.architetto.rivevent.util.ChatMessages;
+import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -65,6 +68,10 @@ public class StartCommand extends SubCommand{
 
         if (RIVevent.plugin.getConfig().getBoolean("ANTI_CAMPER_TOGGLE")) {
             antiCamper();
+        }
+
+        if (RIVevent.plugin.getConfig().getBoolean("REWARD_PLAYER_ON_TOP")) {
+           rewardPlayerOnTop();
         }
 
 
@@ -151,13 +158,18 @@ public class StartCommand extends SubCommand{
 
     }
 
-    //--------------------------------------------------//
+    //------------------ APPROVED ----------------------//
+
+
+
+    //-------------------- TEST ------------------------//
 
     public void antiCamper () {
 
         GameHandler global = GameHandler.getInstance();
-        int acDelay = RIVevent.plugin.getConfig().getInt("AC_DELAY");
-        int acPeriod = RIVevent.plugin.getConfig().getInt("AC_PERIOD");
+        long acDelay = RIVevent.plugin.getConfig().getLong("AC_DELAY") * 20;
+        long acPeriod = RIVevent.plugin.getConfig().getLong("AC_PERIOD") * 20;
+        int damageValue = RIVevent.plugin.getConfig().getInt("AC_DAMAGE");
 
         new BukkitRunnable() {
 
@@ -172,16 +184,17 @@ public class StartCommand extends SubCommand{
 
                 for (UUID key : global.playerJoined) {
 
-                    if (target.getLocation().getBlockY() > Bukkit.getPlayer(key).getLocation().getBlockY()) {
+                    assert target != null;
+                    if (target.getLocation().getBlockY() > Objects.requireNonNull(Bukkit.getPlayer(key)).getLocation().getBlockY()) {
 
                         target = Bukkit.getPlayer(key);
 
                     }
-
                 }
 
-                target.setHealth(target.getHealth()-1);
-                target.sendMessage(ChatMessages.AQUA("Pizzicato !")); //Migliorabile
+                assert target != null;
+                target.setHealth(target.getHealth()-damageValue);
+                target.sendMessage(ChatMessages.AQUA(Messages.ANTI_CAMPER_MSG));
 
             }
         }.runTaskTimer(RIVevent.plugin,acDelay,acPeriod);
@@ -189,37 +202,43 @@ public class StartCommand extends SubCommand{
 
     }
 
-    //--------------------------------------------------//
 
 
-
-
-
-    //---------------NOT IMPLEMENTED-------------------//
-
-    public void rewardTopTowerPlayerEvent(int towerY) {
+    public void rewardPlayerOnTop() {
 
         GameHandler global = GameHandler.getInstance();
+        long rewardPeriod = RIVevent.plugin.getConfig().getLong("REWARD_PERIOD") * 20;
+        int minNumPlayer = RIVevent.plugin.getConfig().getInt("REWARD_MIN_PLAYERS");
 
-        for(UUID key : global.playerJoined){
+        new BukkitRunnable() {
 
-            Player target = Bukkit.getPlayer(key);
+            private final int towerTopY = LocSerialization.getDeserializedLocation(global.riveventPreset
+                    .get(global.presetSummon).get(LeftclickListener.LOC.TOWER)).getBlockY();
 
-            assert target != null;
-            if (target.getLocation().getY() >= towerY) {
+            @Override
+            public void run(){
 
-                Material material = randomItem();
+                if (global.playerJoined.size() <= minNumPlayer)
+                    this.cancel();
 
-                ItemStack itemStack = new ItemStack(material,randomAmount(material));
+                for (UUID key : global.playerJoined) {
+                    Player player = Bukkit.getPlayer(key);
 
-                target.getInventory().addItem(itemStack);
+                    assert player != null;
+                    if (player.getLocation().getBlockY() >= towerTopY) {
 
-                target.sendMessage(ChatMessages.AQUA("Hai ricevuto : " + itemStack.getI18NDisplayName()));
+                        Material material = randomItem();
 
+                        ItemStack itemStack = new ItemStack(material,randomAmount(material));
+
+                        player.getInventory().addItem(itemStack);
+
+                        player.sendMessage(ChatMessages.AQUA("Hai ricevuto : " + itemStack.getI18NDisplayName()));
+
+                    }
+                }
             }
-
-
-        }
+        }.runTaskTimer(RIVevent.plugin,0,rewardPeriod);
 
     }
 
@@ -228,7 +247,7 @@ public class StartCommand extends SubCommand{
         GameHandler global = GameHandler.getInstance();
         int randomNum = global.itemList.size();
 
-        randomNum = ThreadLocalRandom.current().nextInt(1, randomNum);
+        randomNum = ThreadLocalRandom.current().nextInt(0, randomNum);
 
         return global.itemList.get(randomNum);
 
@@ -240,13 +259,17 @@ public class StartCommand extends SubCommand{
             return 1;
 
 
-        int randomNum = 10;
+        int randomNum = RIVevent.plugin.getConfig().getInt("MAX_REWARD_AMOUNT");
         randomNum = ThreadLocalRandom.current().nextInt(1, randomNum+1);
 
         return randomNum;
 
     }
 
+
+
+
+    //---------------NOT IMPLEMENTED-------------------//
 
 
 

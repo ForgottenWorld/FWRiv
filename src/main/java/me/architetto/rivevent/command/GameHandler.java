@@ -62,13 +62,24 @@ public class GameHandler{
         itemList.add(Material.LEATHER_HELMET);
         itemList.add(Material.LEATHER_BOOTS);
         itemList.add(Material.LEATHER_LEGGINGS);
-        itemList.add(Material.EMERALD);
         itemList.add(Material.COOKED_PORKCHOP);
-        itemList.add(Material.SUGAR);
-        itemList.add(Material.GLOWSTONE_DUST);
         itemList.add(Material.BAKED_POTATO);
         itemList.add(Material.POISONOUS_POTATO);
         itemList.add(Material.SNOWBALL);
+
+        /* L'idea è di usare  i reward come emerald,etc. come moneta per riscattare "cose"
+        itemList.add(Material.EMERALD);
+        itemList.add(Material.SUGAR);
+        itemList.add(Material.GLOWSTONE_DUST);
+
+        Possibili "cose" da poter riscattare :
+        - ...
+        - Revive di un amico  (allungherebbe sicuramente il brodo)
+
+        Il metodo per consumare questi reward rari potrebbe essere un semplice click destro
+        con in mano l'items che si vuole consumare.
+
+         */
 
         // } NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
 
