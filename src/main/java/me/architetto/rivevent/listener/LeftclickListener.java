@@ -21,7 +21,7 @@ public class LeftclickListener implements Listener{
 
     GameHandler global = GameHandler.getInstance();
 
-    private final  HashMap<UUID, HashMap<LOC, String>> playerSelectedLocation = new HashMap<>();
+    public final HashMap<UUID, HashMap<LOC, String>> playerSelectedLocation = new HashMap<>();
     public enum LOC {
         SPAWN1,
         SPAWN2,
@@ -30,6 +30,7 @@ public class LeftclickListener implements Listener{
         TOWER,
         SPECTATE
     }
+
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) throws Exception{
@@ -138,12 +139,12 @@ public class LeftclickListener implements Listener{
 
                 count++;
                 loc.getWorld().spawnParticle(Particle.REDSTONE,loc,10,dustOptions);
-                if (count == 6) {
+                if (count == 5) {
                     this.cancel();
                 }
 
             }
-        }.runTaskTimer(RIVevent.plugin,0,18);
+        }.runTaskTimer(RIVevent.plugin,0,20);
     }
 
 

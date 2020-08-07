@@ -15,8 +15,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public class SetupCommand extends SubCommand{
     @Override
     public String getName(){
@@ -33,7 +31,6 @@ public class SetupCommand extends SubCommand{
         return "/rivevent setup";
     }
 
-    int playerCount = 0;
 
 
     @Override
@@ -74,17 +71,24 @@ public class SetupCommand extends SubCommand{
 
         new BukkitRunnable(){
 
+            private int playerCount = 0;
+            private int spawnNum = 1;
+
             @Override
             public void run(){
 
                 Player target = Bukkit.getPlayer(global.playerJoined.get(playerCount));
 
+                if (spawnNum == 5)
+                    spawnNum = 1;
+
                 assert target != null;
                 target.getInventory().clear();
 
-                randomTeleport(target);
+                eventSpawnPointTeleport(target,spawnNum);
 
                 playerCount++;
+                spawnNum++;
 
                 if (global.playerJoined.size() - 1 < playerCount) {
                     player.sendMessage(ChatMessages.GREEN(Messages.OK_SETUP));
@@ -119,13 +123,11 @@ public class SetupCommand extends SubCommand{
         }
     }
 
-    public void randomTeleport(Player target) {
-
-        int randomValue = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+    public void eventSpawnPointTeleport(Player target, int spawnNum) {
 
         GameHandler global = GameHandler.getInstance();
 
-        switch(randomValue){
+        switch(spawnNum) {
             case 1:
                 target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN1)));
                 target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
@@ -137,9 +139,6 @@ public class SetupCommand extends SubCommand{
                 target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
             case 4:
                 target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN4)));
-                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-            default:
-                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN1)));
                 target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
         }
 
