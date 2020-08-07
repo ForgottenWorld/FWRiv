@@ -49,7 +49,7 @@ public class DeathListener implements Listener{
                 for (UUID key : mergedList) {
 
                     Player target = Bukkit.getPlayer(key);
-                    target.sendTitle(player.getDisplayName(),"Complimenti! Sei il vincitore.",20,100,20);
+                    target.sendTitle(player.getDisplayName(),"Complimenti! HAI VINTO!",20,100,20);
 
                 }
 
