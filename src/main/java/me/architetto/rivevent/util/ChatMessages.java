@@ -20,6 +20,9 @@ public class ChatMessages{
         return ChatColor.AQUA + "[RIVe] " + ChatColor.RESET + message;
     }
 
+    public static String RIVallert(String message) { return ChatColor.LIGHT_PURPLE + "[RIVe]" + ChatColor.RESET
+            + ChatColor.ITALIC + ChatColor.AQUA + message; }
+
     public static String PosMessage(String message, Enum LOC) {
 
         return ChatColor.GOLD + "["+ message + "] " + ChatColor.RESET + "Inserisci la posizione di " + ChatColor.DARK_AQUA
