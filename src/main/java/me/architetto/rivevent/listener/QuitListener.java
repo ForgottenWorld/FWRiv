@@ -18,6 +18,8 @@ public class QuitListener implements Listener{
 
         if (global.playerJoined.contains(player.getUniqueId())) {
 
+            global.playerJoined.remove(player.getUniqueId()); //per evitare l'eventuale attivazione di eventi legati al deathListener
+
             if (global.setupStart) {
 
                 player.getInventory().clear();
@@ -25,17 +27,16 @@ public class QuitListener implements Listener{
 
             } else {
 
-                player.teleport(global.respawnLoc);
+                player.teleport(global.endEventRespawnLocation);
 
             }
 
-            global.playerJoined.remove(player.getUniqueId());
             return;
         }
 
         if (global.playerSpectate.contains(player.getUniqueId())) {
 
-            player.teleport(global.respawnLoc);
+            player.teleport(global.endEventRespawnLocation);
             global.playerSpectate.remove(player.getUniqueId());
 
         }
