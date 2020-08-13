@@ -11,10 +11,11 @@ commands:
 permissions:
   rivevent.admin:
     description: description
-    default: false
+    default: op
     children:
       rivevent.create : true
       rivevent.delete : true
+      rivevent.superuser : true
 
   rivevent.superuser:
     description: description
@@ -25,6 +26,7 @@ permissions:
       rivevent.setup : true
       rivevent.start : true
       rivevent.stop : true
+      rivevent.user : true
 
   rivevent.user:
     description: description
