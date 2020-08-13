@@ -4,15 +4,13 @@ import org.bukkit.ChatColor;
 
 public class Messages{
 
-    //TODO: DA SISTEMARE (PROBABILMENTE CI SONO MESSAGGI CHE NON SERVONO, MENTRE QUALCUNO CHE SERVE NON C'E')
-
     public static final String NO_CONSOLE = "Comando non eseguibile in console.";
     public static final String NO_PERM = "Non hai i permessi necessari.";
     public static final String NO_PARAM = "Non hai inserito correttamente i parametri.";
     public static final String NO_PRESET = "Nessun preset con questo nome. Usa '/rivevent list' per la lista dei preset presenti.";
     public static final String NO_EVENT_JOINED = "Non stai partecipando a nessun evento!";
 
-    public static final String OK_INIT = "Evento inizializzato. I player possono joinare con il comando /rivevent join .";
+    public static final String OK_INIT = "Evento inizializzato...";
     public static final String OK_JOIN = "Sei stato inserito nella lista dei partecipanti.";
     public static final String OK_SETUP = "Tutti i player sono stati teletrasportati. Per iniziare l'evento /rivevent start .";
     public static final String OK_SPECTATE = "Sei stato inserito nella lista degli spettatori.";
@@ -39,7 +37,7 @@ public class Messages{
 
     public static final String VOID_PRESET_LIST = "Nessun preset salvato.";
 
-    public static final String STOP_EVENT = "Evento cancellato.";
+    public static final String STOP_EVENT = "Evento terminato.";
 
     public static final String USE_SPECTATE = "L'evento e' gia' iniziato! Usa /rivevent spectate per guardare l'evento.";
 
@@ -54,4 +52,13 @@ public class Messages{
             "PS: Partecipando l'inventario verra' perso!";
 
     public static final String ANTI_CAMPER_MSG = "I superni si accaniscono su di te perche' sei ultimo!";
+
+    public static final String DEATH_MESSAGE = "Sei stato bravo, ma hai perso !"
+            + "\n" + "Sarai più fortunato la prossima volta ."
+            + "\n" + "Se vuoi abbandonare l'evento fai /rivevent leave .";
+
+    public static final String VICTORY_SUBTITLE = "E' il vincitore dell'evento, COMPLIMENTI !";
+
+    public static final String ALLERT_END_EVENT = "Reminder : Terminate l'evento con /rivevent stop";
+
 }
