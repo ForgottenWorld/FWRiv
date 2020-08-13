@@ -11,22 +11,20 @@ public class DamageListener implements Listener{
     @EventHandler
     public void disableDamage(EntityDamageByEntityEvent event){
 
-        if (!(event.getEntity() instanceof Player))
-            return;
+        if (event.getDamager() instanceof Player){
 
-        Player player = (Player) event.getDamager();
+            Player player = (Player) event.getDamager();
 
-        GameHandler global = GameHandler.getInstance();
+            GameHandler global = GameHandler.getInstance();
 
-        if (!global.startDone && global.playerJoined.contains(player.getUniqueId())) {
-            event.setCancelled(true);
+            if (!global.startDone && global.playerJoined.contains(player.getUniqueId())){
+                event.setCancelled(true);
+            }
+
+            if (global.playerSpectate.contains(player.getUniqueId())){
+                event.setCancelled(true);
+            }
         }
-
-        if (global.playerSpectate.contains(player.getUniqueId())) {
-            event.setCancelled(true);
-        }
-
-
     }
 
 }
