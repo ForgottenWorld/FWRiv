@@ -43,9 +43,11 @@ public class InitCommand extends SubCommand{
 
             if (!global.riveventPreset.containsKey(args[1])) {
                 player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
+
             }else{
                 global.presetSummon = args[1];
-                player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT + " \n "));
+                player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
+
                 Bukkit.getServer().broadcastMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT));
 
             }
