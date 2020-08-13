@@ -40,14 +40,14 @@ public class LeaveCommand extends SubCommand{
 
         if (global.playerSpectate.contains(player.getUniqueId())) {
 
-            player.teleport(global.respawnLoc);
+            player.teleport(global.endEventRespawnLocation);
             player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
             global.playerSpectate.remove(player.getUniqueId());
 
         } else if (global.playerJoined.contains(player.getUniqueId())) {
 
             player.getInventory().clear();
-            player.teleport(global.respawnLoc);
+            player.teleport(global.endEventRespawnLocation);
             player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
             global.playerJoined.remove(player.getUniqueId());
 
