@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class CommandManager implements CommandExecutor{
 
-    private ArrayList<SubCommand> subcommands = new ArrayList<>();
+    private final ArrayList<SubCommand> subcommands = new ArrayList<>();
 
     public CommandManager(){
         subcommands.add(new CreateCommand());
@@ -48,7 +48,7 @@ public class CommandManager implements CommandExecutor{
                         getSubcommands().get(i).perform(p, args);
                 }
             }
-        }else if (args.length == 0) {
+        }else{
             p.sendMessage("--------------------------------");
             for (int i = 0; i < getSubcommands().size(); i++){
                 p.sendMessage(getSubcommands().get(i).getSyntax() + " - " + getSubcommands().get(i).getDescription());
