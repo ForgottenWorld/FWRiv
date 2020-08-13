@@ -3,19 +3,17 @@ package me.architetto.rivevent.listener;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.util.ChatMessages;
+import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.*;
 
 public class DeathListener implements Listener{
 
@@ -34,34 +32,26 @@ public class DeathListener implements Listener{
             global.playerSpectate.add(event.getEntity().getUniqueId());
             global.playerJoined.remove(event.getEntity().getUniqueId());
 
-            //TODO: listener Spawnevent che tippa in LOC.spectate
 
-            event.getEntity().sendMessage(ChatMessages.GREEN("Hai perso, ma hai giocato bene ! Sarai più fortunato la prossima volta ."
-                    + "\n" + "Se vuoi abbandonare l'evento fai /rivevent leave ." ));
+            event.getEntity().sendMessage(ChatMessages.GREEN(Messages.DEATH_MESSAGE));
 
-            if (global.playerJoined.size()==1){
+            if (global.playerJoined.size() <= 1){
+
+                Bukkit.broadcast(ChatMessages.RIVallert(Messages.ALLERT_END_EVENT),"rivevent.superuser");
 
                 Player player = Bukkit.getPlayer(global.playerJoined.get(0)); //Il player vincitore !
-                victoryEffect(player);
 
-                List<UUID> mergedList = new ArrayList<>(global.playerJoined);
-                mergedList.addAll(global.playerSpectate);
-                for (UUID key : mergedList) {
+                victoryEffect(player); //Non so se funziona.... DA TESTARE
 
-                    Player target = Bukkit.getPlayer(key);
-                    target.sendTitle(player.getDisplayName(),"Complimenti! HAI VINTO!",20,100,20);
-
-                }
+                assert player != null;
+                victoryMessage(player.getName()); //Viene mandato a tutti i player attualmente presenti all'evento
 
             }
-
-
-            //TODO: Experimental Mode ? [metod : randomEffect]
 
         }
     }
 
-    public void victoryEffect(Player winner) {
+    public void victoryEffect(Player playerName) {
 
         new BukkitRunnable() {
 
@@ -71,7 +61,8 @@ public class DeathListener implements Listener{
             public void run(){
 
                 count++;
-                winner.spawnParticle(Particle.FIREWORKS_SPARK,winner.getLocation(),0,0,1,0);
+
+                playerName.spawnParticle(Particle.FIREWORKS_SPARK,playerName.getLocation(),0,0,5,0);
                 if (count >= 5) {
                     this.cancel();
                 }
@@ -82,25 +73,67 @@ public class DeathListener implements Listener{
 
     }
 
-    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
-
-    public void randomEffect() {
-
-        //todo: cooldown
-
+    public void victoryMessage(String playerName) {
         GameHandler global = GameHandler.getInstance();
-        int randomNum = global.playerJoined.size();
+        List<UUID> mergedList = new ArrayList<>(global.playerJoined);
+        mergedList.addAll(global.playerSpectate);
 
-        randomNum = ThreadLocalRandom.current().nextInt(0, randomNum-1);
-        // pesca a caso tra i partecipanti
-        Player target = Bukkit.getPlayer(global.playerJoined.get(randomNum));
+        for (UUID key : mergedList) {
 
-        randomNum = ThreadLocalRandom.current().nextInt(1, global.positivePotionEffects.size()+1);
+            Player player = Bukkit.getPlayer(key);
+            assert player != null;
+            player.sendTitle(ChatColor.GOLD + playerName.toUpperCase(),
+                    ChatColor.ITALIC + Messages.VICTORY_SUBTITLE,20,100,20);
 
-        if (target!=null)
-            target.addPotionEffect(new PotionEffect(global.positivePotionEffects.get(randomNum), 200, 1));  //effetto ( va fatto in modo che sia casuale)
+        }
+
 
     }
+
+
+
+    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
+
+    //non mi convince ... meglio metterlo come evento che coinvolge gli spettatori .....
+
+    /*
+    public void randomPotionEffect() {
+
+        GameHandler global = GameHandler.getInstance();
+
+        SecureRandom random = new SecureRandom();
+
+        List<PotionEffectType> mergedList = new ArrayList<>(global.positivePotionEffects);
+        mergedList.addAll(global.negativePotionEffects);
+
+        int randomNum = random.nextInt(mergedList.size());
+
+        for (UUID target : global.playerJoined) {
+
+            Player player = Bukkit.getPlayer(target);
+            assert player != null;
+            player.addPotionEffect(new PotionEffect(mergedList.get(randomNum),200,1));
+
+        }
+    }
+
+    public void cooldown() {
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                cooldown = false;
+
+            }
+        }.runTaskLater(RIVevent.plugin,randomPotionEffectCooldown);
+
+
+    }
+
+     */
+
 
     //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
 
