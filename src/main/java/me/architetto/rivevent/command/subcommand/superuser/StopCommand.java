@@ -53,10 +53,10 @@ public class StopCommand extends SubCommand{
 
             List<UUID> mergedList = new ArrayList<>(global.playerJoined);
             mergedList.addAll(global.playerSpectate);
-            global.clearVar();
+            global.clearEventVariables();
 
             if (!mergedList.isEmpty()){
-                tpBackToConfigPosition(mergedList);
+                tpBackToConfigPosition(mergedList); //DA TESTARE
             }
 
             player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
@@ -76,35 +76,32 @@ public class StopCommand extends SubCommand{
 
     }
 
+
+
     public void tpBackToConfigPosition(List<UUID> playerList) {
 
         GameHandler global = GameHandler.getInstance();
 
-
         new BukkitRunnable() {
-
-            private int playerCount = 0;
-
             @Override
             public void run() {
 
-                Player target = Bukkit.getPlayer(playerList.get(playerCount));
-                assert target != null;
-                target.teleport(global.respawnLoc);
-                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
-
-                playerCount++;
-
-                if (playerList.size() - 1 < playerCount) {
-                    playerCount = 0;
+                if (playerList.size() == 0) {
                     this.cancel();
+
+                } else {
+                    Player target = Bukkit.getPlayer(playerList.get(0));
+                    assert target != null;
+                    target.teleport(global.endEventRespawnLocation);
+                    target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
+                    playerList.remove(0);
+
                 }
             }
 
         }.runTaskTimer(RIVevent.plugin,0L,20L);
 
     }
-
 
 
 }
