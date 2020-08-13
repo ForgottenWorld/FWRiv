@@ -3,22 +3,26 @@ package me.architetto.rivevent.command.subcommand.superuser;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
+
 import me.architetto.rivevent.listener.LeftclickListener;
 import me.architetto.rivevent.util.ChatMessages;
+
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
+
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+
+import java.util.*;
 
 
 public class StartCommand extends SubCommand{
@@ -71,7 +75,7 @@ public class StartCommand extends SubCommand{
         }
 
         if (RIVevent.plugin.getConfig().getBoolean("REWARD_PLAYER_ON_TOP")) {
-           rewardPlayerOnTop();
+            rewardPlayerOnTop();
         }
 
 
@@ -158,9 +162,6 @@ public class StartCommand extends SubCommand{
 
     }
 
-    //------------------ APPROVED ----------------------//
-
-
 
     //-------------------- TEST ------------------------//
 
@@ -169,32 +170,31 @@ public class StartCommand extends SubCommand{
         GameHandler global = GameHandler.getInstance();
         long acDelay = RIVevent.plugin.getConfig().getLong("AC_DELAY") * 20;
         long acPeriod = RIVevent.plugin.getConfig().getLong("AC_PERIOD") * 20;
-        int damageValue = RIVevent.plugin.getConfig().getInt("AC_DAMAGE");
+        int damageValue = Math.abs(RIVevent.plugin.getConfig().getInt("AC_DAMAGE"));//Only positive value
+        int minPlayer = Math.max(1, RIVevent.plugin.getConfig().getInt("AC_MIN_PLAYER_ACTIVATION"));
 
         new BukkitRunnable() {
 
             @Override
             public void run(){
 
-                if (global.playerJoined.size()<=1) {
+                if (global.playerJoined.size() < minPlayer) {
                     this.cancel();
+                    return;
                 }
 
-                Player target = Bukkit.getPlayer(global.playerJoined.get(0));
+                sortUUIDbyY(global.playerJoined); //Da testare
 
-                for (UUID key : global.playerJoined) {
+                Player target = Bukkit.getPlayer(global.playerJoined.get(global.playerJoined.size()-1));
 
-                    assert target != null;
-                    if (target.getLocation().getBlockY() > Objects.requireNonNull(Bukkit.getPlayer(key)).getLocation().getBlockY()) {
-
-                        target = Bukkit.getPlayer(key);
-
-                    }
-                }
 
                 assert target != null;
-                target.setHealth(target.getHealth()-damageValue);
+                target.damage(damageValue);
+                target.getWorld().strikeLightningEffect(target.getLocation());
+                target.getWorld().playSound(target.getLocation(),Sound.ENTITY_LIGHTNING_BOLT_THUNDER,3,1);
                 target.sendMessage(ChatMessages.AQUA(Messages.ANTI_CAMPER_MSG));
+
+                Collections.shuffle(global.playerJoined, new Random()); //randomizza la lista per essere il più imparziali possibile
 
             }
         }.runTaskTimer(RIVevent.plugin,acDelay,acPeriod);
@@ -202,7 +202,18 @@ public class StartCommand extends SubCommand{
 
     }
 
-
+    public void sortUUIDbyY(List<UUID> playerList) {
+        playerList.sort((p1, p2) -> {
+            int y1 = Objects.requireNonNull(Bukkit.getPlayer(p1)).getLocation().getBlockY();
+            int y2 = Objects.requireNonNull(Bukkit.getPlayer(p2)).getLocation().getBlockY();
+            if (y1 > y2){
+                return 1;
+            }else if (y1 == y2){
+                return 0;
+            }
+            return -1;
+        });
+    }
 
     public void rewardPlayerOnTop() {
 
@@ -218,8 +229,11 @@ public class StartCommand extends SubCommand{
             @Override
             public void run(){
 
-                if (global.playerJoined.size() <= minNumPlayer)
+                if (global.playerJoined.size() <= minNumPlayer) {
                     this.cancel();
+                    return;
+                }
+
 
                 for (UUID key : global.playerJoined) {
                     Player player = Bukkit.getPlayer(key);
@@ -227,13 +241,15 @@ public class StartCommand extends SubCommand{
                     assert player != null;
                     if (player.getLocation().getBlockY() >= towerTopY) {
 
-                        Material material = randomItem();
+                        Material material = global.pickRandomItem();
 
-                        ItemStack itemStack = new ItemStack(material,randomAmount(material));
+                        ItemStack itemStack = new ItemStack(material, global.pickRandomAmount(material));
 
                         player.getInventory().addItem(itemStack);
 
                         player.sendMessage(ChatMessages.AQUA("Hai ricevuto : " + itemStack.getI18NDisplayName()));
+
+                        player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_GUITAR,2,1); //todo: scegliere un suono migliore
 
                     }
                 }
@@ -242,34 +258,11 @@ public class StartCommand extends SubCommand{
 
     }
 
-    public Material randomItem() {
-
-        GameHandler global = GameHandler.getInstance();
-        int randomNum = global.itemList.size();
-
-        randomNum = ThreadLocalRandom.current().nextInt(0, randomNum);
-
-        return global.itemList.get(randomNum);
-
-    }
-
-    public int randomAmount(Material material) {
-
-        if (material.getMaxStackSize()==1 || material.equals(Material.GOLDEN_APPLE))
-            return 1;
-
-
-        int randomNum = RIVevent.plugin.getConfig().getInt("MAX_REWARD_AMOUNT");
-        randomNum = ThreadLocalRandom.current().nextInt(1, randomNum+1);
-
-        return randomNum;
-
-    }
-
-
-
 
     //---------------NOT IMPLEMENTED-------------------//
+
+
+
 
 
 
