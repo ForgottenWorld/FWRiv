@@ -4,8 +4,8 @@ import me.architetto.rivevent.listener.LeftclickListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.potion.PotionEffectType;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 public class GameHandler{
@@ -18,29 +18,26 @@ public class GameHandler{
     public String presetSummon = "";
     public List<UUID> playerJoined = new ArrayList<>();
     public List<UUID> playerSpectate = new ArrayList<>();
+    public List<UUID> playerOut = new ArrayList<>(); //Player che vengono eliminati durante l'evento
 
     public boolean setupStart = false;
     public boolean setupDone = false;
     public boolean startDone = false;
 
     public List<Block> doorsToOpen = new ArrayList<>();
+    public Location endEventRespawnLocation;
 
-    public Location respawnLoc;
-
-    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
-    public boolean experimentalMode;
-
-    public List<PotionEffectType> positivePotionEffects = new ArrayList<>();
-    public List<PotionEffectType> negativePotionEffects = new ArrayList<>();
-    public List<Material> itemList = new ArrayList<>();
-
-    // } NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
+    public HashMap<Material,Integer> itemsListWeight = new HashMap<>();
+    public HashMap<Material,Integer> itemsListMaxAmount = new HashMap<>();
+    public int totalWeight;
+    
 
 
     private GameHandler(){
 
         //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
 
+        /*
         positivePotionEffects.add(PotionEffectType.REGENERATION);
         positivePotionEffects.add(PotionEffectType.DAMAGE_RESISTANCE);
         positivePotionEffects.add(PotionEffectType.INCREASE_DAMAGE);
@@ -55,33 +52,8 @@ public class GameHandler{
         negativePotionEffects.add(PotionEffectType.WITHER);
         negativePotionEffects.add(PotionEffectType.SLOW);
 
-        itemList.add(Material.MILK_BUCKET);
-        itemList.add(Material.GOLDEN_APPLE);
-        itemList.add(Material.WOODEN_HOE);
-        itemList.add(Material.LEATHER_CHESTPLATE);
-        itemList.add(Material.LEATHER_HELMET);
-        itemList.add(Material.LEATHER_BOOTS);
-        itemList.add(Material.LEATHER_LEGGINGS);
-        itemList.add(Material.COOKED_PORKCHOP);
-        itemList.add(Material.BAKED_POTATO);
-        itemList.add(Material.POISONOUS_POTATO);
-        itemList.add(Material.SNOWBALL);
-
-        /* L'idea è di usare  i reward come emerald,etc. come moneta per riscattare "cose"
-        itemList.add(Material.EMERALD);
-        itemList.add(Material.SUGAR);
-        itemList.add(Material.GLOWSTONE_DUST);
-
-        Possibili "cose" da poter riscattare :
-        - ...
-        - Revive di un amico  (allungherebbe sicuramente il brodo)
-
-        Il metodo per consumare questi reward rari potrebbe essere un semplice click destro
-        con in mano l'items che si vuole consumare.
-
          */
 
-        // } NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
 
     }
 
@@ -92,12 +64,49 @@ public class GameHandler{
         return instance;
     }
 
-    public  void clearVar () {
+    public void clearEventVariables() {
         playerSpectate.clear();
         playerJoined.clear();
+        playerOut.clear();
         presetSummon = "";
         setupStart = false;
         setupDone = false;
+        startDone = false;
+        doorsToOpen.clear();
+    }
+
+    public Material pickRandomItem() {
+
+        SecureRandom secureRandom = new SecureRandom();
+        int randomValue = secureRandom.nextInt(totalWeight) + secureRandom.nextInt(totalWeight) + 10;
+
+        while (randomValue > 0){
+
+            for(Material material : itemsListWeight.keySet()){
+
+                randomValue -= (secureRandom.nextInt(itemsListWeight.get(material)) + 1);
+
+                if (randomValue <= 0) {
+
+                    return material;
+
+                }
+            }
+        }
+
+
+        return null;
+    }
+
+    public int pickRandomAmount(Material material) {
+
+        if (itemsListMaxAmount.get(material) == 1)
+            return 1;
+
+        SecureRandom secureRandom = new SecureRandom();
+        return secureRandom.nextInt(itemsListMaxAmount.get(material)) + 1;
+
+
     }
 
 }
