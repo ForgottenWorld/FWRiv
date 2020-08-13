@@ -32,6 +32,7 @@ public class SetupCommand extends SubCommand{
     }
 
 
+    int doorsRadiusDetector = RIVevent.getDefaultConfig().getInt("DOORS_RADIUS_DETECTOR");
 
     @Override
     public void perform(Player player, String[] args){
@@ -60,12 +61,12 @@ public class SetupCommand extends SubCommand{
 
         global.setupStart = true;
 
-        int doorsRadius = RIVevent.getDefaultConfig().getInt("DOORS_RADIUS_DETECTOR");
 
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN1)),doorsRadius);
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN2)),doorsRadius);
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN3)),doorsRadius);
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN4)),doorsRadius);
+
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN1)), doorsRadiusDetector);
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN2)), doorsRadiusDetector);
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN3)), doorsRadiusDetector);
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN4)), doorsRadiusDetector);
 
 
 
@@ -79,12 +80,9 @@ public class SetupCommand extends SubCommand{
 
                 Player target = Bukkit.getPlayer(global.playerJoined.get(playerCount));
 
-                if (spawnNum == 5)
-                    spawnNum = 1;
 
                 assert target != null;
                 target.getInventory().clear();
-
                 eventSpawnPointTeleport(target,spawnNum);
 
                 playerCount++;
@@ -95,6 +93,11 @@ public class SetupCommand extends SubCommand{
                     global.setupDone = true;
                     playerCount = 0;
                     this.cancel();
+                    return;
+                }
+
+                if (spawnNum == 5) {
+                    spawnNum = 1;
                 }
 
             }
@@ -131,12 +134,15 @@ public class SetupCommand extends SubCommand{
             case 1:
                 target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN1)));
                 target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+                return;
             case 2:
                 target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN2)));
                 target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+                return;
             case 3:
                 target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN3)));
                 target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+                return;
             case 4:
                 target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN4)));
                 target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
