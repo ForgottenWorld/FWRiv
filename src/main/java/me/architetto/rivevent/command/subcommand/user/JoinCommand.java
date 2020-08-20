@@ -26,6 +26,8 @@ public class JoinCommand extends SubCommand{
         return "/rivevent join";
     }
 
+    GameHandler global = GameHandler.getInstance();
+
     @Override
     public void perform(Player player, String[] args){
 
@@ -33,8 +35,6 @@ public class JoinCommand extends SubCommand{
             player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
-
-        GameHandler global = GameHandler.getInstance();
 
         if (global.presetSummon.isEmpty()) {
 
@@ -57,7 +57,7 @@ public class JoinCommand extends SubCommand{
 
         }
 
-        if (global.setupStart) {
+        if (global.setupStartFlag) {
 
             player.sendMessage(ChatMessages.RED(Messages.USE_SPECTATE));
             return;
