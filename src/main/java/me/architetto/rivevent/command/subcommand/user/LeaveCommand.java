@@ -23,6 +23,8 @@ public class LeaveCommand extends SubCommand{
         return "/rivevent leave";
     }
 
+    GameHandler global = GameHandler.getInstance();
+
     @Override
     public void perform(Player player, String[] args){
 
@@ -30,8 +32,6 @@ public class LeaveCommand extends SubCommand{
             player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
-
-        GameHandler global = GameHandler.getInstance();
 
         if(global.presetSummon.isEmpty()){
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
@@ -43,13 +43,15 @@ public class LeaveCommand extends SubCommand{
             player.teleport(global.endEventRespawnLocation);
             player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
             global.playerSpectate.remove(player.getUniqueId());
+            global.playerOut.remove(player.getUniqueId());
 
         } else if (global.playerJoined.contains(player.getUniqueId())) {
 
+            global.playerJoined.remove(player.getUniqueId());
             player.getInventory().clear();
             player.teleport(global.endEventRespawnLocation);
             player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-            global.playerJoined.remove(player.getUniqueId());
+
 
         } else{
             player.sendMessage(ChatMessages.RED(Messages.NO_EVENT_JOINED));
