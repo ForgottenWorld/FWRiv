@@ -18,9 +18,9 @@ public class QuitListener implements Listener{
 
         if (global.playerJoined.contains(player.getUniqueId())) {
 
-            global.playerJoined.remove(player.getUniqueId()); //per evitare l'eventuale attivazione di eventi legati al deathListener
+            global.playerJoined.remove(player.getUniqueId());
 
-            if (global.setupStart) {
+            if (global.setupStartFlag) {
 
                 player.getInventory().clear();
                 player.setHealth(0);
@@ -38,6 +38,7 @@ public class QuitListener implements Listener{
 
             player.teleport(global.endEventRespawnLocation);
             global.playerSpectate.remove(player.getUniqueId());
+            global.playerOut.remove(player.getUniqueId());
 
         }
     }
