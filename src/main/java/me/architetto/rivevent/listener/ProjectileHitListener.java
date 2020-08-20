@@ -26,7 +26,7 @@ public class ProjectileHitListener implements Listener{
 
         Projectile p = event.getEntity();
 
-        if (!global.startDone)
+        if (!global.startDoneFlag)
             return;
 
         if (!(event.getHitEntity() instanceof Player))
