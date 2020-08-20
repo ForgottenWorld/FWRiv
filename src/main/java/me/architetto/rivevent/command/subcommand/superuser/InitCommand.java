@@ -4,8 +4,10 @@ import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
+
 import org.bukkit.entity.Player;
+
 
 public class InitCommand extends SubCommand{
     @Override
@@ -23,6 +25,8 @@ public class InitCommand extends SubCommand{
         return "/rivevent init <preset_name>";
     }
 
+    GameHandler global = GameHandler.getInstance();
+
     @Override
     public void perform(Player player, String[] args){
 
@@ -31,26 +35,32 @@ public class InitCommand extends SubCommand{
             return;
         }
 
-        GameHandler global = GameHandler.getInstance();
-
-        if (args.length!=2) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
-        }else{
-            if (!global.presetSummon.isEmpty()) {
-                player.sendMessage(ChatMessages.RED(Messages.ERR_EVENT) + " [ " + global.presetSummon + " ] ");
-                return;
-            }
-
-            if (!global.riveventPreset.containsKey(args[1])) {
-                player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
-
-            }else{
-                global.presetSummon = args[1];
-                player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
-
-                Bukkit.getServer().broadcastMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT));
-
-            }
+        if (!global.presetSummon.isEmpty()) {
+            player.sendMessage(ChatMessages.RED(Messages.ERR_EVENT) + " [ " + global.presetSummon + " ] ");
+            return;
         }
+
+        if (!global.riveventPreset.containsKey(args[1])) {
+            player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
+
+        } else {
+
+            global.presetSummon = args[1];
+            player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
+
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.sendTitle("","Partecipa all'evento 'Resta in vetta' !" + ChatColor.AQUA + " /rivevent join",20,200,20);
+                p.sendMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT));
+            }
+
+            // Bukkit.getServer().broadcastMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT));
+
+        }
+
     }
+
+
+
+
+
 }
