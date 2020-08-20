@@ -41,6 +41,8 @@ public class StartCommand extends SubCommand{
         return "/rivevent start";
     }
 
+    GameHandler global = GameHandler.getInstance();
+
     @Override
     public void perform(Player player, String[] args){
 
@@ -49,14 +51,12 @@ public class StartCommand extends SubCommand{
             return;
         }
 
-        GameHandler global = GameHandler.getInstance();
-
         if (global.presetSummon.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
         }
 
-        if (!global.setupDone) {
+        if (!global.setupDoneFlag) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_SETUP_NOTREADY));
             return;
         }
@@ -84,7 +84,6 @@ public class StartCommand extends SubCommand{
 
     public void readyAllert () {
 
-        GameHandler global = GameHandler.getInstance();
         for(UUID key : global.playerJoined){
 
             Player target = Bukkit.getPlayer(key);
@@ -97,12 +96,13 @@ public class StartCommand extends SubCommand{
 
     public void openDoors (long delay) {
 
-        GameHandler global = GameHandler.getInstance();
 
         new BukkitRunnable() {
 
             @Override
             public void run() {
+
+                global.startDoneFlag = true;
 
                 for(org.bukkit.block.Block block : global.doorsToOpen){
 
@@ -116,7 +116,6 @@ public class StartCommand extends SubCommand{
                     Openable door = (Openable) data;
                     door.setOpen(true);
                     block.setBlockData(door, true);
-                    global.startDone = true;
 
                 }
 
@@ -134,8 +133,6 @@ public class StartCommand extends SubCommand{
     }
 
     public void closeDoors (long delay) {
-
-        GameHandler global = GameHandler.getInstance();
 
         new BukkitRunnable() {
 
@@ -167,7 +164,6 @@ public class StartCommand extends SubCommand{
 
     public void antiCamper () {
 
-        GameHandler global = GameHandler.getInstance();
         long acDelay = RIVevent.plugin.getConfig().getLong("AC_DELAY") * 20;
         long acPeriod = RIVevent.plugin.getConfig().getLong("AC_PERIOD") * 20;
         int damageValue = Math.abs(RIVevent.plugin.getConfig().getInt("AC_DAMAGE"));//Only positive value
@@ -190,7 +186,6 @@ public class StartCommand extends SubCommand{
 
                 assert target != null;
                 target.damage(damageValue);
-                target.getWorld().strikeLightningEffect(target.getLocation());
                 target.getWorld().playSound(target.getLocation(),Sound.ENTITY_LIGHTNING_BOLT_THUNDER,3,1);
                 target.sendMessage(ChatMessages.AQUA(Messages.ANTI_CAMPER_MSG));
 
@@ -213,11 +208,10 @@ public class StartCommand extends SubCommand{
             }
             return -1;
         });
-    }
+    }  //TODO: TESTA QUESTO PLEASE
 
     public void rewardPlayerOnTop() {
 
-        GameHandler global = GameHandler.getInstance();
         long rewardPeriod = RIVevent.plugin.getConfig().getLong("REWARD_PERIOD") * 20;
         int minNumPlayer = RIVevent.plugin.getConfig().getInt("REWARD_MIN_PLAYERS");
 
@@ -229,7 +223,7 @@ public class StartCommand extends SubCommand{
             @Override
             public void run(){
 
-                if (global.playerJoined.size() <= minNumPlayer) {
+                if (global.playerJoined.size() < minNumPlayer || !global.setupStartFlag) {
                     this.cancel();
                     return;
                 }
@@ -238,7 +232,13 @@ public class StartCommand extends SubCommand{
                 for (UUID key : global.playerJoined) {
                     Player player = Bukkit.getPlayer(key);
 
+
                     assert player != null;
+                    if (player.getInventory().firstEmpty() == -1){
+                        player.sendMessage(ChatMessages.AQUA("Non hai ricevuto nulla perchè il tuo inventario è pieno!"));
+                        continue;
+                    }
+
                     if (player.getLocation().getBlockY() >= towerTopY) {
 
                         Material material = global.pickRandomItem();
@@ -249,7 +249,7 @@ public class StartCommand extends SubCommand{
 
                         player.sendMessage(ChatMessages.AQUA("Hai ricevuto : " + itemStack.getI18NDisplayName()));
 
-                        player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_GUITAR,2,1); //todo: scegliere un suono migliore
+                        player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_GUITAR,1,1); //todo: scegliere un suono migliore
 
                     }
                 }
