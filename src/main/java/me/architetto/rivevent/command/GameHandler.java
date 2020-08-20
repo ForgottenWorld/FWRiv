@@ -4,6 +4,7 @@ import me.architetto.rivevent.listener.LeftclickListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -18,18 +19,25 @@ public class GameHandler{
     public String presetSummon = "";
     public List<UUID> playerJoined = new ArrayList<>();
     public List<UUID> playerSpectate = new ArrayList<>();
-    public List<UUID> playerOut = new ArrayList<>(); //Player che vengono eliminati durante l'evento
 
-    public boolean setupStart = false;
-    public boolean setupDone = false;
-    public boolean startDone = false;
+    public List<UUID> playerOut = new ArrayList<>();
+
+    public HashMap<Material,Integer> startLoadOut = new HashMap<>();
+
+    public boolean setupStartFlag = false;
+    public boolean setupDoneFlag = false;
+    public boolean startDoneFlag = false;
+    public boolean miniEventFlag = false;
 
     public List<Block> doorsToOpen = new ArrayList<>();
     public Location endEventRespawnLocation;
 
-    public HashMap<Material,Integer> itemsListWeight = new HashMap<>();
+    public HashMap<Material,Double> itemsListWeight = new HashMap<>();
     public HashMap<Material,Integer> itemsListMaxAmount = new HashMap<>();
-    public int totalWeight;
+    public Double totalWeight;
+
+    public boolean curseEventFlag = false;
+    public Player cursedPlayer;
     
 
 
@@ -52,6 +60,7 @@ public class GameHandler{
         negativePotionEffects.add(PotionEffectType.WITHER);
         negativePotionEffects.add(PotionEffectType.SLOW);
 
+
          */
 
 
@@ -64,27 +73,37 @@ public class GameHandler{
         return instance;
     }
 
+    public List<UUID> allPlayerList() {
+
+        List<UUID> mergedList = new ArrayList<>(playerJoined);
+        mergedList.addAll(playerSpectate);
+
+        return mergedList;
+    }
+
     public void clearEventVariables() {
         playerSpectate.clear();
         playerJoined.clear();
         playerOut.clear();
         presetSummon = "";
-        setupStart = false;
-        setupDone = false;
-        startDone = false;
+        setupStartFlag = false;
+        setupDoneFlag = false;
+        startDoneFlag = false;
+        curseEventFlag = false;
         doorsToOpen.clear();
     }
+
 
     public Material pickRandomItem() {
 
         SecureRandom secureRandom = new SecureRandom();
-        int randomValue = secureRandom.nextInt(totalWeight) + secureRandom.nextInt(totalWeight) + 10;
+        double randomValue = totalWeight + secureRandom.nextInt((int) Math.round(totalWeight)) + totalWeight * secureRandom.nextDouble();
 
         while (randomValue > 0){
 
             for(Material material : itemsListWeight.keySet()){
 
-                randomValue -= (secureRandom.nextInt(itemsListWeight.get(material)) + 1);
+                randomValue -= (itemsListWeight.get(material) + secureRandom.nextDouble());
 
                 if (randomValue <= 0) {
 
