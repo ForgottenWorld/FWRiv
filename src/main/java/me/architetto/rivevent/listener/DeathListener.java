@@ -1,76 +1,64 @@
 package me.architetto.rivevent.listener;
 
+
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Particle;
+import org.bukkit.*;
+
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+
 
 import java.util.*;
 
 public class DeathListener implements Listener{
 
+    GameHandler global = GameHandler.getInstance();
+
     @EventHandler
     public void deathEvent(PlayerDeathEvent event){
 
-        GameHandler global = GameHandler.getInstance();
-
-
         if (global.playerJoined.contains(event.getEntity().getUniqueId())) {
 
-            if (!global.setupStart) {
+            if (!global.setupStartFlag) {
                 return;
             }
 
-            global.playerSpectate.add(event.getEntity().getUniqueId());
-            global.playerJoined.remove(event.getEntity().getUniqueId());
+            Player deadPlayer = event.getEntity();
 
+            global.playerSpectate.add(deadPlayer.getUniqueId());
+            global.playerJoined.remove(deadPlayer.getUniqueId());
+            global.playerOut.add(deadPlayer.getUniqueId());
 
-            event.getEntity().sendMessage(ChatMessages.GREEN(Messages.DEATH_MESSAGE));
+            event.getDrops().clear();
+            deadPlayer.sendMessage(ChatMessages.GREEN(Messages.DEATH_MESSAGE));
+
 
             if (global.playerJoined.size() <= 1){
 
                 Bukkit.broadcast(ChatMessages.RIVallert(Messages.ALLERT_END_EVENT),"rivevent.superuser");
 
-                Player player = Bukkit.getPlayer(global.playerJoined.get(0)); //Il player vincitore !
+                if (global.playerJoined.size() == 1){
 
-                victoryEffect(player); //Non so se funziona.... DA TESTARE
+                    Player player = Bukkit.getPlayer(global.playerJoined.get(0)); //Il player vincitore !
 
-                assert player != null;
-                victoryMessage(player.getName()); //Viene mandato a tutti i player attualmente presenti all'evento
+                    assert player != null;
+                    victoryFireworksEffect(player.getLocation().add(0,1,0),2);
+                    victoryMessage(player.getName());
+
+                }
 
             }
 
         }
-    }
-
-    public void victoryEffect(Player playerName) {
-
-        new BukkitRunnable() {
-
-            private int count = 0;
-
-            @Override
-            public void run(){
-
-                count++;
-
-                playerName.spawnParticle(Particle.FIREWORKS_SPARK,playerName.getLocation(),0,0,5,0);
-                if (count >= 5) {
-                    this.cancel();
-                }
-
-            }
-        }.runTaskTimer(RIVevent.plugin,0,20);
-
-
     }
 
     public void victoryMessage(String playerName) {
@@ -91,48 +79,47 @@ public class DeathListener implements Listener{
     }
 
 
-
-    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
-
-    //non mi convince ... meglio metterlo come evento che coinvolge gli spettatori .....
-
-    /*
-    public void randomPotionEffect() {
-
-        GameHandler global = GameHandler.getInstance();
-
-        SecureRandom random = new SecureRandom();
-
-        List<PotionEffectType> mergedList = new ArrayList<>(global.positivePotionEffects);
-        mergedList.addAll(global.negativePotionEffects);
-
-        int randomNum = random.nextInt(mergedList.size());
-
-        for (UUID target : global.playerJoined) {
-
-            Player player = Bukkit.getPlayer(target);
-            assert player != null;
-            player.addPotionEffect(new PotionEffect(mergedList.get(randomNum),200,1));
-
-        }
-    }
-
-    public void cooldown() {
+    public static void victoryFireworksEffect(Location loc, int amount){
 
         new BukkitRunnable() {
+            int cicle = 0;
 
             @Override
             public void run(){
 
-                cooldown = false;
+                Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+                FireworkMeta fwm = fw.getFireworkMeta();
+
+                fwm.setPower(1);
+                fwm.addEffect(FireworkEffect.builder().flicker(true).trail(true)
+                        .with(FireworkEffect.Type.BALL).with(FireworkEffect.Type.BALL_LARGE)
+                        .with(FireworkEffect.Type.STAR).withColor(Color.ORANGE)
+                        .withColor(Color.YELLOW).withFade(Color.PURPLE).withFade(Color.RED).build());
+
+                fw.setFireworkMeta(fwm);
+
+                for (int i = 0;i<amount; i++) {
+
+                    Firework fw2 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+                    fw2.setFireworkMeta(fwm);
+                }
+
+                cicle++;
+
+                if (cicle == 4)
+                    this.cancel();
 
             }
-        }.runTaskLater(RIVevent.plugin,randomPotionEffectCooldown);
-
+        }.runTaskTimer(RIVevent.plugin,20,100);
 
     }
 
-     */
+
+
+    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
+
+    //non mi convince ... player.addPotionEffect(new PotionEffect(mergedList.get(randomNum),200,1));
+
 
 
     //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
