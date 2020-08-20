@@ -30,6 +30,7 @@ public class StopCommand extends SubCommand{
         return "/rivevent stop";
     }
 
+    GameHandler global = GameHandler.getInstance();
 
 
     @Override
@@ -40,28 +41,28 @@ public class StopCommand extends SubCommand{
             return;
         }
 
-        GameHandler global = GameHandler.getInstance();
-
-        if (global.presetSummon.isEmpty()) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
-        }else{
-
-
-            if (!global.playerJoined.isEmpty()) {
-                clearInventories(global.playerJoined);
-            }
-
-            List<UUID> mergedList = new ArrayList<>(global.playerJoined);
-            mergedList.addAll(global.playerSpectate);
+        if (args.length == 2 && args[1].toLowerCase().equals("force")) {
             global.clearEventVariables();
-
-            if (!mergedList.isEmpty()){
-                tpBackToConfigPosition(mergedList); //DA TESTARE
-            }
-
-            player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
-
+            return;
         }
+
+        if (global.presetSummon.isEmpty()){
+            player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
+            return;
+        }
+
+        if (!global.playerJoined.isEmpty()) {
+            clearInventories(global.playerJoined);
+        }
+
+        if (!global.allPlayerList().isEmpty()){
+            tpBackToConfigPosition(global.allPlayerList());
+        }
+
+        global.clearEventVariables();
+
+        player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
+
     }
 
     public void clearInventories (List<UUID> playerJoined) {
@@ -76,11 +77,7 @@ public class StopCommand extends SubCommand{
 
     }
 
-
-
     public void tpBackToConfigPosition(List<UUID> playerList) {
-
-        GameHandler global = GameHandler.getInstance();
 
         new BukkitRunnable() {
             @Override
