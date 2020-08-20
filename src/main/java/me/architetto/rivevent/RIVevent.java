@@ -8,18 +8,21 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public final class RIVevent extends JavaPlugin {
 
     private static final String pathPreset = "plugins/Rivevent/preset.txt";
     public static Plugin plugin;
     static FileConfiguration defaultConfig;
+
 
     @Override
     public void onEnable() {
@@ -36,13 +39,15 @@ public final class RIVevent extends JavaPlugin {
 
         loadRewardItemList();
 
-
+        loadStartLoadout();
 
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+
+        clearPlayerJoinedInventory(); //in caso di riavvio vengono cancellati gli inventari dei payer joinati ad un eventuale evento (solo i partecipanti ovviamente)
+
     }
 
     public static <T> void save(T obj) throws Exception {
@@ -130,8 +135,8 @@ public final class RIVevent extends JavaPlugin {
                 String [] parts = name.split(",");
 
                 if (Material.getMaterial(parts[0]) != null) {
-                    global.itemsListWeight.put(Material.getMaterial(parts[0]), Integer.parseInt(parts[1]));
-                    global.itemsListMaxAmount.put(Material.getMaterial(parts[0]),Integer.parseInt(parts[2]));
+                    global.itemsListWeight.put(Material.getMaterial(parts[0]), Math.abs(Double.parseDouble(parts[1])));
+                    global.itemsListMaxAmount.put(Material.getMaterial(parts[0]), Math.abs(Integer.parseInt(parts[2])));
                 }
 
             }
@@ -139,8 +144,41 @@ public final class RIVevent extends JavaPlugin {
 
         global.totalWeight = global.itemsListWeight.values()
                 .stream()
-                .mapToInt(Integer::valueOf)
+                .mapToDouble(Double::doubleValue)
                 .sum();
+    }
+
+    public void loadStartLoadout() {
+
+        GameHandler global = GameHandler.getInstance();
+        FileConfiguration config = getDefaultConfig();
+
+        List<String> MaterialName = config.getStringList("START_LOADOUT");
+
+        if (!MaterialName.isEmpty()){
+            for(String name : MaterialName){
+
+                String [] parts = name.split(",");
+
+                if (Material.getMaterial(parts[0]) != null) {
+                    global.startLoadOut.put(Material.getMaterial(parts[0]),Math.abs(Integer.parseInt(parts[1])));
+                }
+
+            }
+        }
+
+    }
+
+    public void clearPlayerJoinedInventory() {
+
+        GameHandler global = GameHandler.getInstance();
+        if (global.setupStartFlag && !global.playerJoined.isEmpty()) {
+            for (UUID target : global.playerJoined) {
+                Player player = Bukkit.getPlayer(target);
+                assert player != null;
+                player.getInventory().clear();
+            }
+        }
     }
 
 
