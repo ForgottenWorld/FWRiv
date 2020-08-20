@@ -19,5 +19,13 @@ public class SpawnListener implements Listener{
                     .get(global.presetSummon).get(LeftclickListener.LOC.SPECTATE)));
 
         }
+
+        if (global.playerJoined.contains(event.getPlayer().getUniqueId()) && !global.setupStartFlag) {
+
+            event.setRespawnLocation(LocSerialization.getDeserializedLocation(global.riveventPreset
+                    .get(global.presetSummon).get(LeftclickListener.LOC.SPECTATE)));
+
+        }
+
     }
 }
