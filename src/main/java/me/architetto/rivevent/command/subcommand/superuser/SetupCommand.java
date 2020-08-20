@@ -7,13 +7,15 @@ import me.architetto.rivevent.listener.LeftclickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.Tag;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class SetupCommand extends SubCommand{
     @Override
@@ -33,6 +35,7 @@ public class SetupCommand extends SubCommand{
 
 
     int doorsRadiusDetector = RIVevent.getDefaultConfig().getInt("DOORS_RADIUS_DETECTOR");
+    GameHandler global = GameHandler.getInstance();
 
     @Override
     public void perform(Player player, String[] args){
@@ -42,9 +45,7 @@ public class SetupCommand extends SubCommand{
             return;
         }
 
-        GameHandler global = GameHandler.getInstance();
-
-        if (global.setupStart) {
+        if (global.setupStartFlag) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_SETUP_DONE));
             return;
         }
@@ -59,49 +60,14 @@ public class SetupCommand extends SubCommand{
             return;
         }
 
-        global.setupStart = true;
-
-
+        global.setupStartFlag = true;
 
         doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN1)), doorsRadiusDetector);
         doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN2)), doorsRadiusDetector);
         doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN3)), doorsRadiusDetector);
         doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.SPAWN4)), doorsRadiusDetector);
 
-
-
-        new BukkitRunnable(){
-
-            private int playerCount = 0;
-            private int spawnNum = 1;
-
-            @Override
-            public void run(){
-
-                Player target = Bukkit.getPlayer(global.playerJoined.get(playerCount));
-
-
-                assert target != null;
-                target.getInventory().clear();
-                eventSpawnPointTeleport(target,spawnNum);
-
-                playerCount++;
-                spawnNum++;
-
-                if (global.playerJoined.size() - 1 < playerCount) {
-                    player.sendMessage(ChatMessages.GREEN(Messages.OK_SETUP));
-                    global.setupDone = true;
-                    playerCount = 0;
-                    this.cancel();
-                    return;
-                }
-
-                if (spawnNum == 5) {
-                    spawnNum = 1;
-                }
-
-            }
-        }.runTaskTimer(RIVevent.plugin,0L,20L);
+        playersSpawnSetup(player);
 
     }
 
@@ -109,7 +75,6 @@ public class SetupCommand extends SubCommand{
     public void doorDetector(Location loc,int radius) {
 
         Block middle = loc.getBlock();
-        GameHandler global = GameHandler.getInstance();
         for (int x = radius; x >= -radius; x--) {
             for (int y = radius; y >= -radius; y--){
                 for(int z = radius; z >= -radius; z--){
@@ -126,9 +91,7 @@ public class SetupCommand extends SubCommand{
         }
     }
 
-    public void eventSpawnPointTeleport(Player target, int spawnNum) {
-
-        GameHandler global = GameHandler.getInstance();
+    public void chooseSpawnPoint(Player target, int spawnNum) {
 
         switch(spawnNum) {
             case 1:
@@ -148,6 +111,51 @@ public class SetupCommand extends SubCommand{
                 target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
         }
 
+
+    }
+
+    public void playersSpawnSetup(Player player) {
+
+        new BukkitRunnable() {
+
+            private final List<UUID> playerJoinedCopy = new ArrayList<>(global.playerJoined);
+            private int spawnPointIndex = 1;
+
+
+            @Override
+            public void run(){
+
+                Player target = Bukkit.getPlayer(playerJoinedCopy.get(0));
+                assert target != null;
+                target.getInventory().clear();
+
+                chooseSpawnPoint(target,spawnPointIndex);
+                equipLoadout(target);
+
+                playerJoinedCopy.remove(0);
+                spawnPointIndex++;
+
+                if (playerJoinedCopy.isEmpty()) {
+                    player.sendMessage(ChatMessages.GREEN(Messages.OK_SETUP));
+                    global.setupDoneFlag = true;
+                    this.cancel();
+                }
+
+                if (spawnPointIndex == 5)
+                    spawnPointIndex = 1;
+
+            }
+        }.runTaskTimer(RIVevent.plugin,0L,20L);
+
+    }
+
+    public void equipLoadout(Player target) {
+
+        for (Material material : global.startLoadOut.keySet()) {
+
+            target.getInventory().addItem(new ItemStack(material,global.startLoadOut.get(material)));
+
+        }
 
     }
 
