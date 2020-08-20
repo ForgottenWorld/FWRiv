@@ -29,6 +29,7 @@ public class CommandManager implements CommandExecutor{
         subcommands.add(new JoinCommand());
         subcommands.add(new StartCommand());
         subcommands.add(new SpectateCommand());
+        subcommands.add(new MiniGameCommand());
         subcommands.add(new LeaveCommand());
     }
 
