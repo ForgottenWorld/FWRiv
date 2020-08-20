@@ -29,6 +29,8 @@ public class ListCommand extends SubCommand{
         return "/rivevent list <preset_name>";
     }
 
+    GameHandler global = GameHandler.getInstance();
+
     @Override
     public void perform(Player player, String[] args){
 
@@ -36,13 +38,6 @@ public class ListCommand extends SubCommand{
             player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
-
-        if (args.length > 2) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
-            return;
-        }
-
-        GameHandler global = GameHandler.getInstance();
 
         if (global.riveventPreset.isEmpty()) {
             player.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
