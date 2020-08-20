@@ -26,6 +26,8 @@ public class CreateCommand extends SubCommand{
         return "/rivevent create <preset_name>";
     }
 
+    GameHandler global = GameHandler.getInstance();
+
     @Override
     public void perform(Player player, String[] args){
 
@@ -38,8 +40,6 @@ public class CreateCommand extends SubCommand{
             player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
             return;
         }
-
-        GameHandler global = GameHandler.getInstance();
 
         if (global.riveventPreset.containsKey(args[1])) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_PRESET));
@@ -54,7 +54,7 @@ public class CreateCommand extends SubCommand{
         global.riveventPreset.put(args[1], new HashMap<>());
         global.listenerActivator.put(player.getUniqueId(), args[1]);
 
-        player.sendMessage(ChatMessages.GREEN("Usa click sinistro per inserire le coordinate ..."));
+        player.sendMessage(ChatMessages.GREEN("Left-click to insert position  ..."));
         player.sendMessage(ChatMessages.PosMessage("1/6", LeftclickListener.LOC.SPAWN1));
 
     }
