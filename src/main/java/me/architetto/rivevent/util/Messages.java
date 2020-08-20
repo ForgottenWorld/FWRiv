@@ -18,11 +18,13 @@ public class Messages{
     public static final String OK_PRESET = "Il preset è stato correttamente inserito.";
 
     public static final String ERR_EVENT = "Un evento e' già in corso.";
+    public static final String ERR_MINIEVENT = "Un mini-evento e' già in corso.";
     public static final String ERR_NO_EVENT = "Nessun evento in corso.";
     public static final String ERR_PRESET = "Preset già esistente.";
     public static final String ERR_PRESET2 = "Stai gia' creando un preset ...";
     public static final String ERR_SETUP_DONE = "Setup gia' effettuato.";
     public static final String ERR_SETUP_NOTREADY = "Setup non effettuato o non ancora terminato.";
+    public static final String ERR_START = "Per iniziare un mini-evento l'evento deve essere già iniziato...";
     public static final String ERR_JOIN = "Sei gia' presente nella lista dei partecipanti.";
     public static final String ERR_JOIN2 = "Sei gia' presente nella lista degli spettatori." +
             "\n" + "Usa prima /Rivevent leave -- e poi --> /Rivevent join " +
@@ -43,13 +45,13 @@ public class Messages{
 
     public static final String START_ALLERT_TITLE = "READY ...";
     public static final String START_TITLE = ChatColor.DARK_RED + "GO !";
-    public static final String START_SUBTITLE = "Conquistate la torre se ne avete la forza !";
+    public static final String START_SUBTITLE = "Conquista la torre se ne avete la forza !";
 
     public static final String BROADCAST_EVENT =
             "\n" + "## ---------- EVENTO : RESTA IN VETTA ---------- ##" + "\n" +
             " - Per partecipare -> /rivevent join " + "\n" +
             " - Per assistere -> /rivevent spectate" + "\n" +
-            "PS: Partecipando l'inventario verra' perso!";
+            ChatColor.RED + ChatColor.ITALIC + ChatColor.UNDERLINE + "PS: Partecipando l'inventario verra' perso!";
 
     public static final String ANTI_CAMPER_MSG = "I superni si accaniscono su di te perche' sei ultimo!";
 
