@@ -22,6 +22,7 @@ permissions:
     default: false
     children:
       rivevent.init : true
+      rivevent.minigame : true
       rivevent.list : true
       rivevent.setup : true
       rivevent.start : true
