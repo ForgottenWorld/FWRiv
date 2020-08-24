@@ -3,7 +3,7 @@ package me.architetto.rivevent.command.subcommand.superuser;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LeftclickListener;
+import me.architetto.rivevent.listener.RightClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
@@ -11,6 +11,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.security.SecureRandom;
@@ -50,32 +52,30 @@ public class MiniGameCommand extends SubCommand{
             return;
         }
 
-        if (global.miniEventFlag) {
+        if (global.isMinigameInProgress()) {
             player.sendMessage(ChatMessages.RED(Messages.ERR_MINIEVENT));
             return;
         }
 
         if (args.length >= 2) {
-            switch(args[1].toLowerCase()){
-                case "backtolife":
+            switch(args[1].toUpperCase()){
+                case "CURSE":
+                    curseEvent(player);
+                    return;
+                case "BACKTOLIFE":
                     backToLifeEvent();
                     return;
-                case "rollback":
-                    rollbackEvent();
-                    return;
-                case "curse":
-                    curseEvent();
-                    return;
                 default:
-                    player.sendMessage("Cos ?");
+                    player.sendMessage("Nessun minigame con questo nome !");
 
             }
         }
 
-        /* EVENTI
-        -BLACKOUT : Blind dei player e scambio di posizione
+        /* Esempi di Eventi
+
+        -BLACKOUT : Blind player
         -BACKTOLIFE : Tutti i player tornano in vita (OK)
-        -ROLLBACK : Clear inventario di tutti i partecipanti (OK)
+        -ROLLBACK : Clear inventario di tutti i partecipanti (OK ma non mi piace molto)
         -SNOWBALL SHOWDOWN : Ogni spettatore riceve palle di neve per bersagliare i giocatori
         -NAUSEA : i giocatori ricevono effetto nausea
         -INVISIBILITA' : tutti i giocatori diventano invisibili
@@ -83,57 +83,30 @@ public class MiniGameCommand extends SubCommand{
         -CURSE : una maledizione che si passa tramite pugno, al termine del cooldown chi ha la malattia muore all'istante  (OK) [curseEvent]
         -WIP : un player ha la corona colpendolo viene sottratta
 
+        -LUCKYBOY : un player che se colpito da premi
+
          */
 
     }
 
-    public void backToLifeEvent() {
+    // -- CurseMinigame methods -- // {
 
-        //Fa tornare in gioco tutti i player eliminati - WIP
+    public void curseEvent(Player sender) {
 
-        global.playerSpectate.removeAll(global.playerOut);
-        global.playerJoined.addAll(global.playerOut);
-
-        for (UUID player : global.playerOut) {
-            Player target = Bukkit.getPlayer(player);
-            assert target != null;
-            target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(LeftclickListener.LOC.TOWER)));
-
+        if (global.playerJoined.size() < 2) {
+            sender.sendMessage(ChatMessages.RED("Non ci sono abbastanza giocatori per iniziare questo minigioco!"));
+            return;
         }
 
-        global.playerOut.clear();
+        cursePickRandomPlayer();
 
-    }
-
-    public void rollbackEvent() {
-
-        //Clear degli inventari di tutti i partecipanti - WIP
-
-        for (UUID player : global.playerJoined) {
-
-            Player target = Bukkit.getPlayer(player);
-            assert target != null;
-            target.getInventory().clear();
-
+        if (global.cursedPlayer == null){
+            sender.sendMessage(ChatMessages.RED("Errore nella scelta del player maledetto."));
+            return;
         }
-
-    }
-
-    public void curseEvent() {
 
         global.curseEventFlag = true;
 
-        SecureRandom random = new SecureRandom();
-        int randomPlayerIndex;
-
-        if (global.playerJoined.size() == 1) //Situazione che non dovrebbe capitare mai ovviamente
-            randomPlayerIndex = 0;
-        else
-            randomPlayerIndex = random.nextInt(global.playerJoined.size()-1);
-
-        global.cursedPlayer = Bukkit.getPlayer(global.playerJoined.get(randomPlayerIndex));
-
-        assert global.cursedPlayer != null;
         global.cursedPlayer.sendTitle(ChatColor.RED  + "Sei stato maledetto !",ChatColor.ITALIC + "Presto, colpisci qualcuno per sbarazzarti della maledizione!",20,120,20);
         global.cursedPlayer.getWorld().playSound(global.cursedPlayer.getLocation(), Sound.ENTITY_GHAST_HURT,5,2);
 
@@ -146,6 +119,21 @@ public class MiniGameCommand extends SubCommand{
             assert p != null;
             p.sendMessage(ChatMessages.AQUA("Attento, uno dei partecipanti è stato maledetto! Non farti toccare!"));
         }
+
+        execution();
+
+    }
+
+    public void cursePickRandomPlayer() {
+
+        SecureRandom random = new SecureRandom();
+        int randomPlayerIndex = random.nextInt(global.playerJoined.size()-1);
+
+        global.cursedPlayer = Bukkit.getPlayer(global.playerJoined.get(randomPlayerIndex));
+
+    }
+
+    public void execution() {
 
         new BukkitRunnable() {
 
@@ -177,8 +165,84 @@ public class MiniGameCommand extends SubCommand{
             }
         }.runTaskLater(RIVevent.plugin,3600L);
 
+    }
+
+    // -- CurseMinigame methods -- // }
+
+
+    //-----------------------------------//
+
+
+    // -- BackToLife-Minigame methods -- // {
+
+    public void backToLifeEvent() {
+
+        global.backToLifeEventFlag = true;
+
+        //Fa tornare in gioco tutti i player eliminati - WIP
+
+        regenEffectForNotRevivedPlayer();
+
+        revivePlayerRunnable();
+
 
     }
+
+    public void regenEffectForNotRevivedPlayer() {
+
+        Player player;
+
+        for (UUID u : global.playerJoined) {
+            player = Bukkit.getPlayer(u);
+
+            if (player != null)
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 10));
+
+        }
+    }
+
+    public void revivePlayerRunnable() {
+
+        new BukkitRunnable() {
+
+            Player target;
+
+            @Override
+            public void run(){
+
+                if (global.playerOut.isEmpty()){
+                    global.backToLifeEventFlag = false;
+                    this.cancel();
+                    return;
+                }
+
+                target = Bukkit.getPlayer(global.playerOut.get(0));
+
+                global.playerSpectate.remove(global.playerOut.get(0));
+                global.playerJoined.add(global.playerOut.get(0));
+
+                if (target != null){
+
+                    target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon)
+                            .get(RightClickListener.Step.TOWER)));
+
+                    target.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 10));
+
+                }
+
+                global.playerOut.remove(0);
+
+            }
+        }.runTaskTimer(RIVevent.plugin,0,25);
+
+    }
+
+    // -- BackToLife-Minigame methods -- // }
+
+    //-----------------------------------//
+
+
+
 
 
 
