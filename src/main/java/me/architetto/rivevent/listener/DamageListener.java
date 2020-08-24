@@ -1,15 +1,18 @@
 package me.architetto.rivevent.listener;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GameHandler;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class DamageListener implements Listener{
 
     GameHandler global = GameHandler.getInstance();
+    public boolean curseCooldown = false;
 
     @EventHandler
     public void disableDamage(EntityDamageByEntityEvent event){
@@ -22,7 +25,7 @@ public class DamageListener implements Listener{
                 event.setCancelled(true);
             }
 
-            if (global.playerSpectate.contains(damager.getUniqueId())){ //TODO: probabile che debba essere preso in considerazione il caso di snowball showdown (quando lo implementero')
+            if (global.playerSpectate.contains(damager.getUniqueId())){
                 event.setCancelled(true);
             }
 
@@ -31,9 +34,12 @@ public class DamageListener implements Listener{
 
                 Player damageTaker = ((Player) event.getEntity()).getPlayer();
 
-                if (global.cursedPlayer == damager){ //Todo: inserire un cooldown per trasferire la maledizione ?
+                if (global.cursedPlayer == damager){
                     assert damageTaker != null;
-                    if (global.playerJoined.contains(damageTaker.getUniqueId())){
+                    if (global.playerJoined.contains(damageTaker.getUniqueId()) && !curseCooldown){
+
+                        transferCurseCooldown();
+
                         global.cursedPlayer = damageTaker;
                         damageTaker.playSound(damageTaker.getLocation(), Sound.ENTITY_GHAST_HURT,4,1);
                         damageTaker.sendMessage("Ti hanno passato la maledizione! Colpisci qualcuno per sbarazzartene ...");
@@ -46,4 +52,17 @@ public class DamageListener implements Listener{
         }
     }
 
+    public void transferCurseCooldown() {
+
+        curseCooldown = true;
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+                curseCooldown = false;
+            }
+        }.runTaskLater(RIVevent.plugin,60);
+
+    }
 }
