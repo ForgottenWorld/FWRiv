@@ -1,6 +1,6 @@
 package me.architetto.rivevent.command;
 
-import me.architetto.rivevent.listener.LeftclickListener;
+import me.architetto.rivevent.listener.RightClickListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,7 +13,7 @@ public class GameHandler{
 
     private static GameHandler instance;
 
-    public HashMap<String, HashMap<LeftclickListener.LOC,String>> riveventPreset = new HashMap<>();
+    public HashMap<String, HashMap<RightClickListener.Step,String>> riveventPreset = new HashMap<>();
     public HashMap<UUID, String> listenerActivator = new HashMap<>();
 
     public String presetSummon = "";
@@ -27,7 +27,6 @@ public class GameHandler{
     public boolean setupStartFlag = false;
     public boolean setupDoneFlag = false;
     public boolean startDoneFlag = false;
-    public boolean miniEventFlag = false;
 
     public List<Block> doorsToOpen = new ArrayList<>();
     public Location endEventRespawnLocation;
@@ -38,6 +37,8 @@ public class GameHandler{
 
     public boolean curseEventFlag = false;
     public Player cursedPlayer;
+
+    public boolean backToLifeEventFlag = false;
     
 
 
@@ -89,8 +90,11 @@ public class GameHandler{
         setupStartFlag = false;
         setupDoneFlag = false;
         startDoneFlag = false;
-        curseEventFlag = false;
         doorsToOpen.clear();
+
+        //minigames flag
+        curseEventFlag = false;
+        backToLifeEventFlag = false;
     }
 
 
@@ -125,6 +129,12 @@ public class GameHandler{
         SecureRandom secureRandom = new SecureRandom();
         return secureRandom.nextInt(itemsListMaxAmount.get(material)) + 1;
 
+
+    }
+
+    public boolean isMinigameInProgress() {
+
+        return curseEventFlag || backToLifeEventFlag;  //flag dei vari eventi
 
     }
 
