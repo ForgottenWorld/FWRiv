@@ -46,7 +46,7 @@ public final class RIVevent extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        clearPlayerJoinedInventory(); //in caso di riavvio vengono cancellati gli inventari dei payer joinati ad un eventuale evento (solo i partecipanti ovviamente)
+        clearPlayerJoinedInventory();
 
     }
 
@@ -111,7 +111,7 @@ public final class RIVevent extends JavaPlugin {
 
     public void loadListener() {
 
-        getServer().getPluginManager().registerEvents(new LeftclickListener(),this);
+        getServer().getPluginManager().registerEvents(new RightClickListener(),this);
         getServer().getPluginManager().registerEvents(new FoodLevelListener(),this);
         getServer().getPluginManager().registerEvents(new DeathListener(),this);
         getServer().getPluginManager().registerEvents(new QuitListener(),this);
@@ -170,6 +170,9 @@ public final class RIVevent extends JavaPlugin {
     }
 
     public void clearPlayerJoinedInventory() {
+
+        //in caso di riavvio vengono se c'è un evento in corso vengono cancellati
+        // gli inventari dei players partecipanti
 
         GameHandler global = GameHandler.getInstance();
         if (global.setupStartFlag && !global.playerJoined.isEmpty()) {
