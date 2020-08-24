@@ -16,14 +16,14 @@ public class SpawnListener implements Listener{
         if (global.playerSpectate.contains(event.getPlayer().getUniqueId())) {
 
             event.setRespawnLocation(LocSerialization.getDeserializedLocation(global.riveventPreset
-                    .get(global.presetSummon).get(LeftclickListener.LOC.SPECTATE)));
+                    .get(global.presetSummon).get(RightClickListener.Step.SPECTATE)));
 
         }
 
         if (global.playerJoined.contains(event.getPlayer().getUniqueId()) && !global.setupStartFlag) {
 
             event.setRespawnLocation(LocSerialization.getDeserializedLocation(global.riveventPreset
-                    .get(global.presetSummon).get(LeftclickListener.LOC.SPECTATE)));
+                    .get(global.presetSummon).get(RightClickListener.Step.SPECTATE)));
 
         }
 
