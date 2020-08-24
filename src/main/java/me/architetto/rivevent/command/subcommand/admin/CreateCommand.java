@@ -2,7 +2,7 @@ package me.architetto.rivevent.command.subcommand.admin;
 
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.listener.LeftclickListener;
+import me.architetto.rivevent.listener.RightClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
@@ -37,7 +37,10 @@ public class CreateCommand extends SubCommand{
         }
 
         if (args.length != 2) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
+            if (args.length < 2)
+                player.sendMessage(ChatMessages.RED(Messages.NO_PRESET_NAME));
+            else
+                player.sendMessage(ChatMessages.RED(Messages.NO_PARAM));
             return;
         }
 
@@ -54,8 +57,8 @@ public class CreateCommand extends SubCommand{
         global.riveventPreset.put(args[1], new HashMap<>());
         global.listenerActivator.put(player.getUniqueId(), args[1]);
 
-        player.sendMessage(ChatMessages.GREEN("Left-click to insert position  ..."));
-        player.sendMessage(ChatMessages.PosMessage("1/6", LeftclickListener.LOC.SPAWN1));
+        player.sendMessage(ChatMessages.GREEN("Right-click block to insert position  ..."));
+        player.sendMessage(ChatMessages.PosMessage("1/6", RightClickListener.Step.SPAWN1));
 
     }
 }
