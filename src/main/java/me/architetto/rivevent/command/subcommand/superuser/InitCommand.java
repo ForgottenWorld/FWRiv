@@ -49,7 +49,7 @@ public class InitCommand extends SubCommand{
             player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                p.sendTitle("","Partecipa all'evento 'Resta in vetta' !" + ChatColor.AQUA + " /rivevent join",20,200,20);
+                p.sendTitle("", Messages.NEW_EVENT_TITLE,20,200,20);
                 p.sendMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT));
             }
 
