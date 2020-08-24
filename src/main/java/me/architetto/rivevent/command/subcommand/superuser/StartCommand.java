@@ -4,7 +4,7 @@ import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 
-import me.architetto.rivevent.listener.LeftclickListener;
+import me.architetto.rivevent.listener.RightClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 
 import me.architetto.rivevent.util.LocSerialization;
@@ -181,6 +181,8 @@ public class StartCommand extends SubCommand{
 
                 sortUUIDbyY(global.playerJoined); //Da testare
 
+               // System.out.println(global.playerJoined); //todo: e' per il test, da togliere
+
                 Player target = Bukkit.getPlayer(global.playerJoined.get(global.playerJoined.size()-1));
 
 
@@ -208,7 +210,7 @@ public class StartCommand extends SubCommand{
             }
             return -1;
         });
-    }  //TODO: TESTA QUESTO PLEASE
+    }  //TODO: TESTA QUESTO PLEASE\
 
     public void rewardPlayerOnTop() {
 
@@ -218,7 +220,7 @@ public class StartCommand extends SubCommand{
         new BukkitRunnable() {
 
             private final int towerTopY = LocSerialization.getDeserializedLocation(global.riveventPreset
-                    .get(global.presetSummon).get(LeftclickListener.LOC.TOWER)).getBlockY();
+                    .get(global.presetSummon).get(RightClickListener.Step.TOWER)).getBlockY();
 
             @Override
             public void run(){
