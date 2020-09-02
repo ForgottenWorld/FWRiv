@@ -7,9 +7,9 @@ import me.architetto.rivevent.listener.RightClickListener;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -65,6 +65,12 @@ public class MiniGameCommand extends SubCommand{
                 case "BACKTOLIFE":
                     backToLifeEvent();
                     return;
+                case "THEBOOGEYMAN":
+                    theBoogeymanEvent(player);
+                    return;
+                case "FALLDOWN":
+                    allFallDownEvent();
+                    return;
                 default:
                     player.sendMessage("Nessun minigame con questo nome !");
 
@@ -73,21 +79,22 @@ public class MiniGameCommand extends SubCommand{
 
         /* Esempi di Eventi
 
-        -BLACKOUT : Blind player
         -BACKTOLIFE : Tutti i player tornano in vita (OK)
-        -ROLLBACK : Clear inventario di tutti i partecipanti (OK ma non mi piace molto)
-        -SNOWBALL SHOWDOWN : Ogni spettatore riceve palle di neve per bersagliare i giocatori
-        -NAUSEA : i giocatori ricevono effetto nausea
-        -INVISIBILITA' : tutti i giocatori diventano invisibili
-        -TITANFALL : un giocatore potenziato... non so
+        -FALLDOWN : I partecipanti tornano allo start (OK)
+        -THEBOOGEYMAN : un player invisibile, il primo che lo colpisce vince l'evento. (OK, da perfezionare)
         -CURSE : una maledizione che si passa tramite pugno, al termine del cooldown chi ha la malattia muore all'istante  (OK) [curseEvent]
+
+
+        -SNOWBALL SHOWDOWN : Ogni spettatore riceve palle di neve per bersagliare i giocatori
+
+
         -WIP : un player ha la corona colpendolo viene sottratta
 
-        -LUCKYBOY : un player che se colpito da premi
 
          */
 
     }
+
 
     // -- CurseMinigame methods -- // {
 
@@ -226,7 +233,7 @@ public class MiniGameCommand extends SubCommand{
                     target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon)
                             .get(RightClickListener.Step.TOWER)));
 
-                    target.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 10));
+                    target.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 80, 10));
 
                 }
 
@@ -240,6 +247,258 @@ public class MiniGameCommand extends SubCommand{
     // -- BackToLife-Minigame methods -- // }
 
     //-----------------------------------//
+
+    // -- Boogeyman-Minigame methods -- // {
+
+    public void theBoogeymanEvent(Player sender) {
+
+
+        if (global.playerJoined.size() < 2) {
+            sender.sendMessage(ChatMessages.RED("Non ci sono abbastanza giocatori per iniziare questo minigioco!"));
+            return;
+        }
+
+        global.boogeymanEventFlag = true;
+
+        global.boogeymanPlayer = chooseBoogeyman();
+
+        if (global.boogeymanPlayer == null){
+            global.boogeymanEventFlag = false;
+            return;
+        }
+
+        blindAllPlayer();
+
+        global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2400, 10));
+        discontinuousInvisibleEffect();
+
+        boogeymanSparkEffect();
+
+        endBoogeymanEvent(2400);
+
+
+
+        //il boogeyman muore se toccato
+        //se non viene toccato ottiene qualche bonus o item
+
+    }
+
+    public void blindAllPlayer() {
+
+        Player p;
+        for (UUID u : global.allPlayerList()) {
+            p = Bukkit.getPlayer(u);
+
+            if (p != null && p != global.boogeymanPlayer)
+                p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 10));
+
+        }
+
+    }
+
+    public Player chooseBoogeyman() {
+
+        if (global.playerJoined.size() == 1)
+            return Bukkit.getPlayer(global.playerJoined.get(0));
+
+        SecureRandom random = new SecureRandom();
+        int randomPlayerIndex = random.nextInt(global.playerJoined.size()-1);
+
+        return Bukkit.getPlayer(global.playerJoined.get(randomPlayerIndex));
+
+    }
+
+    public void boogeymanSparkEffect() {
+
+        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(64, 64, 64), 2);
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                if (!global.boogeymanEventFlag) {
+                    this.cancel();
+                    return;
+                }
+
+                global.boogeymanPlayer.getWorld().spawnParticle(Particle.REDSTONE, global.boogeymanPlayer.getLocation().add(0,1,0), 10, dustOptions);
+                global.boogeymanPlayer.getWorld().playSound(global.boogeymanPlayer.getLocation(),Sound.ENTITY_SLIME_SQUISH,1,1);
+
+
+            }
+        }.runTaskTimer(RIVevent.plugin,200, 15);
+
+
+    }
+
+    public void discontinuousInvisibleEffect() {
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                if (!global.boogeymanEventFlag) {
+                    global.boogeymanPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
+                    this.cancel();
+                    return;
+                }
+
+                global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 15, 10));
+                global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30, 2));
+
+            }
+        }.runTaskTimer(RIVevent.plugin,100,240);
+    }
+
+    public void  endBoogeymanEvent(long eventEndTimer) {
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                if (!global.boogeymanEventFlag) {
+                    this.cancel();
+                    return;
+                }
+
+                global.boogeymanEventFlag = false;
+
+                if (global.playerJoined.contains(global.boogeymanPlayer.getUniqueId())) {
+
+                    //Premio per il boogeyman
+                    global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 3600, 2));
+                    global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 3600, 2));
+
+                }
+
+            }
+        }.runTaskLater(RIVevent.plugin,eventEndTimer);
+
+    }
+
+    // -- Boogeyman-Minigame methods -- // }
+
+    // -- ALLFALLDOWN-Minigame methods -- // {
+
+    public void allFallDownEvent() {
+
+        global.fallDownEventFlag = true;
+
+        new BukkitRunnable(){
+
+            @Override
+            public void run(){
+
+                nauseaEffect();
+
+                fallDownTeleport();
+
+                manageDoors();
+
+            }
+
+        }.runTaskLater(RIVevent.plugin,100L);
+
+
+    }
+
+    public void nauseaEffect() {
+        Player p;
+        for (UUID u : global.allPlayerList()) {
+            p = Bukkit.getPlayer(u);
+
+            if (p != null) {
+                p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 140, 10));
+                p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 200, 20));
+                p.sendTitle("","Tutti giu' per terra!",20,80,20);
+            }
+
+        }
+    }
+
+    public void fallDownTeleport() {
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                Player p;
+                int i = 1;
+                for (UUID u : global.playerJoined) {
+                    p = Bukkit.getPlayer(u);
+                    if (p != null) {
+                        p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+                        switch(i){
+                            case 1:
+                                p.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN1)));
+                                i++;
+                                continue;
+                            case 2:
+                                p.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN2)));
+                                i++;
+                                continue;
+                            case 3:
+                                p.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN3)));
+                                i++;
+                                continue;
+                            case 4:
+                                p.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN4)));
+                                i=1;
+                        }
+                    }
+                }
+
+                global.fallDownEventFlag = false;
+
+            }
+        }.runTaskLater(RIVevent.plugin,60);
+    }
+
+    public void manageDoors() {
+
+        for(org.bukkit.block.Block block : global.doorsToOpen){
+
+            if (!Tag.DOORS.getValues().contains(block.getType())
+                    && !Tag.DOORS.getValues().contains(block.getType())
+                    && !Tag.FENCE_GATES.getValues().contains(block.getType())){
+                continue;
+            } //Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
+
+            BlockData data = block.getBlockData();
+            Openable door = (Openable) data;
+            door.setOpen(true);
+            block.setBlockData(door, true);
+
+        }
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+
+                for(org.bukkit.block.Block block : global.doorsToOpen){
+
+                    if (!Tag.DOORS.getValues().contains(block.getType())
+                            && !Tag.DOORS.getValues().contains(block.getType())
+                            && !Tag.FENCE_GATES.getValues().contains(block.getType())){
+                        continue;
+                    }//Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
+
+                    BlockData data = block.getBlockData();
+                    Openable door = (Openable) data;
+                    door.setOpen(false);
+                    block.setBlockData(door, true);
+
+                }
+            }
+        }.runTaskLater(RIVevent.plugin, 2400L);
+
+    }
+
+    // -- ALLFALLDOWN-Minigame methods -- // }
+
 
 
 

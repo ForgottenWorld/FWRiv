@@ -39,32 +39,15 @@ public class GameHandler{
     public Player cursedPlayer;
 
     public boolean backToLifeEventFlag = false;
+
+    public boolean boogeymanEventFlag = false;
+    public Player boogeymanPlayer;
+
+    public boolean fallDownEventFlag = false;
     
 
 
     private GameHandler(){
-
-        //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
-
-        /*
-        positivePotionEffects.add(PotionEffectType.REGENERATION);
-        positivePotionEffects.add(PotionEffectType.DAMAGE_RESISTANCE);
-        positivePotionEffects.add(PotionEffectType.INCREASE_DAMAGE);
-        positivePotionEffects.add(PotionEffectType.INVISIBILITY);
-        positivePotionEffects.add(PotionEffectType.HEAL);
-        positivePotionEffects.add(PotionEffectType.HEALTH_BOOST);
-
-        negativePotionEffects.add(PotionEffectType.BLINDNESS);
-        negativePotionEffects.add(PotionEffectType.CONFUSION);
-        negativePotionEffects.add(PotionEffectType.POISON);
-        negativePotionEffects.add(PotionEffectType.WEAKNESS);
-        negativePotionEffects.add(PotionEffectType.WITHER);
-        negativePotionEffects.add(PotionEffectType.SLOW);
-
-
-         */
-
-
     }
 
     public static GameHandler getInstance(){
@@ -95,6 +78,7 @@ public class GameHandler{
         //minigames flag
         curseEventFlag = false;
         backToLifeEventFlag = false;
+        boogeymanEventFlag = false;
     }
 
 
@@ -134,7 +118,7 @@ public class GameHandler{
 
     public boolean isMinigameInProgress() {
 
-        return curseEventFlag || backToLifeEventFlag;  //flag dei vari eventi
+        return curseEventFlag || backToLifeEventFlag || boogeymanEventFlag;  //flag dei vari eventi
 
     }
 

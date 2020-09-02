@@ -42,6 +42,8 @@ public class StartCommand extends SubCommand{
     }
 
     GameHandler global = GameHandler.getInstance();
+    List<Material> noDoubleItem = new ArrayList<>(Arrays.asList(Material.LEATHER_BOOTS,
+            Material.LEATHER_CHESTPLATE, Material.LEATHER_HELMET, Material.LEATHER_LEGGINGS, Material.FISHING_ROD));
 
     @Override
     public void perform(Player player, String[] args){
@@ -245,13 +247,18 @@ public class StartCommand extends SubCommand{
 
                         Material material = global.pickRandomItem();
 
+                        if (noDoubleItem.contains(material) && player.getInventory().contains(material)){
+                            player.sendMessage(ChatMessages.AQUA("Nulla di utile, sarai piu' fortunato al prossimo giro!"));
+                            continue;
+                        }
+
                         ItemStack itemStack = new ItemStack(material, global.pickRandomAmount(material));
 
                         player.getInventory().addItem(itemStack);
 
                         player.sendMessage(ChatMessages.AQUA("Hai ricevuto : " + itemStack.getI18NDisplayName()));
 
-                        player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_GUITAR,1,1); //todo: scegliere un suono migliore
+                        player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1,1); //todo: scegliere un suono migliore
 
                     }
                 }

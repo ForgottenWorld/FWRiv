@@ -41,6 +41,9 @@ public class DeathListener implements Listener{
             event.getDrops().clear();
             deadPlayer.sendMessage(ChatMessages.GREEN(Messages.DEATH_MESSAGE));
 
+            if (global.boogeymanEventFlag && deadPlayer == global.boogeymanPlayer)
+                global.boogeymanEventFlag = false;
+
 
             if (global.playerJoined.size() <= 1){
 
@@ -113,16 +116,5 @@ public class DeathListener implements Listener{
         }.runTaskTimer(RIVevent.plugin,20,100);
 
     }
-
-
-
-    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE {
-
-    //non mi convince ... player.addPotionEffect(new PotionEffect(mergedList.get(randomNum),200,1));
-
-
-
-    //NOT IMPLEMENTED - WIP - EXPERIMENTAL MODE
-
 
 }
