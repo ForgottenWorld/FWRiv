@@ -32,26 +32,26 @@ public class ListCommand extends SubCommand{
     GameHandler global = GameHandler.getInstance();
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
-        if (!player.hasPermission("rivevent.list")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.list")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         if (global.riveventPreset.isEmpty()) {
-            player.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
+            sender.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
             return;
         }
 
         if (args.length == 2 ) {
 
             if (!global.riveventPreset.containsKey(args[1])) {
-                player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
+                sender.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
                 return;
             }
 
-            player.sendMessage(ChatColor.DARK_AQUA + "PRESET NAME : " + ChatColor.RESET + ChatColor.ITALIC + args[1] +
+            sender.sendMessage(ChatColor.DARK_AQUA + "PRESET NAME : " + ChatColor.RESET + ChatColor.ITALIC + args[1] +
                     "\n" + "//--------------------------------------//" +
                     "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPECTATE : " + ChatColor.RESET + formatCoord(global.riveventPreset.get(args[1]).get(RightClickListener.Step.SPECTATE)) +
                     "\n" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "SPAWN POINT #1 : " + ChatColor.RESET + formatCoord(global.riveventPreset.get(args[1]).get(RightClickListener.Step.SPAWN1)) +
@@ -64,7 +64,7 @@ public class ListCommand extends SubCommand{
             return;
         }
 
-        player.sendMessage(ChatMessages.GREEN(" PRESET LIST :  " + global.riveventPreset.keySet().toString()));
+        sender.sendMessage(ChatMessages.GREEN(" PRESET LIST :  " + global.riveventPreset.keySet().toString()));
 
     }
 
