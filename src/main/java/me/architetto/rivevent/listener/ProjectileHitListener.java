@@ -1,7 +1,7 @@
 package me.architetto.rivevent.listener;
 
 
-import me.architetto.rivevent.RIVevent;
+import me.architetto.rivevent.command.SettingsHandler;
 import me.architetto.rivevent.command.GameHandler;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -16,10 +16,7 @@ import org.bukkit.util.Vector;
 public class ProjectileHitListener implements Listener{
 
     GameHandler global = GameHandler.getInstance();
-    boolean snowballDamageToggle = RIVevent.plugin.getConfig().getBoolean("SNOWBALL_DOES_DAMAGE");
-    boolean snowballKnockbackToggle = RIVevent.plugin.getConfig().getBoolean("SNOWBALL_DOES_KNOCKBACK");
-    double knockbackPower = RIVevent.plugin.getConfig().getDouble("SNOWBALL_KNOCKBACK_POWER");
-    double hitDamage = RIVevent.plugin.getConfig().getDouble("SNOWBALL_DAMAGE");
+    SettingsHandler settings = SettingsHandler.getInstance();
 
     @EventHandler
     public void disableDamage(ProjectileHitEvent event){
@@ -37,13 +34,13 @@ public class ProjectileHitListener implements Listener{
         if (p.getType() == EntityType.SNOWBALL && global.playerJoined.contains(playerHitted.getUniqueId())) {
 
 
-            if (snowballKnockbackToggle){
-                Vector knockbackVector = playerHitted.getLocation().getDirection().multiply(knockbackPower * -1).setY(0.2);
+            if (settings.snowballKnockbackToggle){
+                Vector knockbackVector = playerHitted.getLocation().getDirection().multiply(settings.snowballKnockbackPower * -1).setY(0.2);
                 playerHitted.setVelocity(knockbackVector);
             }
 
-            if (snowballDamageToggle){
-                playerHitted.damage(hitDamage);
+            if (settings.snowballDamageToggle){
+                playerHitted.damage(settings.snowballHitDamage);
             }
 
             playerHitted.playSound(playerHitted.getLocation(), Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK,2,1);
