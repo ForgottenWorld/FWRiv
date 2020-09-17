@@ -33,44 +33,48 @@ public class StopCommand extends SubCommand{
 
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
-        if (!player.hasPermission("rivevent.stop")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.stop")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         if (args.length == 2 && args[1].toLowerCase().equals("force")) {
-            global.clearEventVariables();
+            global.resetEventVariables();
             return;
         }
 
         if (global.presetSummon.isEmpty()){
-            player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
         }
 
-        if (!global.playerJoined.isEmpty()) {
-            clearInventories(global.playerJoined);
-        }
+
 
         if (!global.allPlayerList().isEmpty()){
+
+            clearInventories(global.playerJoined);
+
             tpBackToConfigPosition(global.allPlayerList());
+
         }
 
-        global.clearEventVariables();
+        global.resetEventVariables();
 
-        player.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
+        sender.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
 
     }
 
     public void clearInventories (List<UUID> playerJoined) {
 
+        Player p;
         for (UUID key : playerJoined) {
 
-            Player player = Bukkit.getPlayer(key);
-            assert player != null;
-            player.getInventory().clear();
+            p = Bukkit.getPlayer(key);
+
+            if (p != null)
+                p.getInventory().clear();
 
         }
 
@@ -83,7 +87,7 @@ public class StopCommand extends SubCommand{
             public void run() {
 
                 if (playerList.size() == 0) {
-                    this.cancel();
+                    Bukkit.getScheduler().cancelTasks(RIVevent.plugin);
 
                 } else {
                     Player target = Bukkit.getPlayer(playerList.get(0));
