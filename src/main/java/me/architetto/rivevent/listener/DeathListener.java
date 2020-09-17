@@ -41,21 +41,19 @@ public class DeathListener implements Listener{
             event.getDrops().clear();
             deadPlayer.sendMessage(ChatMessages.GREEN(Messages.DEATH_MESSAGE));
 
-            if (global.boogeymanEventFlag && deadPlayer == global.boogeymanPlayer)
-                global.boogeymanEventFlag = false;
-
-
             if (global.playerJoined.size() <= 1){
 
                 Bukkit.broadcast(ChatMessages.RIVallert(Messages.ALLERT_END_EVENT),"rivevent.superuser");
+                global.shutdownMinigames();
 
                 if (global.playerJoined.size() == 1){
 
                     Player player = Bukkit.getPlayer(global.playerJoined.get(0)); //Il player vincitore !
 
-                    assert player != null;
-                    victoryFireworksEffect(player.getLocation().add(0,1,0),2);
-                    victoryMessage(player.getName());
+                    if (player != null){
+                        victoryFireworksEffect(player.getLocation().add(0, 1, 0), 2);
+                        victoryMessage(player.getName());
+                    }
 
                 }
 
