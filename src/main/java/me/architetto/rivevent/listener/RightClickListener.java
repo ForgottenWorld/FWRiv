@@ -5,10 +5,7 @@ import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -124,7 +121,7 @@ public class RightClickListener implements Listener{
 
                 if (checkPreset(global.listenerActivator.get(player.getUniqueId()))){
                     RIVevent.save(global.riveventPreset);
-                    player.sendMessage(ChatMessages.GREEN(Messages.OK_PRESET));
+                    player.sendMessage(ChatMessages.GREEN(Messages.OK_PRESET + "\n Preset name --> " + ChatColor.ITALIC + global.listenerActivator.get(player.getUniqueId())));
                 }
                 else {
                     player.sendMessage(ChatMessages.RED(Messages.ERR_INSERT_PRESET));
