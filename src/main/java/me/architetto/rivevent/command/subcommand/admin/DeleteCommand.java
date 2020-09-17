@@ -26,24 +26,29 @@ public class DeleteCommand extends SubCommand{
     GameHandler global = GameHandler.getInstance();
 
     @Override
-    public void perform(Player player, String[] args) {
+    public void perform(Player sender, String[] args) {
 
-        if (!player.hasPermission("rivevent.delete")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.delete")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         if (global.riveventPreset.isEmpty()) {
-            player.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
+            sender.sendMessage(ChatMessages.RED(Messages.VOID_PRESET_LIST));
             return;
         }
 
-        if (!global.riveventPreset.containsKey(args[1])) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
+        if (!global.presetSummon.isEmpty()) {
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_DELETE));
             return;
         }
 
-        global.riveventPreset.remove(args[1]);
+        if (!global.riveventPreset.containsKey(args[1].toLowerCase())) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
+            return;
+        }
+
+        global.riveventPreset.remove(args[1].toLowerCase());
 
         try{
             RIVevent.save(global.riveventPreset);
@@ -51,7 +56,7 @@ public class DeleteCommand extends SubCommand{
             e.printStackTrace();
         }
 
-        player.sendMessage(ChatMessages.GREEN(Messages.SUCCESS_DELETE));
+        sender.sendMessage(ChatMessages.GREEN(Messages.SUCCESS_DELETE));
 
     }
 }
