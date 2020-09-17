@@ -16,12 +16,14 @@ permissions:
       rivevent.create : true
       rivevent.delete : true
       rivevent.superuser : true
+      rivevent.reload : true
 
   rivevent.superuser:
     description: description
     default: false
     children:
       rivevent.init : true
+      rivevent.restart : true
       rivevent.minigame : true
       rivevent.list : true
       rivevent.setup : true
