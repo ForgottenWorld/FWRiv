@@ -29,45 +29,45 @@ public class JoinCommand extends SubCommand{
     GameHandler global = GameHandler.getInstance();
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
-        if (!player.hasPermission("rivevent.join")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.join")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         if (global.presetSummon.isEmpty()) {
 
-            player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
             
         }
 
-        if (global.playerJoined.contains(player.getUniqueId())) {
+        if (global.playerJoined.contains(sender.getUniqueId())) {
 
-            player.sendMessage(ChatMessages.RED(Messages.ERR_JOIN));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_JOIN));
             return;
 
         }
 
-        if (global.playerSpectate.contains(player.getUniqueId())) {
+        if (global.playerSpectate.contains(sender.getUniqueId())) {
 
-            player.sendMessage(ChatMessages.RED(Messages.ERR_JOIN2));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_JOIN2));
             return;
 
         }
 
         if (global.setupStartFlag) {
 
-            player.sendMessage(ChatMessages.RED(Messages.USE_SPECTATE));
+            sender.sendMessage(ChatMessages.RED(Messages.USE_SPECTATE));
             return;
 
         }
 
-        global.playerJoined.add(player.getUniqueId());
-        player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPECTATE)));
-        player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-        player.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
+        global.playerJoined.add(sender.getUniqueId());
+        sender.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPECTATE)));
+        sender.playSound(sender.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+        sender.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
 
     }
 }
