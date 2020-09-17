@@ -28,39 +28,34 @@ public class InitCommand extends SubCommand{
     GameHandler global = GameHandler.getInstance();
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
-        if (!player.hasPermission("rivevent.init")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.init")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         if (!global.presetSummon.isEmpty()) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_EVENT) + " [ " + global.presetSummon + " ] ");
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_EVENT) + " [ " + global.presetSummon + " ] ");
             return;
         }
 
-        if (!global.riveventPreset.containsKey(args[1])) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
+        if (!global.riveventPreset.containsKey(args[1].toLowerCase())) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PRESET));
 
         } else {
 
-            global.presetSummon = args[1];
-            player.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
+            global.presetSummon = args[1].toLowerCase();
+            sender.sendMessage(ChatMessages.GREEN(Messages.OK_INIT));
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                 p.sendTitle("", Messages.NEW_EVENT_TITLE,20,200,20);
                 p.sendMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT));
             }
 
-            // Bukkit.getServer().broadcastMessage(ChatMessages.AQUA(Messages.BROADCAST_EVENT));
-
         }
 
     }
-
-
-
 
 
 }
