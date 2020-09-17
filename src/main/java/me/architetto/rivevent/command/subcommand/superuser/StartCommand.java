@@ -1,6 +1,7 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
 import me.architetto.rivevent.RIVevent;
+import me.architetto.rivevent.command.SettingsHandler;
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 
@@ -42,41 +43,43 @@ public class StartCommand extends SubCommand{
     }
 
     GameHandler global = GameHandler.getInstance();
+    SettingsHandler settings = SettingsHandler.getInstance();
+
     List<Material> noDoubleItem = new ArrayList<>(Arrays.asList(Material.LEATHER_BOOTS,
             Material.LEATHER_CHESTPLATE, Material.LEATHER_HELMET, Material.LEATHER_LEGGINGS, Material.FISHING_ROD));
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
-        if (!player.hasPermission("rivevent.start")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.start")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         if (global.presetSummon.isEmpty()) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
         }
 
         if (!global.setupDoneFlag) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_SETUP_NOTREADY));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_SETUP_NOTREADY));
             return;
         }
 
 
         readyAllert();
 
-        int openDoorsDelay = RIVevent.getDefaultConfig().getInt("OPEN_DOORS_DELAY") * 20;
-        int closeDoorsDelay = openDoorsDelay + RIVevent.getDefaultConfig().getInt("CLOSE_DOORS_DELAY") * 20;
+        openDoors(settings.openDoorsDelay);
+        closeDoors(settings.closeDoorsDelay);
 
-        openDoors(openDoorsDelay);
-        closeDoors(closeDoorsDelay);
-
-        if (RIVevent.plugin.getConfig().getBoolean("ANTI_CAMPER_TOGGLE")) {
-            antiCamper();
+        /*
+        if (settings.antiCamperToggle) {
+            antiCamper(settings.antiCamperStartDelay,settings.antiCamperPeriod);
         }
 
-        if (RIVevent.plugin.getConfig().getBoolean("REWARD_PLAYER_ON_TOP")) {
+         */
+
+        if (settings.rewardPlayersOnTopToggle) {
             rewardPlayerOnTop();
         }
 
@@ -86,11 +89,13 @@ public class StartCommand extends SubCommand{
 
     public void readyAllert () {
 
+        Player target;
         for(UUID key : global.playerJoined){
 
-            Player target = Bukkit.getPlayer(key);
-            assert target != null;
-            target.sendTitle(Messages.START_ALLERT_TITLE,"",20,60,20);
+            target = Bukkit.getPlayer(key);
+
+            if (target != null)
+                target.sendTitle(Messages.START_ALLERT_TITLE,"",20,60,20);
 
         }
 
@@ -124,8 +129,9 @@ public class StartCommand extends SubCommand{
                 for (UUID key : global.playerJoined) {
 
                     Player target = Bukkit.getPlayer(key);
-                    assert target != null;
-                    target.sendTitle(Messages.START_TITLE,Messages.START_SUBTITLE,20,40,20);
+
+                    if (target != null)
+                        target.sendTitle(Messages.START_TITLE,Messages.START_SUBTITLE,20,40,20);
 
                 }
 
@@ -162,62 +168,9 @@ public class StartCommand extends SubCommand{
     }
 
 
-    //-------------------- TEST ------------------------//
-
-    public void antiCamper () {
-
-        long acDelay = RIVevent.plugin.getConfig().getLong("AC_DELAY") * 20;
-        long acPeriod = RIVevent.plugin.getConfig().getLong("AC_PERIOD") * 20;
-        int damageValue = Math.abs(RIVevent.plugin.getConfig().getInt("AC_DAMAGE"));//Only positive value
-        int minPlayer = Math.max(1, RIVevent.plugin.getConfig().getInt("AC_MIN_PLAYER_ACTIVATION"));
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run(){
-
-                if (global.playerJoined.size() < minPlayer) {
-                    this.cancel();
-                    return;
-                }
-
-                sortUUIDbyY(global.playerJoined); //Da testare
-
-               // System.out.println(global.playerJoined); //todo: e' per il test, da togliere
-
-                Player target = Bukkit.getPlayer(global.playerJoined.get(global.playerJoined.size()-1));
-
-
-                assert target != null;
-                target.damage(damageValue);
-                target.getWorld().playSound(target.getLocation(),Sound.ENTITY_LIGHTNING_BOLT_THUNDER,3,1);
-                target.sendMessage(ChatMessages.AQUA(Messages.ANTI_CAMPER_MSG));
-
-                Collections.shuffle(global.playerJoined, new Random()); //randomizza la lista per essere il più imparziali possibile
-
-            }
-        }.runTaskTimer(RIVevent.plugin,acDelay,acPeriod);
-
-
-    }
-
-    public void sortUUIDbyY(List<UUID> playerList) {
-        playerList.sort((p1, p2) -> {
-            int y1 = Objects.requireNonNull(Bukkit.getPlayer(p1)).getLocation().getBlockY();
-            int y2 = Objects.requireNonNull(Bukkit.getPlayer(p2)).getLocation().getBlockY();
-            if (y1 > y2){
-                return 1;
-            }else if (y1 == y2){
-                return 0;
-            }
-            return -1;
-        });
-    }  //TODO: TESTA QUESTO PLEASE\
+    //-------------------- REWARD PLAYER ------------------------//
 
     public void rewardPlayerOnTop() {
-
-        long rewardPeriod = RIVevent.plugin.getConfig().getLong("REWARD_PERIOD") * 20;
-        int minNumPlayer = RIVevent.plugin.getConfig().getInt("REWARD_MIN_PLAYERS");
 
         new BukkitRunnable() {
 
@@ -227,7 +180,7 @@ public class StartCommand extends SubCommand{
             @Override
             public void run(){
 
-                if (global.playerJoined.size() < minNumPlayer || !global.setupStartFlag) {
+                if (global.playerJoined.size() < settings.rewardMinPlayer || !global.setupStartFlag) {
                     this.cancel();
                     return;
                 }
@@ -258,17 +211,15 @@ public class StartCommand extends SubCommand{
 
                         player.sendMessage(ChatMessages.AQUA("Hai ricevuto : " + itemStack.getI18NDisplayName()));
 
-                        player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1,1); //todo: scegliere un suono migliore
+                        player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1,1);
 
                     }
                 }
             }
-        }.runTaskTimer(RIVevent.plugin,0,rewardPeriod);
+        }.runTaskTimer(RIVevent.plugin,0,settings.rewardPlayerPeriod);
 
     }
 
-
-    //---------------NOT IMPLEMENTED-------------------//
 
 
 
