@@ -13,22 +13,13 @@ RESPAWN:
 DOORS_RADIUS_DETECTOR : 10
 
 #seconds
-OPEN_DOORS_DELAY : 10
-CLOSE_DOORS_DELAY : 30
+OPEN_DOORS_DELAY : 5
+CLOSE_DOORS_DELAY : 15
 
 #--------------    FOOD SETTINGS     --------------#
 
 MIN_FOOD_LEVEL : 10 #0 - 20
 RESET_FOOD_LEVEL : 18 #0 - 20
-
-#-------------- ANTI CAMPER SETTINGS --------------#
-
-ANTI_CAMPER_TOGGLE : true
-
-AC_MIN_PLAYER_ACTIVATION : 2
-AC_DELAY : 180
-AC_PERIOD : 60
-AC_DAMAGE : 2 #(1 is half heart)
 
 #---------- REWARD PLAYER SYSTEM SETTINGS ----------#
 
@@ -43,6 +34,10 @@ SNOWBALL_DAMAGE : 0.1
 
 SNOWBALL_DOES_KNOCKBACK : true
 SNOWBALL_KNOCKBACK_POWER : 1
+
+#---------------- MINIGAMES SETTINGS ----------------#
+
+DEATH_RACE_PERIOD : 120
 
 #---------------------------------------------------#
 
@@ -63,6 +58,9 @@ LIST_ITEMS_REWARD:
   - 'FISHING_ROD,0.6,1'
   - 'ENCHANTED_GOLDEN_APPLE,0.5,1'
   - 'TOTEM_OF_UNDYING,0.1,1'
+
+
+
 
 
 
