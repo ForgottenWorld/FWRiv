@@ -26,39 +26,47 @@ public class LeaveCommand extends SubCommand{
     GameHandler global = GameHandler.getInstance();
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
-        if (!player.hasPermission("rivevent.leave")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.leave")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
-        if(global.presetSummon.isEmpty()){
-            player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
+        if (global.presetSummon.isEmpty() && global.playerJoined.isEmpty() && global.playerSpectate.isEmpty()) {
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
         }
 
-        if (global.playerSpectate.contains(player.getUniqueId())) {
+        if (global.playerSpectate.contains(sender.getUniqueId())) {
 
-            player.teleport(global.endEventRespawnLocation);
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-            global.playerSpectate.remove(player.getUniqueId());
-            global.playerOut.remove(player.getUniqueId());
+            sender.teleport(global.endEventRespawnLocation);
+            sender.playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+            global.playerSpectate.remove(sender.getUniqueId());
+            global.playerOut.remove(sender.getUniqueId());
 
-        } else if (global.playerJoined.contains(player.getUniqueId())) {
+        } else if (global.playerJoined.contains(sender.getUniqueId())) {
 
-            global.playerJoined.remove(player.getUniqueId());
-            player.getInventory().clear();
-            player.teleport(global.endEventRespawnLocation);
-            player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+            sender.getInventory().clear();
+            global.playerJoined.remove(sender.getUniqueId());
+
+            if (global.setupStartFlag) {
+                sender.setHealth(0);
+                sender.sendMessage(ChatMessages.GREEN(Messages.OK_LEAVE));
+                return;
+            }
+
+
+            sender.teleport(global.endEventRespawnLocation);
+            sender.playSound(sender.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
 
 
         } else{
-            player.sendMessage(ChatMessages.RED(Messages.NO_EVENT_JOINED));
+            sender.sendMessage(ChatMessages.RED(Messages.NO_EVENT_JOINED));
             return;
         }
 
-        player.sendMessage(ChatMessages.GREEN(Messages.OK_LEAVE));
+        sender.sendMessage(ChatMessages.GREEN(Messages.OK_LEAVE));
 
     }
 }
