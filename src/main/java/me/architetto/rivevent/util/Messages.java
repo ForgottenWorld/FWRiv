@@ -18,8 +18,10 @@ public class Messages{
     public static final String OK_SPECTATE = "Sei stato inserito nella lista degli spettatori.";
     public static final String OK_LEAVE = "Grazie per aver partecipato all'evento!";
     public static final String OK_PRESET = "Il preset è stato correttamente inserito.";
+    public static final String OK_RELOAD = "Reload settings effettuato.";
 
     public static final String ERR_INSERT_PRESET = "Si e' presentato un errore nell'inserimento del preset. Ripetere l'operazione.";
+    public static final String ERR_DELETE = "Non puoi cancellare un preset mentre è in corso un evento.";
     public static final String ERR_EVENT = "Un evento e' già in corso.";
     public static final String ERR_MINIEVENT = "Un mini-evento e' già in corso.";
     public static final String ERR_NO_EVENT = "Nessun evento in corso.";
@@ -38,6 +40,8 @@ public class Messages{
             "\n" + "Usa prima /Rivevent leave -- e poi --> /Rivevent spectate " +
             "\n" + "per entrare nella lista degli spettatori !";
 
+    public static final String USE_RIGHT_CLICK = "Click destro su un blocco per inserire la coordinata...";
+
     public static final String SUCCESS_DELETE = "Preset eliminato.";
 
     public static final String VOID_PRESET_LIST = "Nessun preset salvato.";
@@ -48,7 +52,7 @@ public class Messages{
 
     public static final String START_ALLERT_TITLE = "READY ...";
     public static final String START_TITLE = ChatColor.DARK_RED + "GO !";
-    public static final String START_SUBTITLE = "Conquista la torre se ne avete la forza !";
+    public static final String START_SUBTITLE = "Prova a conquistare la torre !";
 
     public static final String BROADCAST_EVENT =
             "\n" + "## ---------- EVENTO : RESTA IN VETTA ---------- ##" + "\n" +
@@ -57,7 +61,6 @@ public class Messages{
             ChatColor.RED + ChatColor.ITALIC + ChatColor.UNDERLINE + "PS: Partecipando l'inventario verra' perso!";
     public static final String NEW_EVENT_TITLE = "Partecipa all'evento 'Resta in vetta' !" + ChatColor.AQUA + " /rivevent join";
 
-    public static final String ANTI_CAMPER_MSG = "I superni si accaniscono su di te perche' sei ultimo!";
 
     public static final String DEATH_MESSAGE = "Sei stato bravo, ma hai perso !"
             + "\n" + "Sarai più fortunato la prossima volta ."
@@ -66,5 +69,9 @@ public class Messages{
     public static final String VICTORY_SUBTITLE = "E' il vincitore dell'evento, COMPLIMENTI !";
 
     public static final String ALLERT_END_EVENT = "Reminder : Terminate l'evento con /rivevent stop";
+
+
+
+    public static final String CURSE_TRANSFER_EVENT = "Ti hanno passato la maledizione! Colpisci qualcuno per sbarazzartene ...";
 
 }
