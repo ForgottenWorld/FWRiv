@@ -1,5 +1,6 @@
 package me.architetto.rivevent.command;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.listener.RightClickListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,20 +36,20 @@ public class GameHandler{
     public HashMap<Material,Integer> itemsListMaxAmount = new HashMap<>();
     public Double totalWeight;
 
+    //MINIGAME VARIABLES
     public boolean curseEventFlag = false;
     public Player cursedPlayer;
 
     public boolean backToLifeEventFlag = false;
 
-    public boolean boogeymanEventFlag = false;
-    public Player boogeymanPlayer;
-
     public boolean fallDownEventFlag = false;
-    
 
+    public boolean deathRaceEventFlag = false;
+    public boolean deathRaceStartRunnable = false;
 
     private GameHandler(){
     }
+
 
     public static GameHandler getInstance(){
         if(instance==null)
@@ -65,7 +66,7 @@ public class GameHandler{
         return mergedList;
     }
 
-    public void clearEventVariables() {
+    public void resetEventVariables() {
         playerSpectate.clear();
         playerJoined.clear();
         playerOut.clear();
@@ -76,16 +77,36 @@ public class GameHandler{
         doorsToOpen.clear();
 
         //minigames flag
+        shutdownMinigames();
+    }
+
+    public void shutdownMinigames() {
+
         curseEventFlag = false;
         backToLifeEventFlag = false;
-        boogeymanEventFlag = false;
+        fallDownEventFlag = false;
+        deathRaceEventFlag = false;
+
+    }
+
+    public void restartEvent() {
+
+        setupStartFlag = false;
+        setupDoneFlag = false;
+        startDoneFlag = false;
+        doorsToOpen.clear();
+
+        //minigames flag
+        shutdownMinigames();
+
     }
 
 
     public Material pickRandomItem() {
 
         SecureRandom secureRandom = new SecureRandom();
-        double randomValue = totalWeight + secureRandom.nextInt((int) Math.round(totalWeight)) + totalWeight * secureRandom.nextDouble();
+        double randomValue = totalWeight + secureRandom.nextInt((int) Math.round(totalWeight))
+                + totalWeight * secureRandom.nextDouble();
 
         while (randomValue > 0){
 
@@ -100,7 +121,6 @@ public class GameHandler{
                 }
             }
         }
-
 
         return null;
     }
@@ -118,8 +138,53 @@ public class GameHandler{
 
     public boolean isMinigameInProgress() {
 
-        return curseEventFlag || backToLifeEventFlag || boogeymanEventFlag;  //flag dei vari eventi
+        return curseEventFlag || backToLifeEventFlag || fallDownEventFlag || deathRaceEventFlag;
 
+    }
+
+// LOAD & RELOAD
+
+    public void loadStartLoadout() {
+
+        List<String> MaterialName = RIVevent.plugin.getConfig().getStringList("START_LOADOUT");
+
+        if (!MaterialName.isEmpty()){
+            for(String name : MaterialName){
+
+                String [] parts = name.split(",");
+
+                if (Material.getMaterial(parts[0]) != null) {
+                    startLoadOut.put(Material.getMaterial(parts[0]),Math.abs(Integer.parseInt(parts[1])));
+                }
+
+            }
+        }
+
+    }
+
+    public void loadRewardItemList() {
+
+        //FileConfiguration config = getDefaultConfig();
+
+        List<String> MaterialName = RIVevent.plugin.getConfig().getStringList("LIST_ITEMS_REWARD");
+
+        if (!MaterialName.isEmpty()) {
+            for(String name : MaterialName){
+
+                String [] parts = name.split(",");
+
+                if (Material.getMaterial(parts[0]) != null) {
+                    itemsListWeight.put(Material.getMaterial(parts[0]), Math.abs(Double.parseDouble(parts[1])));
+                    itemsListMaxAmount.put(Material.getMaterial(parts[0]), Math.abs(Integer.parseInt(parts[2])));
+                }
+
+            }
+        }
+
+        totalWeight = itemsListWeight.values()
+                .stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
 }
