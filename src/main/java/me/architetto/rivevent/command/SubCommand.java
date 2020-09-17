@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public abstract class SubCommand {
 
-    //name of the subcommand
+    //name of the command
     public abstract String getName();
 
     
@@ -14,6 +14,6 @@ public abstract class SubCommand {
     public abstract String getSyntax();
 
     //code for the subcommand
-    public abstract void perform(Player player, String[] args);
+    public abstract void perform(Player sender, String[] args);
 
 }
