@@ -2,18 +2,17 @@ package me.architetto.rivevent;
 
 import me.architetto.rivevent.command.CommandManager;
 import me.architetto.rivevent.command.GameHandler;
+import me.architetto.rivevent.command.SettingsHandler;
 import me.architetto.rivevent.listener.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -21,7 +20,9 @@ public final class RIVevent extends JavaPlugin {
 
     private static final String pathPreset = "plugins/Rivevent/preset.txt";
     public static Plugin plugin;
-    static FileConfiguration defaultConfig;
+
+    GameHandler global = GameHandler.getInstance();
+    SettingsHandler settings = SettingsHandler.getInstance();
 
 
     @Override
@@ -29,24 +30,29 @@ public final class RIVevent extends JavaPlugin {
 
         plugin = this;
 
+        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading configuration...");
         loadConfiguration();
 
+        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading settings...");
+        loadSettings();
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading commands...");
         loadCommands();
 
+        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading listeners...");
         loadListener();
 
-        loadPreset();
-
-        loadRewardItemList();
-
-        loadStartLoadout();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading preset...");
+        loadRIVPreset();
 
     }
 
     @Override
     public void onDisable() {
 
-        clearPlayerJoinedInventory();
+        if (global.setupStartFlag && !global.playerJoined.isEmpty())
+            clearPlayerJoinedInventory();
+
 
     }
 
@@ -70,19 +76,12 @@ public final class RIVevent extends JavaPlugin {
         return result;
     }
 
-    private void loadConfiguration() {
+    public void loadConfiguration() {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
-        defaultConfig = getConfig();
     }
 
-    public static FileConfiguration getDefaultConfig() {
-        return defaultConfig;
-    }
-
-    public void loadPreset () {
-
-        GameHandler global = GameHandler.getInstance();
+    public void loadRIVPreset() {
 
         File presetFile = new File(pathPreset);
 
@@ -122,66 +121,26 @@ public final class RIVevent extends JavaPlugin {
 
     }
 
-    public void loadRewardItemList() {
+    public void loadSettings() {
 
-        GameHandler global = GameHandler.getInstance();
-        FileConfiguration config = getDefaultConfig();
+        settings.load();
 
-        List<String> MaterialName = config.getStringList("LIST_ITEMS_REWARD");
-
-        if (!MaterialName.isEmpty()){
-            for(String name : MaterialName){
-
-                String [] parts = name.split(",");
-
-                if (Material.getMaterial(parts[0]) != null) {
-                    global.itemsListWeight.put(Material.getMaterial(parts[0]), Math.abs(Double.parseDouble(parts[1])));
-                    global.itemsListMaxAmount.put(Material.getMaterial(parts[0]), Math.abs(Integer.parseInt(parts[2])));
-                }
-
-            }
-        }
-
-        global.totalWeight = global.itemsListWeight.values()
-                .stream()
-                .mapToDouble(Double::doubleValue)
-                .sum();
-    }
-
-    public void loadStartLoadout() {
-
-        GameHandler global = GameHandler.getInstance();
-        FileConfiguration config = getDefaultConfig();
-
-        List<String> MaterialName = config.getStringList("START_LOADOUT");
-
-        if (!MaterialName.isEmpty()){
-            for(String name : MaterialName){
-
-                String [] parts = name.split(",");
-
-                if (Material.getMaterial(parts[0]) != null) {
-                    global.startLoadOut.put(Material.getMaterial(parts[0]),Math.abs(Integer.parseInt(parts[1])));
-                }
-
-            }
-        }
+        global.loadRewardItemList();
+        global.loadStartLoadout();
 
     }
 
     public void clearPlayerJoinedInventory() {
 
-        //in caso di riavvio vengono se c'è un evento in corso vengono cancellati
-        // gli inventari dei players partecipanti
+        Player player;
 
-        GameHandler global = GameHandler.getInstance();
-        if (global.setupStartFlag && !global.playerJoined.isEmpty()) {
-            for (UUID target : global.playerJoined) {
-                Player player = Bukkit.getPlayer(target);
-                assert player != null;
+        for (UUID target : global.playerJoined) {
+            player = Bukkit.getPlayer(target);
+
+            if (player != null)
                 player.getInventory().clear();
-            }
         }
+
     }
 
 
