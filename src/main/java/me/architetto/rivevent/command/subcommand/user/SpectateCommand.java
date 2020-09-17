@@ -26,38 +26,38 @@ public class SpectateCommand extends SubCommand{
     }
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
-        if (!player.hasPermission("rivevent.spectate")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.spectate")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         GameHandler global = GameHandler.getInstance();
 
         if (global.presetSummon.isEmpty()) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
         }
 
-        if (global.playerJoined.contains(player.getUniqueId())) {
+        if (global.playerJoined.contains(sender.getUniqueId())) {
 
-            player.sendMessage(ChatMessages.RED(Messages.ERR_SPECTATE2));
-            return;
-
-        }
-
-        if (global.playerSpectate.contains(player.getUniqueId())) {
-
-            player.sendMessage(ChatMessages.RED(Messages.ERR_SPECTATE));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_SPECTATE2));
             return;
 
         }
 
-        global.playerSpectate.add(player.getUniqueId());
-        player.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPECTATE)));
-        player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-        player.sendMessage(ChatMessages.GREEN(Messages.OK_SPECTATE));
+        if (global.playerSpectate.contains(sender.getUniqueId())) {
+
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_SPECTATE));
+            return;
+
+        }
+
+        global.playerSpectate.add(sender.getUniqueId());
+        sender.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPECTATE)));
+        sender.playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
+        sender.sendMessage(ChatMessages.GREEN(Messages.OK_SPECTATE));
 
     }
 }
