@@ -45,7 +45,6 @@ public class GameHandler{
     public boolean fallDownEventFlag = false;
 
     public boolean deathRaceEventFlag = false;
-    public boolean deathRaceStartRunnable = false;
 
     private GameHandler(){
     }
@@ -163,8 +162,6 @@ public class GameHandler{
     }
 
     public void loadRewardItemList() {
-
-        //FileConfiguration config = getDefaultConfig();
 
         List<String> MaterialName = RIVevent.plugin.getConfig().getStringList("LIST_ITEMS_REWARD");
 
