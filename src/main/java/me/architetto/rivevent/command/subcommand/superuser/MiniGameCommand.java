@@ -2,6 +2,7 @@ package me.architetto.rivevent.command.subcommand.superuser;
 
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.GameHandler;
+import me.architetto.rivevent.command.SettingsHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.listener.RightClickListener;
 import me.architetto.rivevent.util.ChatMessages;
@@ -35,11 +36,12 @@ public class MiniGameCommand extends SubCommand{
     }
 
     GameHandler global = GameHandler.getInstance();
+    SettingsHandler settings = SettingsHandler.getInstance();
 
     @Override
     public void perform(Player player, String[] args){
 
-        //WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP
+        //WIP
 
 
         if (!player.hasPermission("rivevent.minigame")) {
@@ -65,34 +67,17 @@ public class MiniGameCommand extends SubCommand{
                 case "BACKTOLIFE":
                     backToLifeEvent();
                     return;
-                case "THEBOOGEYMAN":
-                    theBoogeymanEvent(player);
-                    return;
                 case "FALLDOWN":
                     allFallDownEvent();
+                    return;
+                case "DEATHRACE":
+                    deathRaceEvent(player);
                     return;
                 default:
                     player.sendMessage("Nessun minigame con questo nome !");
 
             }
         }
-
-        /* Esempi di Eventi
-
-        -BACKTOLIFE : Tutti i player tornano in vita (OK)
-        -FALLDOWN : I partecipanti tornano allo start (OK)
-        -THEBOOGEYMAN : un player invisibile, il primo che lo colpisce vince l'evento. (OK, da perfezionare)
-        -CURSE : una maledizione che si passa tramite pugno, al termine del cooldown chi ha la malattia muore all'istante  (OK) [curseEvent]
-
-
-        -SNOWBALL SHOWDOWN : Ogni spettatore riceve palle di neve per bersagliare i giocatori
-
-
-        -WIP : un player ha la corona colpendolo viene sottratta
-
-
-         */
-
     }
 
 
@@ -176,10 +161,6 @@ public class MiniGameCommand extends SubCommand{
 
     // -- CurseMinigame methods -- // }
 
-
-    //-----------------------------------//
-
-
     // -- BackToLife-Minigame methods -- // {
 
     public void backToLifeEvent() {
@@ -246,145 +227,18 @@ public class MiniGameCommand extends SubCommand{
 
     // -- BackToLife-Minigame methods -- // }
 
-    //-----------------------------------//
-
-    // -- Boogeyman-Minigame methods -- // {
-
-    public void theBoogeymanEvent(Player sender) {
-
-
-        if (global.playerJoined.size() < 2) {
-            sender.sendMessage(ChatMessages.RED("Non ci sono abbastanza giocatori per iniziare questo minigioco!"));
-            return;
-        }
-
-        global.boogeymanEventFlag = true;
-
-        global.boogeymanPlayer = chooseBoogeyman();
-
-        if (global.boogeymanPlayer == null){
-            global.boogeymanEventFlag = false;
-            return;
-        }
-
-        blindAllPlayer();
-
-        global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2400, 10));
-        discontinuousInvisibleEffect();
-
-        boogeymanSparkEffect();
-
-        endBoogeymanEvent(2400);
-
-
-
-        //il boogeyman muore se toccato
-        //se non viene toccato ottiene qualche bonus o item
-
-    }
-
-    public void blindAllPlayer() {
-
-        Player p;
-        for (UUID u : global.allPlayerList()) {
-            p = Bukkit.getPlayer(u);
-
-            if (p != null && p != global.boogeymanPlayer)
-                p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 160, 10));
-
-        }
-
-    }
-
-    public Player chooseBoogeyman() {
-
-        if (global.playerJoined.size() == 1)
-            return Bukkit.getPlayer(global.playerJoined.get(0));
-
-        SecureRandom random = new SecureRandom();
-        int randomPlayerIndex = random.nextInt(global.playerJoined.size()-1);
-
-        return Bukkit.getPlayer(global.playerJoined.get(randomPlayerIndex));
-
-    }
-
-    public void boogeymanSparkEffect() {
-
-        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(64, 64, 64), 2);
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run(){
-
-                if (!global.boogeymanEventFlag) {
-                    this.cancel();
-                    return;
-                }
-
-                global.boogeymanPlayer.getWorld().spawnParticle(Particle.REDSTONE, global.boogeymanPlayer.getLocation().add(0,1,0), 10, dustOptions);
-                global.boogeymanPlayer.getWorld().playSound(global.boogeymanPlayer.getLocation(),Sound.ENTITY_SLIME_SQUISH,1,1);
-
-
-            }
-        }.runTaskTimer(RIVevent.plugin,200, 15);
-
-
-    }
-
-    public void discontinuousInvisibleEffect() {
-        new BukkitRunnable() {
-
-            @Override
-            public void run(){
-
-                if (!global.boogeymanEventFlag) {
-                    global.boogeymanPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
-                    this.cancel();
-                    return;
-                }
-
-                global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 15, 10));
-                global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30, 2));
-
-            }
-        }.runTaskTimer(RIVevent.plugin,100,240);
-    }
-
-    public void  endBoogeymanEvent(long eventEndTimer) {
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run(){
-
-                if (!global.boogeymanEventFlag) {
-                    this.cancel();
-                    return;
-                }
-
-                global.boogeymanEventFlag = false;
-
-                if (global.playerJoined.contains(global.boogeymanPlayer.getUniqueId())) {
-
-                    //Premio per il boogeyman
-                    global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 3600, 2));
-                    global.boogeymanPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 3600, 2));
-
-                }
-
-            }
-        }.runTaskLater(RIVevent.plugin,eventEndTimer);
-
-    }
-
-    // -- Boogeyman-Minigame methods -- // }
-
     // -- ALLFALLDOWN-Minigame methods -- // {
 
     public void allFallDownEvent() {
 
         global.fallDownEventFlag = true;
+
+        for (UUID u : global.playerJoined) {
+            Player p = Bukkit.getPlayer(u);
+
+            if (p != null)
+            p.sendMessage(ChatMessages.AQUA("Eento All Fall Down : Tutti i players vengono teletrasportati al punto di partenza!"));
+        }
 
         new BukkitRunnable(){
 
@@ -419,10 +273,6 @@ public class MiniGameCommand extends SubCommand{
     }
 
     public void fallDownTeleport() {
-        new BukkitRunnable() {
-
-            @Override
-            public void run(){
 
                 Player p;
                 int i = 1;
@@ -452,8 +302,6 @@ public class MiniGameCommand extends SubCommand{
 
                 global.fallDownEventFlag = false;
 
-            }
-        }.runTaskLater(RIVevent.plugin,60);
     }
 
     public void manageDoors() {
@@ -498,6 +346,72 @@ public class MiniGameCommand extends SubCommand{
     }
 
     // -- ALLFALLDOWN-Minigame methods -- // }
+
+    // -- DEATHRACE-Minigame methods -- // {       //Work in progress
+
+    public void deathRaceEvent(Player player) {
+
+        if (global.playerJoined.size() < 2) {
+            player.sendMessage(ChatMessages.RED("Non ci sono abbastanza giocatori"));
+            return;
+        }
+
+        global.deathRaceEventFlag = true;
+
+        Player p;
+
+        for (UUID u : global.playerJoined) {
+            p = Bukkit.getPlayer(u);
+            if (p != null){
+                p.sendMessage(ChatMessages.AQUA("Evento Death Race : Ogni " + ChatColor.RED + settings.deathRacePeriod / 20
+                        + " secondi" + ChatColor.RESET + " il player più in basso MUORE!"));
+                p.sendTitle(ChatColor.DARK_RED + "Death Race", "",20,60,20);
+            }
+        }
+
+        deathRaceRunnable();
+
+
+    }
+
+    public void deathRaceRunnable() {
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                Player target = takeLastPlayer();
+                target.setHealth(0);
+                target.sendMessage(ChatMessages.RED("A questo giro sei l'ultimo.. bon voyage!"));
+
+                if (global.playerJoined.size() <= 1) {
+                    global.deathRaceEventFlag = false;
+                    this.cancel();
+                }
+
+
+            }
+        }.runTaskTimer(RIVevent.plugin,settings.deathRacePeriod,settings.deathRacePeriod);
+
+    }
+
+    public Player takeLastPlayer(){
+
+        Player p = Bukkit.getPlayer(global.playerJoined.get(0));
+
+        for (UUID u : global.playerJoined) {
+
+            Player p1 = Bukkit.getPlayer(u);
+
+                if (p1.getLocation().getY() < p.getLocation().getY())
+                    p = Bukkit.getPlayer(u);
+
+        }
+
+       return p;
+    }
+
 
 
 
