@@ -1,6 +1,7 @@
 package me.architetto.rivevent.command.subcommand.superuser;
 
 import me.architetto.rivevent.RIVevent;
+import me.architetto.rivevent.command.SettingsHandler;
 import me.architetto.rivevent.command.GameHandler;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.listener.RightClickListener;
@@ -13,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,76 +33,111 @@ public class SetupCommand extends SubCommand{
         return "/rivevent setup";
     }
 
-
-    int doorsRadiusDetector = RIVevent.getDefaultConfig().getInt("DOORS_RADIUS_DETECTOR");
     GameHandler global = GameHandler.getInstance();
+    SettingsHandler settings = SettingsHandler.getInstance();
+
+    public enum TargetSpawn {Sp1,Sp2,Sp3,Sp4}
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
-        if (!player.hasPermission("rivevent.setup")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.setup")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         if (global.setupStartFlag) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_SETUP_DONE));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_SETUP_DONE));
             return;
         }
 
         if (global.presetSummon.isEmpty()) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_NO_EVENT));
             return;
         }
 
         if (global.playerJoined.isEmpty()) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PLAYER_JOINED));
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PLAYER_JOINED));
             return;
         }
 
         global.setupStartFlag = true;
 
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN1)), doorsRadiusDetector);
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN2)), doorsRadiusDetector);
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN3)), doorsRadiusDetector);
-        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN4)), doorsRadiusDetector);
+        getSpawnDoors();
 
-        playersSpawnSetup(player);
+        teleportToSpawn(sender);
 
     }
 
-    public void playersSpawnSetup(Player player) {
+    public void teleportToSpawn(Player sender) {
 
         new BukkitRunnable() {
 
-            private final List<UUID> playerJoinedCopy = new ArrayList<>(global.playerJoined);
-            private int spawnPointIndex = 1;
-
+            private String loc = TargetSpawn.Sp1.toString();
+            private final List<UUID> playerJoinedCopy = global.playerJoined;
+            private int index = 0;
 
             @Override
             public void run(){
 
-                Player target = Bukkit.getPlayer(playerJoinedCopy.get(0));
-                assert target != null;
-                target.getInventory().clear();
-
-                chooseSpawnPoint(target,spawnPointIndex);
-                equipLoadout(target);
-
-                playerJoinedCopy.remove(0);
-                spawnPointIndex++;
-
-                if (playerJoinedCopy.isEmpty()) {
-                    player.sendMessage(ChatMessages.GREEN(Messages.OK_SETUP));
+                if (index >= playerJoinedCopy.size()) {
+                    sender.sendMessage(ChatMessages.GREEN(Messages.OK_SETUP));
                     global.setupDoneFlag = true;
                     this.cancel();
+                    return;
                 }
 
-                if (spawnPointIndex == 5)
-                    spawnPointIndex = 1;
+                Player p = Bukkit.getPlayer(playerJoinedCopy.get(index));
+
+                if (p != null) {
+
+                    if (!p.isOnline()) {
+                        global.playerJoined.remove(p.getUniqueId());
+                        return;
+                    }
+
+                    p.getInventory().clear();
+                    equipLoadout(p);
+                    index++;
+
+                    switch(loc.toUpperCase()){
+                        case "SP1":
+                            p.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN1)));
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
+                            loc = TargetSpawn.Sp2.toString();
+                            return;
+
+                        case "SP2":
+                            p.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN2)));
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
+                            loc = TargetSpawn.Sp3.toString();
+                            return;
+
+                        case "SP3":
+                            p.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN3)));
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
+                            loc = TargetSpawn.Sp4.toString();
+                            return;
+
+                        case "SP4":
+                            p.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN4)));
+                            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
+                            loc = TargetSpawn.Sp1.toString();
+
+                    }
+                }
 
             }
-        }.runTaskTimer(RIVevent.plugin,0L,20L);
+        }.runTaskTimer(RIVevent.plugin,0,20);
+
+    }
+
+    public void getSpawnDoors() {
+
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN1)), settings.doorsDetectorRange);
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN2)), settings.doorsDetectorRange);
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN3)), settings.doorsDetectorRange);
+        doorDetector(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN4)), settings.doorsDetectorRange);
 
     }
 
@@ -115,9 +150,7 @@ public class SetupCommand extends SubCommand{
                     if (Tag.DOORS.getValues().contains(middle.getRelative(x, y, z).getType())
                             ||Tag.FENCE_GATES.getValues().contains(middle.getRelative(x, y, z).getType())){
 
-                        Block block = middle.getRelative(x, y, z).getLocation().getBlock();
-
-                        global.doorsToOpen.add(block);
+                        global.doorsToOpen.add(middle.getRelative(x, y, z).getLocation().getBlock());
 
                     }
                 }
@@ -125,30 +158,10 @@ public class SetupCommand extends SubCommand{
         }
     }
 
-    public void chooseSpawnPoint(Player target, int spawnNum) {
-
-        switch(spawnNum) {
-            case 1:
-                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN1)));
-                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-                return;
-            case 2:
-                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN2)));
-                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-                return;
-            case 3:
-                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN3)));
-                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-                return;
-            case 4:
-                target.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN4)));
-                target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
-        }
-
-
-    }
-
     public void equipLoadout(Player target) {
+
+        target.setHealth(20);
+        target.setFoodLevel(20);
 
         for (Material material : global.startLoadOut.keySet()) {
 
