@@ -381,9 +381,7 @@ public class MiniGameCommand extends SubCommand{
             @Override
             public void run(){
 
-                Player target = takeLastPlayer();
-                target.setHealth(0);
-                target.sendMessage(ChatMessages.RED("A questo giro sei l'ultimo.. bon voyage!"));
+                animatedTitle();
 
                 if (global.playerJoined.size() <= 1) {
                     global.deathRaceEventFlag = false;
@@ -392,7 +390,45 @@ public class MiniGameCommand extends SubCommand{
 
 
             }
-        }.runTaskTimer(RIVevent.plugin,settings.deathRacePeriod,settings.deathRacePeriod);
+        }.runTaskTimer(RIVevent.plugin,settings.deathRacePeriod - 200,settings.deathRacePeriod - 200);
+
+    }
+
+    public void animatedTitle() {
+
+        new BukkitRunnable() {
+
+            private int countdown = 10;
+
+            @Override
+            public void run(){
+
+                if (countdown == 0){
+                    Player target = takeLastPlayer();
+
+                    if (target != null){
+                        target.setHealth(0);
+                        target.sendMessage(ChatMessages.RED("A questo giro sei l'ultimo.. bon voyage!"));
+                    }
+
+                    this.cancel();
+                    return;
+                }
+
+
+                for (UUID u : global.playerJoined) {
+                    Player p = Bukkit.getPlayer(u);
+
+                    if (p != null)
+                        p.sendTitle("","" + ChatColor.RED + countdown,0,20,0);
+
+                }
+
+                countdown -= 1;
+
+
+            }
+        }.runTaskTimer(RIVevent.plugin,0,20);
 
     }
 
@@ -404,13 +440,18 @@ public class MiniGameCommand extends SubCommand{
 
             Player p1 = Bukkit.getPlayer(u);
 
-                if (p1.getLocation().getY() < p.getLocation().getY())
-                    p = Bukkit.getPlayer(u);
+            if (p1 == null || p == null)
+                return null;
+
+            if (p1.getLocation().getY() < p.getLocation().getY())
+                p = Bukkit.getPlayer(u);
 
         }
 
        return p;
     }
+
+
 
 
 
