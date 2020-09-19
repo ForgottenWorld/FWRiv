@@ -100,6 +100,15 @@ public class GameHandler{
 
     }
 
+    public boolean isMinigameInProgress() {
+
+        return curseEventFlag || backToLifeEventFlag || fallDownEventFlag || deathRaceEventFlag;
+
+    }
+
+
+    // REWARD SYSTEM
+
 
     public Material pickRandomItem() {
 
@@ -135,13 +144,9 @@ public class GameHandler{
 
     }
 
-    public boolean isMinigameInProgress() {
 
-        return curseEventFlag || backToLifeEventFlag || fallDownEventFlag || deathRaceEventFlag;
 
-    }
-
-// LOAD & RELOAD
+    // LOAD & RELOAD
 
     public void loadStartLoadout() {
 
