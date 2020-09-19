@@ -16,15 +16,13 @@ public class SettingsHandler{
     public long rewardPlayerPeriod;
     public int rewardMinPlayer;
 
-    /*
     public boolean antiCamperToggle;
-
     public long antiCamperStartDelay;
     public long antiCamperPeriod;
     public int antiCamperDamage;
-    public int antiCamperMinPlayerActivation;
-
-     */
+    public int antiCamperMaxY;
+    public int antiCamperRedLineGrowPeriod;
+    public int antiCamperRedLineGrowValue;
 
     public int minFoodLevel;
     public int resetFoodLevel;
@@ -53,16 +51,14 @@ public class SettingsHandler{
         openDoorsDelay = RIVevent.plugin.getConfig().getInt("OPEN_DOORS_DELAY",5) * 20;
         closeDoorsDelay = RIVevent.plugin.getConfig().getInt("CLOSE_DOORS_DELAY",15) * 20 + openDoorsDelay;
 
-        /*
+        antiCamperToggle = RIVevent.plugin.getConfig().getBoolean("ANTI_CAMPER_TOGGLE",true);
+        antiCamperStartDelay = RIVevent.plugin.getConfig().getLong("AC_DELAY",120) * 20;
+        antiCamperPeriod = RIVevent.plugin.getConfig().getLong("AC_DAMAGE_PERIOD",2) * 20;
+        antiCamperDamage = Math.abs(RIVevent.plugin.getConfig().getInt("AC_DAMAGE",1));
+        antiCamperMaxY = RIVevent.plugin.getConfig().getInt("AC_MIN_REDLINE_DIFFERENCE",4);
+        antiCamperRedLineGrowPeriod = RIVevent.plugin.getConfig().getInt("RED_LINE_GROW_PERIOD",60) * 20;
+        antiCamperRedLineGrowValue = RIVevent.plugin.getConfig().getInt("RED_LINE_GROW_VALUE",1);
 
-        antiCamperToggle = RIVevent.plugin.getConfig().getBoolean("ANTI_CAMPER_TOGGLE",false);
-        antiCamperStartDelay = RIVevent.plugin.getConfig().getLong("AC_DELAY") * 20;
-        antiCamperPeriod = RIVevent.plugin.getConfig().getLong("AC_PERIOD") * 20;
-        antiCamperDamage = Math.abs(RIVevent.plugin.getConfig().getInt("AC_DAMAGE"));//Only positive value
-        antiCamperMinPlayerActivation = Math.max(1, RIVevent.plugin.getConfig().getInt("AC_MIN_PLAYER_ACTIVATION"));
-
-
-         */
         rewardPlayersOnTopToggle = RIVevent.plugin.getConfig().getBoolean("REWARD_PLAYER_ON_TOP",true);
         rewardPlayerPeriod = RIVevent.plugin.getConfig().getLong("REWARD_PERIOD") * 20;
         rewardMinPlayer = RIVevent.plugin.getConfig().getInt("REWARD_MIN_PLAYERS");
