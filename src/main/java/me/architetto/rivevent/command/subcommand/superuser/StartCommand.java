@@ -10,11 +10,8 @@ import me.architetto.rivevent.util.ChatMessages;
 
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
@@ -48,6 +45,8 @@ public class StartCommand extends SubCommand{
     List<Material> noDoubleItem = new ArrayList<>(Arrays.asList(Material.LEATHER_BOOTS,
             Material.LEATHER_CHESTPLATE, Material.LEATHER_HELMET, Material.LEATHER_LEGGINGS, Material.FISHING_ROD));
 
+    public int redLineY;
+
     @Override
     public void perform(Player sender, String[] args){
 
@@ -72,12 +71,11 @@ public class StartCommand extends SubCommand{
         openDoors(settings.openDoorsDelay);
         closeDoors(settings.closeDoorsDelay);
 
-        /*
+
         if (settings.antiCamperToggle) {
-            antiCamper(settings.antiCamperStartDelay,settings.antiCamperPeriod);
+            antiCamperSystem();
         }
 
-         */
 
         if (settings.rewardPlayersOnTopToggle) {
             rewardPlayerOnTop();
@@ -217,6 +215,80 @@ public class StartCommand extends SubCommand{
                 }
             }
         }.runTaskTimer(RIVevent.plugin,0,settings.rewardPlayerPeriod);
+
+    }
+
+    //--------------------  ANTI CAMPER  ------------------------//
+
+    public void antiCamperSystem() {
+
+        redLineY = takeLowestSpawnYCoord();
+
+        checkPlayersPosition();
+
+        redLineManager();
+
+    }
+
+    public void checkPlayersPosition() {
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+
+                if (global.playerJoined.size() <= 1){
+                    this.cancel();
+                    return;
+                }
+
+                for (UUID u : global.playerJoined) {
+                    Player p = Bukkit.getPlayer(u);
+
+                    if (p != null)
+                        if (p.getLocation().getY() <= redLineY)
+                            p.damage(settings.antiCamperDamage);
+                }
+
+            }
+        }.runTaskTimer(RIVevent.plugin,settings.antiCamperStartDelay,settings.antiCamperPeriod);
+    }
+
+    public int takeLowestSpawnYCoord() {
+
+        int y = 300;
+
+        y = Math.min(y, LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN1)).getBlockY());
+        y = Math.min(y, LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN2)).getBlockY());
+        y = Math.min(y, LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN3)).getBlockY());
+        y = Math.min(y, LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN4)).getBlockY());
+
+        return y;
+    }
+
+    public void redLineManager() {
+
+        new BukkitRunnable() {
+
+            private final int maxYredLine = LocSerialization.getDeserializedLocation(global.riveventPreset
+                    .get(global.presetSummon).get(RightClickListener.Step.TOWER)).getBlockY();
+
+            @Override
+            public void run(){
+                redLineY += settings.antiCamperRedLineGrowValue;
+
+                for (UUID u : global.playerJoined) {
+                    Player p = Bukkit.getPlayer(u);
+                    if (p != null){
+                        p.sendMessage(ChatMessages.RED("Altezza minima consentita : " + ChatColor.GOLD + redLineY));
+                    }
+                }
+
+                if (redLineY == maxYredLine - settings.antiCamperMaxY || global.playerJoined.size() <= 1)
+                    this.cancel();
+
+            }
+        }.runTaskTimer(RIVevent.plugin,settings.antiCamperStartDelay + settings.antiCamperRedLineGrowPeriod,settings.antiCamperRedLineGrowPeriod);
+
 
     }
 
