@@ -47,6 +47,7 @@ public class Messages{
     public static final String VOID_PRESET_LIST = "Nessun preset salvato.";
 
     public static final String STOP_EVENT = "Evento terminato.";
+    public static final String STOP_CMD_TP_EVENT = "Inizio procedura di teleport allo spawn...";
 
     public static final String USE_SPECTATE = "L'evento e' gia' iniziato! Usa /rivevent spectate per guardare l'evento.";
 
@@ -69,7 +70,6 @@ public class Messages{
     public static final String VICTORY_SUBTITLE = "E' il vincitore dell'evento, COMPLIMENTI !";
 
     public static final String ALLERT_END_EVENT = "Reminder : Terminate l'evento con /rivevent stop";
-
 
 
     public static final String CURSE_TRANSFER_EVENT = "Ti hanno passato la maledizione! Colpisci qualcuno per sbarazzartene ...";
