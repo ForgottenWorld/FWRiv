@@ -42,6 +42,7 @@ public class StopCommand extends SubCommand{
 
         if (args.length == 2 && args[1].toLowerCase().equals("force")) {
             global.resetEventVariables();
+            Bukkit.getScheduler().cancelTasks(RIVevent.plugin);
             return;
         }
 
@@ -51,27 +52,34 @@ public class StopCommand extends SubCommand{
         }
 
 
+        if (global.allPlayerList().isEmpty()){
 
-        if (!global.allPlayerList().isEmpty()){
+            global.resetEventVariables();
 
-            clearInventories(global.playerJoined);
+            Bukkit.getScheduler().cancelTasks(RIVevent.plugin);
 
-            tpBackToConfigPosition(global.allPlayerList());
+            sender.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
+
+            return;
 
         }
 
-        global.resetEventVariables();
+        sender.sendMessage(ChatMessages.GREEN(Messages.STOP_CMD_TP_EVENT));
 
-        sender.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
+        if (!global.playerJoined.isEmpty())
+            clearJoinedPlayerInventories();
+
+        teleportPlayersToSpawn(global.allPlayerList(),sender);
+
+
 
     }
 
-    public void clearInventories (List<UUID> playerJoined) {
+    public void clearJoinedPlayerInventories() {
 
-        Player p;
-        for (UUID key : playerJoined) {
+        for (UUID key : global.playerJoined) {
 
-            p = Bukkit.getPlayer(key);
+            Player p = Bukkit.getPlayer(key);
 
             if (p != null)
                 p.getInventory().clear();
@@ -80,20 +88,27 @@ public class StopCommand extends SubCommand{
 
     }
 
-    public void tpBackToConfigPosition(List<UUID> playerList) {
+    public void teleportPlayersToSpawn(List<UUID> playerList, Player sender) {
 
         new BukkitRunnable() {
             @Override
             public void run() {
 
                 if (playerList.size() == 0) {
+
+                    global.resetEventVariables();
+                    sender.sendMessage(ChatMessages.GREEN(Messages.STOP_EVENT));
                     Bukkit.getScheduler().cancelTasks(RIVevent.plugin);
 
                 } else {
+
                     Player target = Bukkit.getPlayer(playerList.get(0));
-                    assert target != null;
-                    target.teleport(global.endEventRespawnLocation);
-                    target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
+
+                    if (target != null){
+                        target.teleport(global.endEventRespawnLocation);
+                        target.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 2, 1);
+                    }
+
                     playerList.remove(0);
 
                 }
