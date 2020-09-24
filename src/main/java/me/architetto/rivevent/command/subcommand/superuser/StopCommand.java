@@ -75,6 +75,11 @@ public class StopCommand extends SubCommand{
 
     }
 
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
+    }
+
     public void clearJoinedPlayerInventories() {
 
         for (UUID key : global.playerJoined) {
