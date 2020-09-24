@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class RestartCommand extends SubCommand{
@@ -85,5 +86,10 @@ public class RestartCommand extends SubCommand{
 
 
 
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
     }
 }
