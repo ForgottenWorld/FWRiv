@@ -7,6 +7,9 @@ import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DeleteCommand extends SubCommand{
     @Override
     public String getName(){
@@ -58,5 +61,17 @@ public class DeleteCommand extends SubCommand{
 
         sender.sendMessage(ChatMessages.GREEN(Messages.SUCCESS_DELETE));
 
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+
+        if (args.length == 2){
+
+            return new ArrayList<>(global.riveventPreset.keySet());
+
+        }
+
+        return null;
     }
 }

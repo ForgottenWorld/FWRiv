@@ -8,6 +8,9 @@ import org.bukkit.*;
 
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class InitCommand extends SubCommand{
     @Override
@@ -55,6 +58,18 @@ public class InitCommand extends SubCommand{
 
         }
 
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+
+        if (args.length == 2){
+
+            return new ArrayList<>(global.riveventPreset.keySet());
+
+        }
+
+        return null;
     }
 
 
