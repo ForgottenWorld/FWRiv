@@ -9,6 +9,8 @@ import me.architetto.rivevent.util.Messages;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class SpectateCommand extends SubCommand{
     @Override
     public String getName(){
@@ -59,5 +61,10 @@ public class SpectateCommand extends SubCommand{
         sender.playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
         sender.sendMessage(ChatMessages.GREEN(Messages.OK_SPECTATE));
 
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
     }
 }
