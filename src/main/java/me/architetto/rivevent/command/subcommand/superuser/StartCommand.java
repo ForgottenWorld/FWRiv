@@ -85,6 +85,11 @@ public class StartCommand extends SubCommand{
 
     }
 
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
+    }
+
     public void readyAllert () {
 
         Player target;
