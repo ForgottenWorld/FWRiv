@@ -8,6 +8,7 @@ import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class CreateCommand extends SubCommand{
 
@@ -63,4 +64,11 @@ public class CreateCommand extends SubCommand{
         sender.sendMessage(ChatMessages.PosMessage("1/6", RightClickListener.Step.SPAWN1));
 
     }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
+    }
+
+
 }
