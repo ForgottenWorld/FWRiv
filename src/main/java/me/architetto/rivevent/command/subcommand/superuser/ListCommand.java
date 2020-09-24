@@ -9,6 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -66,6 +68,18 @@ public class ListCommand extends SubCommand{
 
         sender.sendMessage(ChatMessages.GREEN(" PRESET LIST :  " + global.riveventPreset.keySet().toString()));
 
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+
+        if (args.length == 2){
+
+            return new ArrayList<>(global.riveventPreset.keySet());
+
+        }
+
+        return null;
     }
 
     public String formatCoord (String s) {

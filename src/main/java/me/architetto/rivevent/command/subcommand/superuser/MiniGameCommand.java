@@ -17,6 +17,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class MiniGameCommand extends SubCommand{
@@ -39,30 +42,30 @@ public class MiniGameCommand extends SubCommand{
     SettingsHandler settings = SettingsHandler.getInstance();
 
     @Override
-    public void perform(Player player, String[] args){
+    public void perform(Player sender, String[] args){
 
         //WIP
 
 
-        if (!player.hasPermission("rivevent.minigame")) {
-            player.sendMessage(ChatMessages.RED(Messages.NO_PERM));
+        if (!sender.hasPermission("rivevent.minigame")) {
+            sender.sendMessage(ChatMessages.RED(Messages.NO_PERM));
             return;
         }
 
         if (!global.startDoneFlag) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_START));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_START));
             return;
         }
 
         if (global.isMinigameInProgress()) {
-            player.sendMessage(ChatMessages.RED(Messages.ERR_MINIEVENT));
+            sender.sendMessage(ChatMessages.RED(Messages.ERR_MINIEVENT));
             return;
         }
 
         if (args.length >= 2) {
             switch(args[1].toUpperCase()){
                 case "CURSE":
-                    curseEvent(player);
+                    curseEvent(sender);
                     return;
                 case "BACKTOLIFE":
                     backToLifeEvent();
@@ -71,13 +74,28 @@ public class MiniGameCommand extends SubCommand{
                     allFallDownEvent();
                     return;
                 case "DEATHRACE":
-                    deathRaceEvent(player);
+                    deathRaceEvent(sender);
                     return;
                 default:
-                    player.sendMessage("Nessun minigame con questo nome !");
+                    sender.sendMessage("Nessun minigame con questo nome !");
 
             }
         }
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+
+        if (args.length == 2){
+
+            return new ArrayList<>(
+                    Arrays.asList("Curse",
+                            "BackToLife",
+                            "FallDown",
+                            "DeathRace"));
+
+        }
+        return null;
     }
 
 
