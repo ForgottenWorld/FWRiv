@@ -69,6 +69,11 @@ public class SetupCommand extends SubCommand{
 
     }
 
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
+    }
+
     public void teleportToSpawn(Player sender) {
 
         new BukkitRunnable() {
