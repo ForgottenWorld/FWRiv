@@ -9,6 +9,8 @@ import me.architetto.rivevent.util.Messages;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class JoinCommand extends SubCommand{
 
     @Override
@@ -69,5 +71,10 @@ public class JoinCommand extends SubCommand{
         sender.playSound(sender.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
         sender.sendMessage(ChatMessages.GREEN(Messages.OK_JOIN));
 
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
     }
 }
