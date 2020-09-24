@@ -7,6 +7,8 @@ import me.architetto.rivevent.util.Messages;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class LeaveCommand extends SubCommand{
     @Override
     public String getName(){
@@ -68,5 +70,10 @@ public class LeaveCommand extends SubCommand{
 
         sender.sendMessage(ChatMessages.GREEN(Messages.OK_LEAVE));
 
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
     }
 }
