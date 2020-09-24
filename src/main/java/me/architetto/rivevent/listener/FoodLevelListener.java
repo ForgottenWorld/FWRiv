@@ -20,7 +20,7 @@ public class FoodLevelListener implements Listener{
         if (global.playerJoined.contains(entity.getUniqueId())
                 || global.playerSpectate.contains(entity.getUniqueId()) ) {
 
-            if (entity.isOnline()  && entity.getFoodLevel() <= settings.minFoodLevel) {
+            if (entity.getFoodLevel() <= settings.minFoodLevel) {
                 event.setFoodLevel(settings.resetFoodLevel);
 
             }
