@@ -8,6 +8,8 @@ import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class ReloadCommand extends SubCommand{
     @Override
     public String getName(){
@@ -50,5 +52,10 @@ public class ReloadCommand extends SubCommand{
 
         sender.sendMessage(ChatMessages.GREEN(Messages.OK_RELOAD));
 
+    }
+
+    @Override
+    public List<String> getSubcommandArguments(Player player, String[] args){
+        return null;
     }
 }
