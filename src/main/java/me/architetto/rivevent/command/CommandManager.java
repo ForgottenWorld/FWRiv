@@ -10,13 +10,14 @@ import me.architetto.rivevent.command.subcommand.user.SpectateCommand;
 import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CommandManager implements CommandExecutor{
+public class CommandManager implements TabExecutor{
 
     private final ArrayList<SubCommand> subcommands = new ArrayList<>();
 
@@ -67,6 +68,28 @@ public class CommandManager implements CommandExecutor{
         return subcommands;
     }
 
-    //TODO: rendere TabExecutor ed aggiungere il metodo per il tabcompleter
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+
+        if (args.length == 1) {
+            ArrayList<String> subcommandsArguments = new ArrayList<>();
+
+            for (int i = 0; i < getSubcommands().size(); i++){
+                subcommandsArguments.add(getSubcommands().get(i).getName());
+            }
+
+            return subcommandsArguments;
+
+        }else if (args.length >= 2) {
+            for (int i = 0; i < getSubcommands().size(); i++) {
+                if (args[0].equalsIgnoreCase(getSubcommands().get(i).getName())) {
+                    return getSubcommands().get(i).getSubcommandArguments((Player) sender, args);
+                }
+            }
+        }
+
+        return null;
+    }
 
 }
