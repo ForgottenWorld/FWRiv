@@ -26,13 +26,12 @@ public class DeathListener implements Listener{
     @EventHandler
     public void deathEvent(PlayerDeathEvent event){
 
-        if (global.playerJoined.contains(event.getEntity().getUniqueId())) {
+        Player deadPlayer = event.getEntity().getPlayer();
 
-            if (!global.setupStartFlag) {
-                return;
-            }
+        if (deadPlayer == null)
+            return;
 
-            Player deadPlayer = event.getEntity();
+        if (global.playerJoined.contains(deadPlayer.getUniqueId()) && global.setupStartFlag) {
 
             global.playerSpectate.add(deadPlayer.getUniqueId());
             global.playerJoined.remove(deadPlayer.getUniqueId());
@@ -54,29 +53,25 @@ public class DeathListener implements Listener{
                         victoryFireworksEffect(player.getLocation().add(0, 1, 0), 2);
                         victoryMessage(player.getName());
                     }
-
                 }
-
             }
-
         }
     }
 
     public void victoryMessage(String playerName) {
-        GameHandler global = GameHandler.getInstance();
+
         List<UUID> mergedList = new ArrayList<>(global.playerJoined);
         mergedList.addAll(global.playerSpectate);
 
         for (UUID key : mergedList) {
 
             Player player = Bukkit.getPlayer(key);
-            assert player != null;
-            player.sendTitle(ChatColor.GOLD + playerName.toUpperCase(),
+
+            if (player != null)
+                player.sendTitle(ChatColor.GOLD + playerName.toUpperCase(),
                     ChatColor.ITALIC + Messages.VICTORY_SUBTITLE,20,100,20);
 
         }
-
-
     }
 
 

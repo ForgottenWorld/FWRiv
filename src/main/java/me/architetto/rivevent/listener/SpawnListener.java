@@ -8,10 +8,10 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class SpawnListener implements Listener{
 
+    GameHandler global = GameHandler.getInstance();
+
     @EventHandler
     public void onPlayerSpawn(PlayerRespawnEvent event){
-
-        GameHandler global = GameHandler.getInstance();
 
         if (global.playerSpectate.contains(event.getPlayer().getUniqueId())) {
 

@@ -10,10 +10,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class QuitListener implements Listener{
 
+    GameHandler global = GameHandler.getInstance();
+
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
 
-        GameHandler global = GameHandler.getInstance();
         Player player = event.getPlayer();
 
         if (global.playerJoined.contains(player.getUniqueId())) {

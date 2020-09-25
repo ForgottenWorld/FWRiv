@@ -33,7 +33,6 @@ public class ProjectileHitListener implements Listener{
 
         if (p.getType() == EntityType.SNOWBALL && global.playerJoined.contains(playerHitted.getUniqueId())) {
 
-
             if (settings.snowballKnockbackToggle){
                 Vector knockbackVector = playerHitted.getLocation().getDirection().multiply(settings.snowballKnockbackPower * -1).setY(0.2);
                 playerHitted.setVelocity(knockbackVector);
