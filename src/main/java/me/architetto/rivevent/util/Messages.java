@@ -72,6 +72,8 @@ public class Messages{
     public static final String ALLERT_END_EVENT = "Reminder : Terminate l'evento con /rivevent stop";
 
 
+    public static final String CURSE_TRANSFER_MSG1 = "Bravo! Hai passato la maledizione a ";
+    public static final String CURSE_TRANSFER_MSG2 = ". Stagli più lontano che puoi!";
     public static final String CURSE_TRANSFER_EVENT = "Ti hanno passato la maledizione! Colpisci qualcuno per sbarazzartene ...";
 
 }

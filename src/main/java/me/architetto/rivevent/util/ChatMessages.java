@@ -20,8 +20,19 @@ public class ChatMessages{
         return ChatColor.AQUA + "[RIVe] " + ChatColor.RESET + message;
     }
 
-    public static String RIVallert(String message) { return ChatColor.LIGHT_PURPLE + "[RIVe]" + ChatColor.RESET
-            + ChatColor.ITALIC + ChatColor.AQUA + message; }
+    public static String RIVallert(String message) {
+
+        return ChatColor.LIGHT_PURPLE + "[RIVe]" + ChatColor.RESET
+            + ChatColor.ITALIC + ChatColor.AQUA + message;
+
+    }
+
+    public static String CurseMessage(String msg1, String playerName, String msg2) {
+
+        return ChatColor.AQUA + "[RIVe]" + ChatColor.RESET + msg1 + ChatColor.GOLD + playerName + ChatColor.RESET + msg2;
+
+    }
+
 
     public static String PosMessage(String message, Enum LOC) {
 

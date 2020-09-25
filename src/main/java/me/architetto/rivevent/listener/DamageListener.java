@@ -17,7 +17,7 @@ public class DamageListener implements Listener{
     public boolean curseCooldown = false;
 
     @EventHandler
-    public void disableDamage(EntityDamageByEntityEvent event){
+    public void onPlayerDamageByPlayer(EntityDamageByEntityEvent event){
 
         if (event.getDamager() instanceof Player){
 
@@ -36,8 +36,11 @@ public class DamageListener implements Listener{
 
                 Player damageTaker = ((Player) event.getEntity()).getPlayer();
 
-                if (global.cursedPlayer == damager){
-                    assert damageTaker != null;
+                if (damageTaker == null)
+                    return;
+
+                if (global.cursedPlayer == damager) {
+
                     if (global.playerJoined.contains(damageTaker.getUniqueId()) && !curseCooldown){
 
                         transferCurseCooldown();
@@ -45,10 +48,10 @@ public class DamageListener implements Listener{
                         global.cursedPlayer = damageTaker;
                         damageTaker.playSound(damageTaker.getLocation(), Sound.ENTITY_GHAST_HURT,4,1);
                         damageTaker.sendMessage(ChatMessages.GOLD(Messages.CURSE_TRANSFER_EVENT));
-                        damager.sendMessage("Hai passato la maledizione a " + damageTaker.getDisplayName() + ". Stagli lontano!");
+
+                        damager.sendMessage(ChatMessages.CurseMessage(Messages.CURSE_TRANSFER_MSG1,damageTaker.getDisplayName(),Messages.CURSE_TRANSFER_MSG2));
                     }
                 }
-
             }
         }
     }
