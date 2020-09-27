@@ -1,7 +1,5 @@
 **FWRiv** - Plugin per la gestione dell'evento "Resta in vetta" (RIV)
 
-**ATTENZIONE** Al momento il plugin permette ai partecipanti all'evento di rompere blocchi e/o interaggire con porte,tasti et similia.
-
 ### COMANDI
 
 ```sh
