@@ -12,8 +12,7 @@ import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.*;
 
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Openable;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import org.bukkit.inventory.ItemStack;
@@ -68,9 +67,8 @@ public class StartCommand extends SubCommand{
 
         readyAllert();
 
-        openDoors(settings.openDoorsDelay);
-        closeDoors(settings.closeDoorsDelay);
-
+        openDoorsRunnable();
+        closeDoorsRunnable();
 
         if (settings.antiCamperToggle) {
             antiCamperSystem();
@@ -104,8 +102,7 @@ public class StartCommand extends SubCommand{
 
     }
 
-    public void openDoors (long delay) {
-
+    public void openDoorsRunnable() {
 
         new BukkitRunnable() {
 
@@ -114,20 +111,7 @@ public class StartCommand extends SubCommand{
 
                 global.startDoneFlag = true;
 
-                for(org.bukkit.block.Block block : global.doorsToOpen){
-
-                    if (!Tag.DOORS.getValues().contains(block.getType())
-                            && !Tag.DOORS.getValues().contains(block.getType())
-                            && !Tag.FENCE_GATES.getValues().contains(block.getType())){
-                        continue;
-                    } //Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
-
-                    BlockData data = block.getBlockData();
-                    Openable door = (Openable) data;
-                    door.setOpen(true);
-                    block.setBlockData(door, true);
-
-                }
+                global.openDoors();
 
                 for (UUID key : global.playerJoined) {
 
@@ -140,32 +124,20 @@ public class StartCommand extends SubCommand{
 
 
             }
-        }.runTaskLater(RIVevent.plugin, delay);
+        }.runTaskLater(RIVevent.plugin, settings.openDoorsDelay);
     }
 
-    public void closeDoors (long delay) {
+    public void closeDoorsRunnable() {
 
         new BukkitRunnable() {
 
             @Override
             public void run() {
 
-                for(org.bukkit.block.Block block : global.doorsToOpen){
+                global.closeDoors();
 
-                    if (!Tag.DOORS.getValues().contains(block.getType())
-                            && !Tag.DOORS.getValues().contains(block.getType())
-                            && !Tag.FENCE_GATES.getValues().contains(block.getType())){
-                        continue;
-                    }//Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
-
-                    BlockData data = block.getBlockData();
-                    Openable door = (Openable) data;
-                    door.setOpen(false);
-                    block.setBlockData(door, true);
-
-                }
             }
-        }.runTaskLater(RIVevent.plugin, delay);
+        }.runTaskLater(RIVevent.plugin, settings.closeDoorsDelay);
 
 
     }
@@ -188,12 +160,13 @@ public class StartCommand extends SubCommand{
                     return;
                 }
 
-
                 for (UUID key : global.playerJoined) {
+
                     Player player = Bukkit.getPlayer(key);
 
+                    if (player == null)
+                        continue;
 
-                    assert player != null;
                     if (player.getInventory().firstEmpty() == -1){
                         player.sendMessage(ChatMessages.AQUA("Non hai ricevuto nulla perchè il tuo inventario è pieno!"));
                         continue;
@@ -233,6 +206,9 @@ public class StartCommand extends SubCommand{
 
         redLineManager();
 
+        redLineParticleEffect(LocSerialization.getDeserializedLocation(global.riveventPreset
+                .get(global.presetSummon).get(RightClickListener.Step.TOWER)).clone(),12);
+
     }
 
     public void checkPlayersPosition() {
@@ -241,7 +217,7 @@ public class StartCommand extends SubCommand{
             @Override
             public void run(){
 
-                if (global.playerJoined.size() <= 1){
+                if (global.playerJoined.size() < 1){
                     this.cancel();
                     return;
                 }
@@ -267,7 +243,7 @@ public class StartCommand extends SubCommand{
         y = Math.min(y, LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN3)).getBlockY());
         y = Math.min(y, LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPAWN4)).getBlockY());
 
-        return y;
+        return y+2;
     }
 
     public void redLineManager() {
@@ -288,11 +264,63 @@ public class StartCommand extends SubCommand{
                     }
                 }
 
-                if (redLineY == maxYredLine - settings.antiCamperMaxY || global.playerJoined.size() <= 1)
+                if (redLineY == maxYredLine - settings.antiCamperMaxY || global.playerJoined.size() < 1)
                     this.cancel();
 
             }
         }.runTaskTimer(RIVevent.plugin,settings.antiCamperStartDelay + settings.antiCamperRedLineGrowPeriod,settings.antiCamperRedLineGrowPeriod);
+
+
+    }
+
+    public void redLineParticleEffect(Location xzLoc,int radius) {
+
+         xzLoc.setY(redLineY);
+
+        new BukkitRunnable() {
+
+            final Particle.DustOptions dustOptions = new Particle.DustOptions(org.bukkit.Color.fromRGB(200, 0, 0),10);
+            final Particle.DustOptions dustOptions2 = new Particle.DustOptions(org.bukkit.Color.fromRGB(0, 0, 0),2);
+            final int startYRedLine = redLineY;
+            boolean deathLineAnimation = true;
+
+            @Override
+            public void run(){
+
+                xzLoc.setY(redLineY);
+                Block middle = xzLoc.getBlock();
+                for (int x = radius; x >= -radius; x--) {
+
+                    for (int z = radius; z >= -radius; z--) {
+
+                        if (middle.getRelative(x, 0, z).getType().isAir()) {
+
+                            if (z < radius - 1 && z > -radius + 1 && x < radius - 1 && x > -radius + 1)
+                                continue;
+
+                           if (deathLineAnimation)
+                               xzLoc.getWorld().spawnParticle(Particle.REDSTONE, middle.getRelative(x, 0, z).getLocation(), 2, dustOptions);
+                           else
+                               xzLoc.getWorld().spawnParticle(Particle.REDSTONE, middle.getRelative(x, 0, z).getLocation(), 1, dustOptions2);
+
+
+                           if (redLineY >= startYRedLine + 3)
+                               xzLoc.getWorld().spawnParticle(Particle.CAMPFIRE_COSY_SMOKE, middle.getRelative(x, -1, z).getLocation(), 0, 0,-0.02,0);
+
+                        }
+                    }
+                }
+
+                deathLineAnimation= !deathLineAnimation;
+
+
+            }
+        }.runTaskTimer(RIVevent.plugin,settings.antiCamperStartDelay,10);
+
+
+
+
+
 
 
     }
