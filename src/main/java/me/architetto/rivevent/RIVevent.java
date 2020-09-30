@@ -117,6 +117,8 @@ public final class RIVevent extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DamageListener(),this);
         getServer().getPluginManager().registerEvents(new SpawnListener(),this);
         getServer().getPluginManager().registerEvents(new ProjectileHitListener(),this);
+        getServer().getPluginManager().registerEvents(new BlockListener(),this);
+        getServer().getPluginManager().registerEvents(new ItemDropListener(),this);
 
 
     }
