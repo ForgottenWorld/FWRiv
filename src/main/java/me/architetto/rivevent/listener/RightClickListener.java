@@ -14,8 +14,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 public class RightClickListener implements Listener{
@@ -24,6 +27,7 @@ public class RightClickListener implements Listener{
     SettingsHandler setting = SettingsHandler.getInstance();
 
     public final HashMap<UUID, Step> saveCreatorStep = new HashMap<>();
+    public List<UUID> targetBlockCooldown = new ArrayList<>();
 
     public enum Step {SPAWN1, SPAWN2, SPAWN3, SPAWN4, TOWER, SPECTATE}
 
@@ -157,6 +161,36 @@ public class RightClickListener implements Listener{
         }
     }
 
+    @EventHandler
+    public void targetBlockInteract(PlayerInteractEvent event) {
+
+        if (global.presetSummon.isEmpty())
+            return;
+
+        Player player = event.getPlayer();
+
+        if (global.playerJoined.contains(player.getUniqueId())
+                && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+                && Objects.requireNonNull(event.getClickedBlock()).getType() == Material.TARGET
+                && Objects.equals(event.getHand(), EquipmentSlot.HAND)
+                && global.startDoneFlag) {
+
+            if (targetBlockCooldown.contains(player.getUniqueId())) {
+                player.sendMessage(ChatMessages.RED("Target-block in ricarica ... "));
+                return;
+            }
+
+            //WIP todo: effetti randomici ?
+
+            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, new SecureRandom().nextInt(300), 3));
+            player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1,1);
+            targetBlockCooldown.add(player.getUniqueId());
+            targetBlockCooldownRunnable(player);
+
+        }
+
+    }
+
 
     public void spawnEffectAtBlock(Location loc, int redValue, int greenValue, int blueValue) {
 
@@ -184,6 +218,19 @@ public class RightClickListener implements Listener{
 
         return new ArrayList<>(global.riveventPreset.get(presetName).keySet()).containsAll(new ArrayList<Step>())
                 && !global.riveventPreset.get(presetName).containsValue(null);
+    }
+
+    public void targetBlockCooldownRunnable(Player p) {
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run(){
+                p.sendMessage(ChatMessages.AQUA("Target Block reward disponibile!"));
+                targetBlockCooldown.remove(p.getUniqueId());
+            }
+        }.runTaskLater(RIVevent.plugin,600L);
+
     }
 
 
