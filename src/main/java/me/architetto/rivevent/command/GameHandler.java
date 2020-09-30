@@ -4,7 +4,10 @@ import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.listener.RightClickListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
 
 import java.security.SecureRandom;
@@ -103,6 +106,44 @@ public class GameHandler{
     public boolean isMinigameInProgress() {
 
         return curseEventFlag || backToLifeEventFlag || fallDownEventFlag || deathRaceEventFlag;
+
+    }
+
+    //OPEN & CLOSE DOORS
+
+    public void closeDoors(){
+
+        for(org.bukkit.block.Block block : doorsToOpen){
+
+            if (!Tag.DOORS.getValues().contains(block.getType())
+                    && !Tag.FENCE_GATES.getValues().contains(block.getType())){
+                continue;
+            }//Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
+
+            BlockData data = block.getBlockData();
+            Openable door = (Openable) data;
+            door.setOpen(false);
+            block.setBlockData(door, true);
+
+        }
+
+    }
+
+    public void openDoors(){
+
+        for(org.bukkit.block.Block block : doorsToOpen){
+
+            if (!Tag.DOORS.getValues().contains(block.getType())
+                    && !Tag.FENCE_GATES.getValues().contains(block.getType())){
+                continue;
+            } //Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
+
+            BlockData data = block.getBlockData();
+            Openable door = (Openable) data;
+            door.setOpen(true);
+            block.setBlockData(door, true);
+
+        }
 
     }
 
