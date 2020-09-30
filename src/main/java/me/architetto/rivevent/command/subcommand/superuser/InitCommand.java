@@ -38,6 +38,10 @@ public class InitCommand extends SubCommand{
             return;
         }
 
+        if (args.length < 2) {
+            return;
+        }
+
         if (!global.presetSummon.isEmpty()) {
             sender.sendMessage(ChatMessages.RED(Messages.ERR_EVENT) + " [ " + global.presetSummon + " ] ");
             return;
