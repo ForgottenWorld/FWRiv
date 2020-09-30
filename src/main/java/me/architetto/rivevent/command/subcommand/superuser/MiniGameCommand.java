@@ -9,8 +9,6 @@ import me.architetto.rivevent.util.ChatMessages;
 import me.architetto.rivevent.util.LocSerialization;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.*;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Openable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -120,14 +118,17 @@ public class MiniGameCommand extends SubCommand{
         global.cursedPlayer.sendTitle(ChatColor.RED  + "Sei stato maledetto !",ChatColor.ITALIC + "Presto, colpisci qualcuno per sbarazzarti della maledizione!",20,120,20);
         global.cursedPlayer.getWorld().playSound(global.cursedPlayer.getLocation(), Sound.ENTITY_GHAST_HURT,5,2);
 
-        for (UUID u : global.playerJoined) {
-            Player p = Bukkit.getPlayer(u);
+        for (UUID u : global.allPlayerList()) {
 
-            if (p == global.cursedPlayer)
+            Player p = Bukkit.getPlayer(u);
+            if (p == global.cursedPlayer || p == null)
                 continue;
 
-            assert p != null;
-            p.sendMessage(ChatMessages.AQUA("Attento, uno dei partecipanti è stato maledetto! Non farti toccare!"));
+            if (global.playerJoined.contains(u))
+                p.sendMessage(ChatMessages.AQUA("Attento, uno dei partecipanti è stato maledetto! Non farti toccare!"));
+
+            if (global.playerSpectate.contains(u))
+                p.sendMessage(ChatMessages.RED("Uno dei partecipanti è stato maledetto!"));
         }
 
         execution();
@@ -151,6 +152,11 @@ public class MiniGameCommand extends SubCommand{
             @Override
             public void run(){
 
+                if (!global.curseEventFlag) {
+                    this.cancel();
+                    return;
+                }
+
                 global.curseEventFlag = false;
 
                 if (!global.playerJoined.contains(global.cursedPlayer.getUniqueId())) {
@@ -165,7 +171,9 @@ public class MiniGameCommand extends SubCommand{
 
                     Player p = Bukkit.getPlayer(u);
 
-                    assert p != null;
+                    if (p ==  null)
+                        continue;
+
                     p.sendTitle( ChatColor.DARK_RED + global.cursedPlayer.getDisplayName() + ChatColor.RESET +  "e' morto!",
                             "La maledizione si e' compiuta!",20,60,20);
 
@@ -173,7 +181,7 @@ public class MiniGameCommand extends SubCommand{
 
 
             }
-        }.runTaskLater(RIVevent.plugin,3600L);
+        }.runTaskLater(RIVevent.plugin,2400L);
 
     }
 
@@ -284,6 +292,7 @@ public class MiniGameCommand extends SubCommand{
             if (p != null) {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 140, 10));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 200, 20));
+                p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 300, 3));
                 p.sendTitle("","Tutti giu' per terra!",20,80,20);
             }
 
@@ -324,40 +333,15 @@ public class MiniGameCommand extends SubCommand{
 
     public void manageDoors() {
 
-        for(org.bukkit.block.Block block : global.doorsToOpen){
-
-            if (!Tag.DOORS.getValues().contains(block.getType())
-                    && !Tag.DOORS.getValues().contains(block.getType())
-                    && !Tag.FENCE_GATES.getValues().contains(block.getType())){
-                continue;
-            } //Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
-
-            BlockData data = block.getBlockData();
-            Openable door = (Openable) data;
-            door.setOpen(true);
-            block.setBlockData(door, true);
-
-        }
+        global.openDoors();
 
         new BukkitRunnable() {
 
             @Override
             public void run() {
 
-                for(org.bukkit.block.Block block : global.doorsToOpen){
+                global.closeDoors();
 
-                    if (!Tag.DOORS.getValues().contains(block.getType())
-                            && !Tag.DOORS.getValues().contains(block.getType())
-                            && !Tag.FENCE_GATES.getValues().contains(block.getType())){
-                        continue;
-                    }//Evita qualche errore strano (Porte che vengono tolte tra il /.. setup ed il /.. start)
-
-                    BlockData data = block.getBlockData();
-                    Openable door = (Openable) data;
-                    door.setOpen(false);
-                    block.setBlockData(door, true);
-
-                }
             }
         }.runTaskLater(RIVevent.plugin, 2400L);
 
@@ -365,7 +349,7 @@ public class MiniGameCommand extends SubCommand{
 
     // -- ALLFALLDOWN-Minigame methods -- // }
 
-    // -- DEATHRACE-Minigame methods -- // {       //Work in progress
+    // -- DEATHRACE-Minigame methods -- // {
 
     public void deathRaceEvent(Player player) {
 
@@ -468,6 +452,8 @@ public class MiniGameCommand extends SubCommand{
 
        return p;
     }
+
+    // -- DEATHRACE-Minigame methods -- // }
 
 
 
