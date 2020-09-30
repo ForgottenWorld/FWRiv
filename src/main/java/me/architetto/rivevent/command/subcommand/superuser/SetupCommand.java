@@ -12,6 +12,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -104,6 +105,10 @@ public class SetupCommand extends SubCommand{
                     }
 
                     p.getInventory().clear();
+
+                    for (PotionEffect effect : p.getActivePotionEffects())
+                        p.removePotionEffect(effect.getType());
+
                     equipLoadout(p);
                     index++;
 
