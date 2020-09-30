@@ -10,7 +10,9 @@ public class SettingsHandler{
     public int openDoorsDelay;
     public int closeDoorsDelay;
 
-
+    public boolean allowBreackblock;
+    public boolean allowPlaceBlock;
+    public boolean allowInteraction;
 
     public boolean rewardPlayersOnTopToggle;
     public long rewardPlayerPeriod;
@@ -51,12 +53,16 @@ public class SettingsHandler{
         openDoorsDelay = RIVevent.plugin.getConfig().getInt("OPEN_DOORS_DELAY",5) * 20;
         closeDoorsDelay = RIVevent.plugin.getConfig().getInt("CLOSE_DOORS_DELAY",15) * 20 + openDoorsDelay;
 
+        allowBreackblock = RIVevent.plugin.getConfig().getBoolean("ALLOW_BREAK_BLOCK",true);
+        allowPlaceBlock = RIVevent.plugin.getConfig().getBoolean("ALLOW_PLACE_BLOCK",true);
+        allowInteraction = RIVevent.plugin.getConfig().getBoolean("ALLOW_INTERACTION",true);
+
         antiCamperToggle = RIVevent.plugin.getConfig().getBoolean("ANTI_CAMPER_TOGGLE",true);
         antiCamperStartDelay = RIVevent.plugin.getConfig().getLong("AC_DELAY",120) * 20;
         antiCamperPeriod = RIVevent.plugin.getConfig().getLong("AC_DAMAGE_PERIOD",2) * 20;
         antiCamperDamage = Math.abs(RIVevent.plugin.getConfig().getInt("AC_DAMAGE",1));
         antiCamperMaxY = RIVevent.plugin.getConfig().getInt("AC_MIN_REDLINE_DIFFERENCE",4);
-        antiCamperRedLineGrowPeriod = RIVevent.plugin.getConfig().getInt("RED_LINE_GROW_PERIOD",60) * 20;
+        antiCamperRedLineGrowPeriod = RIVevent.plugin.getConfig().getInt("AC_REDLINE_GROW_PERIOD",60) * 20;
         antiCamperRedLineGrowValue = RIVevent.plugin.getConfig().getInt("RED_LINE_GROW_VALUE",1);
 
         rewardPlayersOnTopToggle = RIVevent.plugin.getConfig().getBoolean("REWARD_PLAYER_ON_TOP",true);
