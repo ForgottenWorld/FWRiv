@@ -51,7 +51,8 @@ public class SpectateCommand extends SubCommand{
 
         if (global.playerSpectate.contains(sender.getUniqueId())) {
 
-            sender.sendMessage(ChatMessages.RED(Messages.ERR_SPECTATE));
+            sender.teleport(LocSerialization.getDeserializedLocation(global.riveventPreset.get(global.presetSummon).get(RightClickListener.Step.SPECTATE)));
+            sender.playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,2,1);
             return;
 
         }
