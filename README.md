@@ -27,6 +27,10 @@ Ricarica i settings.
 ```
 Inizializza l'evento RIV utilizzando il preset indicato.
 ```sh
+/rivevent eventinfo
+```
+Mostra in numero di player che partecipano all'evento.
+```sh
 /rivevent setup
 ```
 Teletrasporta i players partecipanti ai punti di partenza.
