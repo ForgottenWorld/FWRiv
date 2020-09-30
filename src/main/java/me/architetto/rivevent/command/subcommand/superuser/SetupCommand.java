@@ -65,6 +65,8 @@ public class SetupCommand extends SubCommand{
 
         getSpawnDoors();
 
+        global.closeDoors();
+
         teleportToSpawn(sender);
 
     }
