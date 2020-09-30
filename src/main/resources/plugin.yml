@@ -30,6 +30,7 @@ permissions:
       rivevent.start : true
       rivevent.stop : true
       rivevent.user : true
+      rivevent.eventinfo : true
 
   rivevent.user:
     description: description
