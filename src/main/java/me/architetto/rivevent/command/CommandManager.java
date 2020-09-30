@@ -35,6 +35,7 @@ public class CommandManager implements TabExecutor{
         subcommands.add(new SpectateCommand());
         subcommands.add(new MiniGameCommand());
         subcommands.add(new LeaveCommand());
+        subcommands.add(new EventInfo());
     }
 
     @Override
