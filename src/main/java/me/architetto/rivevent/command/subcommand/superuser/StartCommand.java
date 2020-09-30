@@ -217,7 +217,7 @@ public class StartCommand extends SubCommand{
             @Override
             public void run(){
 
-                if (global.playerJoined.size() < 1){
+                if (global.playerJoined.size() <= 1){
                     this.cancel();
                     return;
                 }
@@ -264,7 +264,7 @@ public class StartCommand extends SubCommand{
                     }
                 }
 
-                if (redLineY == maxYredLine - settings.antiCamperMaxY || global.playerJoined.size() < 1)
+                if (redLineY == maxYredLine - settings.antiCamperMaxY || global.playerJoined.size() <= 1)
                     this.cancel();
 
             }
@@ -286,6 +286,10 @@ public class StartCommand extends SubCommand{
 
             @Override
             public void run(){
+
+                if (global.playerJoined.size() <= 1) {
+                    this.cancel();
+                }
 
                 xzLoc.setY(redLineY);
                 Block middle = xzLoc.getBlock();
