@@ -40,6 +40,16 @@ public class DeathListener implements Listener{
             event.getDrops().clear();
             deadPlayer.sendMessage(ChatMessages.GREEN(Messages.DEATH_MESSAGE));
 
+            if (global.curseEventFlag && global.cursedPlayer == deadPlayer) {
+
+                global.curseEventFlag = false;
+                for (UUID u : global.allPlayerList()){
+                    Objects.requireNonNull(Bukkit.getPlayer(u)).sendMessage(ChatMessages.RED(deadPlayer.getDisplayName()
+                            + " e' morto portandosi la maledizione nella tomba!"));
+                }
+
+            }
+
             if (global.playerJoined.size() <= 1){
 
                 Bukkit.broadcast(ChatMessages.RIVallert(Messages.ALLERT_END_EVENT),"rivevent.superuser");
