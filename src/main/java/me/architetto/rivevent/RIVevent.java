@@ -1,105 +1,90 @@
 package me.architetto.rivevent;
 
+import me.architetto.rivevent.arena.ArenaManager;
 import me.architetto.rivevent.command.CommandManager;
-import me.architetto.rivevent.command.GameHandler;
-import me.architetto.rivevent.command.SettingsHandler;
-import me.architetto.rivevent.listener.*;
+import me.architetto.rivevent.config.ConfigManager;
+import me.architetto.rivevent.config.SettingsHandler;
+import me.architetto.rivevent.listener.arena.ArenaCreationListener;
+import me.architetto.rivevent.listener.event.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
 import java.util.Objects;
-import java.util.UUID;
 
 public final class RIVevent extends JavaPlugin {
 
-    private static final String pathPreset = "plugins/Rivevent/preset.txt";
     public static Plugin plugin;
-
-    GameHandler global = GameHandler.getInstance();
-    SettingsHandler settings = SettingsHandler.getInstance();
-
 
     @Override
     public void onEnable() {
 
         plugin = this;
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading configuration...");
-        loadConfiguration();
+        Bukkit.getConsoleSender().sendMessage("=====================[      RIVe      ]======================");
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading settings...");
-        loadSettings();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "RIVe >>" + ChatColor.RESET + " Loading settings files...");
+        loadSettingsFile();
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading commands...");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "RIVe >>" + ChatColor.RESET + " Loading presets ...");
+        loadPresetFile();
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "RIVe >>" + ChatColor.RESET + " Loading commands...");
         loadCommands();
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading listeners...");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "RIVe >>" + ChatColor.RESET + " Loading listeners...");
         loadListener();
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.AQUA + "[RIVevent]" + ChatColor.RESET + " Loading preset...");
-        loadRIVPreset();
+        Bukkit.getConsoleSender().sendMessage("=============================================================");
+
 
     }
 
     @Override
     public void onDisable() {
 
-        if (global.setupStartFlag && !global.playerJoined.isEmpty())
-            clearPlayerJoinedInventory();
+
+    }
+
+    private void loadSettingsFile(){
+
+        ConfigManager.getInstance().setPlugin(plugin);
+        ConfigManager.getInstance().getConfig("Settings.yml");
+        SettingsHandler.getInstance().load();
+
+        if (SettingsHandler.getInstance().respawnLocation == null)
+            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "RIVe >> " + ChatColor.UNDERLINE + "Respawn point missing ...");
 
 
     }
 
-    public static <T> void save(T obj) throws Exception {
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(
-                pathPreset));
-        oos.writeObject(obj);
-        oos.flush();
-        oos.close();
-    }
+    public void loadPresetFile() {
 
-    public static <T> T load() throws Exception {
-        ObjectInputStream
-                ois =
-                new ObjectInputStream(
-                        new FileInputStream(
-                                pathPreset));
-        @SuppressWarnings("unchecked")
-        T result = (T) ois.readObject();
-        ois.close();
-        return result;
-    }
+        ConfigManager.getInstance().getConfig("Preset.yml");
 
-    public void loadConfiguration() {
-        getConfig().options().copyDefaults(true);
-        saveDefaultConfig();
-    }
+        ConfigurationSection configurationSection = ConfigManager.getInstance()
+                .getConfig("Preset.yml").getConfigurationSection("");
 
-    public void loadRIVPreset() {
+        if (configurationSection == null)
+            return;
 
-        File presetFile = new File(pathPreset);
+        ArenaManager presetService = ArenaManager.getInstance();
+        ConfigManager configManager = ConfigManager.getInstance();
 
-        World w = Bukkit.getServer().getWorld(Objects.requireNonNull(getConfig().getString("RESPAWN.w")));
+        for (String presetName : configurationSection.getKeys(false)) {
 
-        global.endEventRespawnLocation = new Location(w, getConfig().getInt("RESPAWN.x"), getConfig().getInt("RESPAWN.y"),
-                getConfig().getInt("RESPAWN.z"));
+            presetService.newArena(
+                    presetName,
+                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN1" ),
+                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN2"),
+                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN3"),
+                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN4"),
+                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".TOWER"),
+                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPECTATOR"));
 
-
-        try{
-            if (!presetFile.createNewFile ()) {
-                if (presetFile.length() != 0)
-                    global.riveventPreset = load();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
         }
-
     }
 
     public void loadCommands() {
@@ -110,40 +95,18 @@ public final class RIVevent extends JavaPlugin {
 
     public void loadListener() {
 
-        getServer().getPluginManager().registerEvents(new RightClickListener(),this);
+        getServer().getPluginManager().registerEvents(new ArenaCreationListener(),this);
+        getServer().getPluginManager().registerEvents(new BlockListener(),this);
+        getServer().getPluginManager().registerEvents(new DamageListener(),this);
         getServer().getPluginManager().registerEvents(new FoodLevelListener(),this);
         getServer().getPluginManager().registerEvents(new DeathListener(),this);
-        getServer().getPluginManager().registerEvents(new QuitListener(),this);
-        getServer().getPluginManager().registerEvents(new DamageListener(),this);
-        getServer().getPluginManager().registerEvents(new SpawnListener(),this);
-        getServer().getPluginManager().registerEvents(new ProjectileHitListener(),this);
-        getServer().getPluginManager().registerEvents(new BlockListener(),this);
         getServer().getPluginManager().registerEvents(new ItemDropListener(),this);
-
-
-    }
-
-    public void loadSettings() {
-
-        settings.load();
-
-        global.loadRewardItemList();
-        global.loadStartLoadout();
+        getServer().getPluginManager().registerEvents(new ProjectileHitListener(),this);
+        getServer().getPluginManager().registerEvents(new QuitListener(),this);
+        getServer().getPluginManager().registerEvents(new RightClickListener(),this);
 
     }
 
-    public void clearPlayerJoinedInventory() {
-
-        Player player;
-
-        for (UUID target : global.playerJoined) {
-            player = Bukkit.getPlayer(target);
-
-            if (player != null)
-                player.getInventory().clear();
-        }
-
-    }
 
 
 

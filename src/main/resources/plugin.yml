@@ -22,10 +22,11 @@ permissions:
     description: description
     default: false
     children:
+      rivevent.config: true
       rivevent.init : true
-      rivevent.restart : true
+      rivevent.restartevent : true
       rivevent.minigame : true
-      rivevent.list : true
+      rivevent.arenainfo : true
       rivevent.setup : true
       rivevent.start : true
       rivevent.stop : true
@@ -38,4 +39,3 @@ permissions:
     children:
       rivevent.join : true
       rivevent.leave : true
-      rivevent.spectate : true

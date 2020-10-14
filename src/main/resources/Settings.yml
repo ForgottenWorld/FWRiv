@@ -1,0 +1,49 @@
+# -------------------------------------------------- #
+# -----------      [RIV CONFIG FILE]       --------- #
+# --------------  made  by  Architetto  ------------ #
+# -------------------------------------------------- #
+
+RESPAWN_POINT: 'null'
+
+FOOD_LEVEL: 12
+
+ANTI_CAMPER_START_DELAY: 30
+ANTI_CAMPER_DAMAGE_PERIOD: 1
+ANTI_CAMPER_DAMAGE: 2
+ANTI_CAMPER_DAMAGE_FINAL_BOOST: 4
+ANTI_CAMPER_GROW_PERIOD: 15
+ANTI_CAMPER_GROW_VALUE: 2
+ANTI_CAMPER_RL_DIF: 5
+
+REWARD_PERIOD: 20
+
+SNOWBALL_KNOCKBACK_POWER: 2
+SNOWBALL_DAMAGE: 0.1
+
+ENABLE_TARGET_BLOCK: true
+
+DEATH_RACE_PERIOD: 60
+
+START_LOADOUT:
+  - 'COOKED_PORKCHOP,15'
+
+LIST_ITEMS_REWARD:
+  - 'SNOWBALL,3,16'
+  - 'LEATHER_LEGGINGS,3,1'
+  - 'LEATHER_BOOTS,3,1'
+  - 'LEATHER_HELMET,3,1'
+  - 'LEATHER_CHESTPLATE,2,1'
+  - 'GOLDEN_APPLE,1.1,1'
+  - 'ENDER_PEARL,1.1,2'
+  - 'MILK_BUCKET,1.5,1'
+  - 'BAKED_POTATO,5,16'
+  - 'FISHING_ROD,0.3,1'
+  - 'ENCHANTED_GOLDEN_APPLE,0.5,1'
+  - 'TOTEM_OF_UNDYING,0.1,1'
+
+
+
+
+
+
+

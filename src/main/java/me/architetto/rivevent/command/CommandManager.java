@@ -1,14 +1,12 @@
 package me.architetto.rivevent.command;
 
-import me.architetto.rivevent.command.subcommand.admin.CreateCommand;
-import me.architetto.rivevent.command.subcommand.admin.DeleteCommand;
-import me.architetto.rivevent.command.subcommand.admin.ReloadCommand;
-import me.architetto.rivevent.command.subcommand.superuser.*;
-import me.architetto.rivevent.command.subcommand.user.JoinCommand;
-import me.architetto.rivevent.command.subcommand.user.LeaveCommand;
-import me.architetto.rivevent.command.subcommand.user.SpectateCommand;
-import me.architetto.rivevent.util.ChatMessages;
-import me.architetto.rivevent.util.Messages;
+import me.architetto.rivevent.command.admin.CreateCommand;
+import me.architetto.rivevent.command.admin.DeleteCommand;
+import me.architetto.rivevent.command.admin.ReloadCommand;
+import me.architetto.rivevent.command.superuser.*;
+import me.architetto.rivevent.command.user.JoinCommand;
+import me.architetto.rivevent.command.user.LeaveCommand;
+import me.architetto.rivevent.util.ChatFormatter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -24,15 +22,15 @@ public class CommandManager implements TabExecutor{
     public CommandManager(){
         subcommands.add(new CreateCommand());
         subcommands.add(new ReloadCommand());
-        subcommands.add(new ListCommand());
+        subcommands.add(new ArenaInfoCommand());
         subcommands.add(new DeleteCommand());
         subcommands.add(new InitCommand());
-        subcommands.add(new RestartCommand());
+        subcommands.add(new RestartEventCommand());
         subcommands.add(new StopCommand());
+        subcommands.add(new ConfigCommand());
         subcommands.add(new SetupCommand());
         subcommands.add(new JoinCommand());
         subcommands.add(new StartCommand());
-        subcommands.add(new SpectateCommand());
         subcommands.add(new MiniGameCommand());
         subcommands.add(new LeaveCommand());
         subcommands.add(new EventInfoCommand());
@@ -42,7 +40,7 @@ public class CommandManager implements TabExecutor{
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatMessages.RED(Messages.NO_CONSOLE));
+            sender.sendMessage(ChatFormatter.formatErrorMessage("Error: can't run commands from console"));
             return true;
         }
 
