@@ -18,74 +18,41 @@ public class Arena {
     private Location spawn3;
     private Location spawn4;
     private Location tower;
-    private Location spectator;
 
     public Arena(String arenaName, Location Spawn1, Location Spawn2, Location spawn3,
-                 Location spawn4, Location towerTopLoc, Location spectatorspawnloc) {
+                 Location spawn4, Location towerTopLoc) {
         this.arenaName = arenaName;
         this.spawn1 = Spawn1;
         this.spawn2 = Spawn2;
         this.spawn3 = spawn3;
         this.spawn4 = spawn4;
         this.tower = towerTopLoc;
-        this.spectator = spectatorspawnloc;
-    }
-
-    public Location getSpawn1() {
-        return spawn1;
-    }
-
-    public void setSpawn1(Location spawn1) {
-        this.spawn1 = spawn1;
-    }
-
-    public Location getSpawn2() {
-        return spawn2;
-    }
-
-    public void setSpawn2(Location spawn2) {
-        this.spawn2 = spawn2;
-    }
-
-    public Location getSpawn3() {
-        return spawn3;
-    }
-
-    public void setSpawn3(Location spawn3) {
-        this.spawn3 = spawn3;
-    }
-
-    public Location getSpawn4() {
-        return spawn4;
-    }
-
-    public void setSpawn4(Location spawn4) {
-        this.spawn4 = spawn4;
-    }
-
-    public Location getTower() {
-        return tower;
-    }
-
-    public void setTower(Location tower) {
-        this.tower = tower;
-    }
-
-    public Location getSpectator() {
-        return spectator;
-    }
-
-    public void setSpectator(Location spectator) {
-        this.spectator = spectator;
     }
 
     public String getName() {
         return this.arenaName;
     }
 
-    public void setName(String name) {
-        this.arenaName = name;
+    public Location getSpawn1() {
+        return spawn1;
     }
+
+    public Location getSpawn2() {
+        return spawn2;
+    }
+
+    public Location getSpawn3() {
+        return spawn3;
+    }
+
+    public Location getSpawn4() {
+        return spawn4;
+    }
+
+    public Location getTower() {
+        return tower;
+    }
+
 
     public List<Location> getAllSpawnLocations() {
 
@@ -94,17 +61,6 @@ public class Arena {
                         spawn2,
                         spawn3,
                         spawn4));
-
-    }
-
-    public int getLowestY() {
-
-        int y = Math.min(1000, spawn1.getBlockY());
-        y = Math.min(y, spawn2.getBlockY());
-        y = Math.min(y, spawn3.getBlockY());
-        y = Math.min(y, spawn4.getBlockY());
-
-        return y;
 
     }
 
@@ -131,6 +87,17 @@ public class Arena {
         return doorsList;
     }
 
+    public int getLowestY() {
+
+        int y = Math.min(1000, spawn1.getBlockY());
+        y = Math.min(y, spawn2.getBlockY());
+        y = Math.min(y, spawn3.getBlockY());
+        y = Math.min(y, spawn4.getBlockY());
+
+        return y;
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -140,13 +107,12 @@ public class Arena {
                 Objects.equals(spawn2, arena.spawn2) &&
                 Objects.equals(spawn3, arena.spawn3) &&
                 Objects.equals(spawn4, arena.spawn4) &&
-                Objects.equals(tower, arena.tower) &&
-                Objects.equals(spectator, arena.spectator);
+                Objects.equals(tower, arena.tower);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(spawn1, spawn2, spawn3, spawn4, tower, spectator);
+        return Objects.hash(spawn1, spawn2, spawn3, spawn4, tower);
     }
 
 }
