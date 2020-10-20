@@ -1,5 +1,7 @@
 **FWRiv** - Plugin per la gestione dell'evento "Resta in vetta" (RIV)
 
+**LISTA COMANDI NON AGGIORNATA**
+
 ### COMANDI
 
 ```sh
