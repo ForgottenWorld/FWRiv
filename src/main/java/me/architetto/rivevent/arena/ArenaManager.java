@@ -19,7 +19,6 @@ public class ArenaManager {
     private final int SPAWN3 = 3;
     private final int SPAWN4 = 4;
     private final int TOWER = 5;
-    private final int SPECTATOR = 6;
 
     private HashMap<String, Arena> arenaContainer;
     private static ArenaManager arenaManager;
@@ -47,13 +46,13 @@ public class ArenaManager {
     }
 
     public boolean newArena(String presetName, Location firstSpawnLoc, Location secondSpawnLoc, Location thirdSpawnLoc,
-                            Location fourthSpawnLoc, Location towerTopLoc, Location spectatorSpawnLoc) {
+                            Location fourthSpawnLoc, Location towerTopLoc) {
 
         if(arenaContainer.containsKey(presetName)) {
             return false;
         }
 
-        Arena arena = new Arena(presetName, firstSpawnLoc, secondSpawnLoc, thirdSpawnLoc, fourthSpawnLoc, towerTopLoc, spectatorSpawnLoc);
+        Arena arena = new Arena(presetName, firstSpawnLoc, secondSpawnLoc, thirdSpawnLoc, fourthSpawnLoc, towerTopLoc);
 
         arenaContainer.put(presetName, arena);
 
@@ -64,7 +63,6 @@ public class ArenaManager {
         configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), thirdSpawnLoc ,presetName + ".SPAWN3");
         configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), fourthSpawnLoc ,presetName + ".SPAWN4");
         configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), towerTopLoc ,presetName + ".TOWER");
-        configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), spectatorSpawnLoc ,presetName + ".SPECTATOR");
 
         return true;
     }
@@ -83,43 +81,31 @@ public class ArenaManager {
             case SPAWN1:
                 playerArenaCoordinates.put(sender.getUniqueId(), new HashMap<>());
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN1, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("FIRST SPAWN selected..."));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("... Select SECOND SPAWN by right clicking on the block"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 2 (Click destro)"));
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 spawnEffectAtBlock(location);
                 break;
             case SPAWN2:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN2, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("SECOND SPAWN selected..."));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Select THIRD SPAWN by right clicking on the block"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 3 (Click destro)"));
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 spawnEffectAtBlock(location);
                 break;
             case SPAWN3:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN3, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("THIRD SPAWN selected..."));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Select FOURTH SPAWN by right clicking on the block"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 4 (Click destro)"));
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 spawnEffectAtBlock(location);
                 break;
             case SPAWN4:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN4, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("FOURTH SPAWN selected..."));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Select TOWER LOCATION by right clicking on the block"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione TORRE (Click destro)"));
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 spawnEffectAtBlock(location);
                 break;
             case TOWER:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(TOWER, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("TOWER LOCATION selected..."));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Select SPECTATOR SPAWN by right clicking on the block"));
-                location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                spawnEffectAtBlock(location);
-                break;
-            case SPECTATOR:
-                playerArenaCoordinates.get(sender.getUniqueId()).put(SPECTATOR, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("SPECTATOR SPAWN selected..."));
-                sender.sendMessage(ChatFormatter.formatSuccessMessage(" '" + playerArenaNameCreation.get(sender.getUniqueId()) + "'" + " arena creation completed!"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Creazione arena completata"));
                 location.getWorld().playSound(location, Sound.ENTITY_PLAYER_LEVELUP,1,1);
                 spawnEffectAtBlock(location);
 
@@ -128,10 +114,9 @@ public class ArenaManager {
                 Location thirdSpawnLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN3);
                 Location fourthSpawnLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN4);
                 Location towerTopLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(TOWER);
-                Location spectatorSpawnLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(SPECTATOR);
 
                 newArena(this.playerArenaNameCreation.get(sender.getUniqueId()), firstSpawnLoc, secondSpawnLoc, thirdSpawnLoc,
-                        fourthSpawnLoc, towerTopLoc, spectatorSpawnLoc);
+                        fourthSpawnLoc, towerTopLoc);
 
                 this.playerArenaNameCreation.remove(sender.getUniqueId());
                 this.playerArenaCoordinates.remove(sender.getUniqueId());
