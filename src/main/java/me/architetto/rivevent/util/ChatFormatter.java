@@ -16,9 +16,15 @@ public class ChatFormatter{
 
 
     public static String chatHeaderPresetInfo() {
-        return  ChatColor.AQUA + ">>>---------------[ " +
+        return  ChatColor.AQUA + "[*]----------------[ " +
                 ChatColor.DARK_AQUA + ChatColor.BOLD + "PRESET INFO" +
-                ChatColor.AQUA + " ]---------------<<<";
+                ChatColor.AQUA + " ]----------------[*]";
+    }
+
+    public static String chatHeaderGameplayInfo() {
+        return  ChatColor.AQUA + "[*]----------------[ " +
+                ChatColor.DARK_AQUA + ChatColor.BOLD + "GAMEPLAY INFO" +
+                ChatColor.AQUA + " ]----------------[*]";
     }
 
     public static String chatFooter() {
@@ -47,6 +53,11 @@ public class ChatFormatter{
 
     public static String formatEventAllert(String message) {
         message = ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "RIVe >> " + ChatColor.RESET + message;
+        return message;
+    }
+
+    public static String formatArenaCreation(String message) {
+        message = ChatColor.YELLOW + "" + ChatColor.BOLD + "RIVe >> " + ChatColor.RESET + message;
         return message;
     }
 
