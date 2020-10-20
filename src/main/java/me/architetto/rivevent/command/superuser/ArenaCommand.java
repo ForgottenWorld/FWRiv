@@ -1,42 +1,48 @@
 package me.architetto.rivevent.command.superuser;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.arena.Arena;
 import me.architetto.rivevent.arena.ArenaManager;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.Messages;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Optional;
 
 
-public class ArenaInfoCommand extends SubCommand{
+public class ArenaCommand extends SubCommand{
     @Override
     public String getName(){
-        return "arenainfo";
+        return "arena";
     }
 
     @Override
     public String getDescription(){
-        return "arenas list and arena saved points";
+        return null;
     }
 
     @Override
     public String getSyntax(){
-        return "/rivevent list <preset_name>";
+        return null;
     }
 
     @Override
     public void perform(Player sender, String[] args){
 
-        if (!sender.hasPermission("rivevent.arenainfo")) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Permission Error: you do not have permission to use that command"));
+        if (!sender.hasPermission("rivevent.eventmanager")) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_PERMISSION));
             return;
         }
 
         ArenaManager arenaManager = ArenaManager.getInstance();
-        if (args.length == 1) {
-            sender.sendMessage(ChatFormatter.formatSuccessMessage(arenaManager.getArenaContainer().keySet().toString()));
+        if (args.length < 2) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ARENA_CMD_SYNTAX));
             return;
         }
 
@@ -44,7 +50,7 @@ public class ArenaInfoCommand extends SubCommand{
         Optional<Arena> arena = arenaManager.getArena(presetName);
 
         if (arenaManager.getArenaContainer().isEmpty()){
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Error: no arena has been created yet"));
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_ARENA));
             return;
         }
 
@@ -53,22 +59,44 @@ public class ArenaInfoCommand extends SubCommand{
             sender.sendMessage(ChatFormatter.chatHeaderPresetInfo());
             sender.sendMessage(ChatFormatter.formatPresetName(selectedArena.getName()));
             sender.sendMessage(ChatFormatter.formatLocation("SPAWN #1", selectedArena.getSpawn1()));
+            particleEffect(selectedArena.getSpawn1());
             sender.sendMessage(ChatFormatter.formatLocation("SPAWN #2", selectedArena.getSpawn2()));
+            particleEffect(selectedArena.getSpawn2());
             sender.sendMessage(ChatFormatter.formatLocation("SPAWN #3", selectedArena.getSpawn3()));
+            particleEffect(selectedArena.getSpawn3());
             sender.sendMessage(ChatFormatter.formatLocation("SPAWN #4", selectedArena.getSpawn4()));
+            particleEffect(selectedArena.getSpawn4());
             sender.sendMessage(ChatFormatter.formatLocation("TOWER POINT", selectedArena.getTower()));
-            sender.sendMessage(ChatFormatter.formatLocation("SPECTATOR", selectedArena.getSpectator()));
+            particleEffect(selectedArena.getTower());
             sender.sendMessage(ChatFormatter.chatFooter());
 
+
+
         } else {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Error: this arena doesn't exist"));
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_ARENA_NAME));
         }
 
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] args){
+    public List<String> getSubcommandArguments(Player player, String[] args) {
 
         return null;
+    }
+
+    public void particleEffect(Location loc) {
+        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(255, 69, 0), 5);
+
+        new BukkitRunnable() {
+            int times = 20;
+            @Override
+            public void run(){
+                loc.getWorld().spawnParticle(Particle.REDSTONE, loc,10,dustOptions);
+                times--;
+                if (times == 0)
+                    this.cancel();
+            }
+        }.runTaskTimer(RIVevent.plugin,0,20);
+
     }
 }
