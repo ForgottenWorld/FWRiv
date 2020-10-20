@@ -13,8 +13,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.security.SecureRandom;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class RewardService {
@@ -27,9 +28,11 @@ public class RewardService {
 
     private int rewardPeriod;
 
-    private HashMap<Material,Double> itemsListWeight = new HashMap<>();
-    private HashMap<Material,Integer> itemsListMaxAmount = new HashMap<>();
+    private HashMap<Material,Double> itemsListWeight;
+    private HashMap<Material,Integer> itemsListMaxAmount;
     private Double totalWeight;
+
+    private List<Material> uniqueReward;
 
 
     private RewardService(){
@@ -39,6 +42,7 @@ public class RewardService {
 
         this.itemsListWeight = new HashMap<>();
         this.itemsListMaxAmount = new HashMap<>();
+        this.uniqueReward = new ArrayList<>();
 
     }
 
@@ -61,6 +65,7 @@ public class RewardService {
                 .stream()
                 .mapToDouble(Double::doubleValue)
                 .sum();
+        this.uniqueReward = settingsHandler.uniquerewardItemList;
 
         rewardPlayerOnTop();
 
@@ -76,9 +81,11 @@ public class RewardService {
             @Override
             public void run(){
 
-                for (UUID uuid : Collections.unmodifiableList(eventService.getParticipantsPlayers())) {
+                for (UUID uuid : eventService.getParticipantsPlayers()) {
 
                     Player player = Bukkit.getPlayer(uuid);
+                    if (player == null)
+                        continue;
 
                     if (player.getInventory().firstEmpty() == -1){
                         player.sendMessage(ChatFormatter.formatErrorMessage("Inventory full! No reward"));
@@ -88,6 +95,15 @@ public class RewardService {
                     if (player.getLocation().getBlockY() >= rewardLine) {
 
                         Material material = pickRandomItem();
+
+                        if (material == null)
+                            return;
+
+                        if (uniqueReward.contains(material) && player.getInventory().contains(material)) {
+                            player.sendMessage(ChatFormatter.formatEventMessage("reward obtained : " + ChatColor.AQUA
+                                    + "nothing" + ChatColor.RESET  + " ... better luck next time"));
+                            continue;
+                        }
 
                         ItemStack itemStack = new ItemStack(material, pickRandomAmount(material));
 
@@ -116,6 +132,8 @@ public class RewardService {
             for(Material material : itemsListWeight.keySet()){
 
                 randomValue -= (itemsListWeight.get(material) + secureRandom.nextDouble());
+
+                //randomValue -= (itemsListWeight.get(material) * secureRandom.nextDouble());   <-todo: questo mi piace di più
 
                 if (randomValue <= 0) {
 
