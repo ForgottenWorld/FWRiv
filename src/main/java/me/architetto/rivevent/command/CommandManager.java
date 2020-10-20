@@ -4,6 +4,7 @@ import me.architetto.rivevent.command.admin.CreateCommand;
 import me.architetto.rivevent.command.admin.DeleteCommand;
 import me.architetto.rivevent.command.admin.ReloadCommand;
 import me.architetto.rivevent.command.superuser.*;
+import me.architetto.rivevent.command.user.InfoCommand;
 import me.architetto.rivevent.command.user.JoinCommand;
 import me.architetto.rivevent.command.user.LeaveCommand;
 import me.architetto.rivevent.util.ChatFormatter;
@@ -22,18 +23,18 @@ public class CommandManager implements TabExecutor{
     public CommandManager(){
         subcommands.add(new CreateCommand());
         subcommands.add(new ReloadCommand());
-        subcommands.add(new ArenaInfoCommand());
+        subcommands.add(new ArenaCommand());
         subcommands.add(new DeleteCommand());
         subcommands.add(new InitCommand());
-        subcommands.add(new RestartEventCommand());
+        subcommands.add(new RestartCommand());
         subcommands.add(new StopCommand());
-        subcommands.add(new ConfigCommand());
-        subcommands.add(new SetupCommand());
+        subcommands.add(new SetCommand());
         subcommands.add(new JoinCommand());
         subcommands.add(new StartCommand());
-        subcommands.add(new MiniGameCommand());
+        subcommands.add(new MinigameCommand());
         subcommands.add(new LeaveCommand());
-        subcommands.add(new EventInfoCommand());
+        subcommands.add(new EventCommand());
+        subcommands.add(new InfoCommand());
     }
 
     @Override
