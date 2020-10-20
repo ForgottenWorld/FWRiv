@@ -4,7 +4,9 @@ import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -31,40 +33,36 @@ public class StopCommand extends SubCommand{
     @Override
     public void perform(Player sender, String[] args) {
 
-        if (!sender.hasPermission("rivevent.stop")) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Permission Error: you do not have permission to use that command"));
+        if (!sender.hasPermission("rivevent.eventmanager")) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_PERMISSION));
             return;
         }
 
         EventService eventService = EventService.getInstance();
 
         if (!eventService.isRunning()) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Error: no event in progress"));
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
             return;
         }
 
         SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
-        for (UUID u : eventService.getParticipantsPlayers()) {
+        for (UUID u : eventService.getAllPlayerEvent()) {
+
             Player p = Bukkit.getPlayer(u);
+            if (p == null) continue;
+
+            p.setGameMode(GameMode.SURVIVAL);
             p.getInventory().clear();
-            p.sendMessage(ChatFormatter.formatInitializationMessage("event ended !"));
             p.teleport(settingsHandler.respawnLocation);
             p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
 
-        }
-
-        for (UUID u : eventService.getEliminatedPlayers()) {
-            Player p = Bukkit.getPlayer(u);
-            p.sendMessage(ChatFormatter.formatInitializationMessage("event ended !"));
-            p.teleport(settingsHandler.respawnLocation);
-            p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-           // p.getInventory().clear(); todo: l'invetario è wipato alla morte ?
+            p.sendMessage(ChatFormatter.formatInitializationMessage(Messages.STOP_CMD_PLAYER_MESSAGE));
 
         }
 
         eventService.stopEvent();
-        sender.sendMessage(ChatFormatter.formatSuccessMessage("event ended !"));
+        sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.STOP_CMD_SENDER_MESSAGE));
 
 
     }
