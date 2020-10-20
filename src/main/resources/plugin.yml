@@ -13,29 +13,13 @@ permissions:
     description: description
     default: op
     children:
-      rivevent.create : true
-      rivevent.delete : true
-      rivevent.superuser : true
-      rivevent.reload : true
+      rivevent.eventmanager: true
+      rivevent.user: true
 
-  rivevent.superuser:
+  rivevent.eventmanager:
     description: description
     default: false
-    children:
-      rivevent.config: true
-      rivevent.init : true
-      rivevent.restartevent : true
-      rivevent.minigame : true
-      rivevent.arenainfo : true
-      rivevent.setup : true
-      rivevent.start : true
-      rivevent.stop : true
-      rivevent.user : true
-      rivevent.eventinfo : true
 
   rivevent.user:
     description: description
     default: true
-    children:
-      rivevent.join : true
-      rivevent.leave : true
