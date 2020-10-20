@@ -1,10 +1,19 @@
 package me.architetto.rivevent.listener.event;
 
 import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.MiniGameService;
+import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.Messages;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 public class DamageListener implements Listener{
 
@@ -16,64 +25,55 @@ public class DamageListener implements Listener{
         if (!eventService.isRunning())
             return;
 
-        if (event.getDamager() instanceof Player){
+        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player))
+            return;
 
             Player damager = (Player) event.getDamager();
+            Player damageTaker = (Player) event.getEntity();
 
             if (!eventService.getParticipantsPlayers().contains(damager.getUniqueId()))
                 return;
 
             if (!eventService.isStarted()){
                 event.setCancelled(true);
-
+                return;
             }
-        }
-    }
 
+            // --- TRIDENT CODE --- //
 
-    /*
-            if (global.curseEventFlag && global.playerJoined.contains(damager.getUniqueId())
-                    && event.getEntity() instanceof Player) {
+            if (damager.getInventory().getItemInMainHand().getType() == Material.TRIDENT) {
 
-                Player damageTaker = ((Player) event.getEntity()).getPlayer();
+                event.setDamage(0.5);
 
-                if (damageTaker == null)
-                    return;
+                Vector knockbackVector = damageTaker.getLocation().getDirection()
+                        .multiply(7 * -1).setY(0.1);
 
-                if (global.cursedPlayer == damager) {
+                damageTaker.setVelocity(knockbackVector);
+                damageTaker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,60,1));
 
-                    if (global.playerJoined.contains(damageTaker.getUniqueId()) && !curseCooldown){
+                damager.getInventory().setItemInMainHand(null);
+            }
 
-                        transferCurseCooldown();
+            // --- ----------- --- //
 
-                        global.cursedPlayer = damageTaker;
-                        damageTaker.playSound(damageTaker.getLocation(), Sound.ENTITY_GHAST_HURT,4,1);
-                        damageTaker.sendMessage(ChatMessages.GOLD(Messages.CURSE_TRANSFER_EVENT));
+            if (MiniGameService.getInstance().isCurseEventRunning()
+                    && eventService.getParticipantsPlayers().contains(damageTaker.getUniqueId())) {
 
-                        damager.sendMessage(ChatMessages.CurseMessage(Messages.CURSE_TRANSFER_MSG1,damageTaker.getDisplayName(),Messages.CURSE_TRANSFER_MSG2));
-                    }
+                if (MiniGameService.getInstance().getCursedPlayer() == damager) {
+
+                    MiniGameService.getInstance().setCursedPlayer(damageTaker);
+                    damageTaker.playSound(damageTaker.getLocation(), Sound.ENTITY_GHAST_HURT,4,1);
+                    damageTaker.spawnParticle(Particle.MOB_APPEARANCE,damageTaker.getLocation(),1,0,0,0);
+
+                    damageTaker.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG1));
+                    damager.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG2));
+
                 }
+
             }
-        }
-    }
 
-     */
 
-    /*
-
-    public void transferCurseCooldown() {
-
-        curseCooldown = true;
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run(){
-                curseCooldown = false;
-            }
-        }.runTaskLater(RIVevent.plugin,60);
 
     }
 
-     */
 }
