@@ -9,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class BlockListener implements Listener{
+public class PlayerInteractionListener implements Listener{
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
