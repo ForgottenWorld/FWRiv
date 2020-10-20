@@ -29,6 +29,8 @@ public class AntiCamperService {
     private int redLineGrowPeriod;
     private List<Location> particleEffectPoint;
 
+    private int redCircleRadius;
+
 
     private AntiCamperService(){
         if(antiCamperService != null) {
@@ -60,6 +62,7 @@ public class AntiCamperService {
         this.redLineGrowValue = settingsHandler.antiCamperGrowValue;
         this.redLineValue = eventService.getSummonedArena().getLowestY();
         this.redLineFinalValue = eventService.getSummonedArena().getTower().getBlockY() - settingsHandler.antiCamperRedLineTopTowerDif;
+        this.redCircleRadius = settingsHandler.redLineAnimationRadius;
 
         redLineManager();
         checkPlayersPosition();
@@ -93,7 +96,7 @@ public class AntiCamperService {
 
                 }
 
-                particleEffectPoint = getCircle(12,40);
+                particleEffectPoint = getCircle(50);
 
                 for (UUID u : eventService.getParticipantsPlayers()) {
 
@@ -154,47 +157,14 @@ public class AntiCamperService {
                     deathLineAnimation= !deathLineAnimation;
 
                 }
-
-                /* OLD PARTICLE EFFECT SYSTEM
-
-                location.setY(getRedLineValue());
-                Block middle = location.getBlock();
-
-                for (int x = 10; x >= -10; x--) {
-
-                    for (int z = 10; z >= -10; z--) {
-
-                        if (middle.getRelative(x, 0, z).getType().isAir()) {
-
-                            if (z < 10 - 1 && z > -10 + 1 && x < 10 - 1 && x > -10 + 1)
-                                continue;
-
-                            if (deathLineAnimation)
-                                location.getWorld().spawnParticle(Particle.REDSTONE, middle.getRelative(x, 0, z).getLocation(), 2, dustOptions);
-                            else
-                                location.getWorld().spawnParticle(Particle.REDSTONE, middle.getRelative(x, 0, z).getLocation(), 1, dustOptions2);
-
-
-                            if (redLineValue >= startRedLine + 3)
-                                location.getWorld().spawnParticle(Particle.CAMPFIRE_COSY_SMOKE, middle.getRelative(x, -1, z).getLocation(), 0, 0,-0.02,0);
-
-                        }
-                    }
-                }
-
-                deathLineAnimation= !deathLineAnimation;
-
-                */
-
-
             }
         }.runTaskTimer(RIVevent.plugin,antiCamperStartDelay,10);
         taskID.add(bukkitTask.getTaskId());
 
     }
 
-    public ArrayList<Location> getCircle(double radius, int amount) {
-        Location redCircleMidLocation = EventService.getInstance().getSummonedArena().getTower();
+    public ArrayList<Location> getCircle(int amount) {
+        Location redCircleMidLocation = EventService.getInstance().getSummonedArena().getTower().clone();
         redCircleMidLocation.setY(redLineValue);
 
         World world = redCircleMidLocation.getWorld();
@@ -205,8 +175,8 @@ public class AntiCamperService {
         for(int i = 0;i < amount; i++) {
 
             double angle = i * increment;
-            double x = redCircleMidLocation.getX() + (radius * Math.cos(angle));
-            double z = redCircleMidLocation.getZ() + (radius * Math.sin(angle));
+            double x = redCircleMidLocation.getX() + (redCircleRadius * Math.cos(angle));
+            double z = redCircleMidLocation.getZ() + (redCircleRadius * Math.sin(angle));
             locations.add(new Location(world, x, redCircleMidLocation.getY(), z));
 
         }
