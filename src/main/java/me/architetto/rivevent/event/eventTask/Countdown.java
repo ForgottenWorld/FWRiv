@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.function.Consumer;
 
-public class StartCountdown implements Runnable {
+public class Countdown implements Runnable {
 
     // Main class for bukkit scheduling
     private JavaPlugin plugin;
@@ -18,15 +18,15 @@ public class StartCountdown implements Runnable {
     private int secondsLeft;
 
     // Actions to perform while counting down, before and after
-    private Consumer<StartCountdown> everySecond;
+    private Consumer<Countdown> everySecond;
     private Runnable beforeTimer;
     private Runnable afterTimer;
 
     // Construct a timer, you could create multiple so for example if
     // you do not want these "actions"
-    public StartCountdown(JavaPlugin plugin, int seconds,
-                          Runnable beforeTimer, Runnable afterTimer,
-                          Consumer<StartCountdown> everySecond) {
+    public Countdown(JavaPlugin plugin, int seconds,
+                     Runnable beforeTimer, Runnable afterTimer,
+                     Consumer<Countdown> everySecond) {
         // Initializing fields
         this.plugin = plugin;
 
@@ -88,6 +88,14 @@ public class StartCountdown implements Runnable {
     public void scheduleTimer() {
         // Initialize our assigned task's id, for later use so we can cancel
         this.assignedTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 20L);
+    }
+
+    public Integer getTaskId() {
+
+        if (this.assignedTaskId != null)
+            return assignedTaskId;
+
+        return null;
     }
 
 }
