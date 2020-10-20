@@ -81,8 +81,7 @@ public final class RIVevent extends JavaPlugin {
                     configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN2"),
                     configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN3"),
                     configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN4"),
-                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".TOWER"),
-                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPECTATOR"));
+                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".TOWER"));
 
         }
     }
@@ -96,7 +95,7 @@ public final class RIVevent extends JavaPlugin {
     public void loadListener() {
 
         getServer().getPluginManager().registerEvents(new ArenaCreationListener(),this);
-        getServer().getPluginManager().registerEvents(new BlockListener(),this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractionListener(),this);
         getServer().getPluginManager().registerEvents(new DamageListener(),this);
         getServer().getPluginManager().registerEvents(new FoodLevelListener(),this);
         getServer().getPluginManager().registerEvents(new DeathListener(),this);

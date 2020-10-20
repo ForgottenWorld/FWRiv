@@ -15,7 +15,7 @@ public class ItemDropListener implements Listener{
         if (!eventService.isRunning())
             return;
 
-        if (eventService.getParticipantsPlayers().contains(event.getPlayer().getUniqueId()))
+        if (eventService.getAllPlayerEvent().contains(event.getPlayer().getUniqueId()))
             event.getItemDrop().remove();
 
     }
