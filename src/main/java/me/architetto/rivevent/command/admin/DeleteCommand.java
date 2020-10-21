@@ -5,26 +5,28 @@ import me.architetto.rivevent.arena.ArenaManager;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class DeleteCommand extends SubCommand{
     @Override
     public String getName(){
-        return "delete";
+        return CommandName.DELETE_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return "Deleta a preset.";
+        return "Deleta arena.";
     }
 
     @Override
     public String getSyntax(){
-        return "/rivevent delete <nome_preset>";
+        return "/rivevent delete <arena_name>";
     }
 
 
@@ -63,6 +65,13 @@ public class DeleteCommand extends SubCommand{
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args){
+
+        if (args.length == 2){
+
+            return new ArrayList<>(ArenaManager.getInstance().getArenaContainer().keySet());
+
+        }
+
         return null;
     }
 }

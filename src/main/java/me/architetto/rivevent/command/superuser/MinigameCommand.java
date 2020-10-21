@@ -2,8 +2,9 @@ package me.architetto.rivevent.command.superuser;
 
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
-import me.architetto.rivevent.event.MiniGameService;
+import me.architetto.rivevent.event.MinigameService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
@@ -14,17 +15,17 @@ import java.util.List;
 public class MinigameCommand extends SubCommand{
     @Override
     public String getName(){
-        return "minigame";
+        return CommandName.MINIGAME_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return "Starts a minigame.";
+        return "Start a minigame.";
     }
 
     @Override
     public String getSyntax(){
-        return "/rivevent minigame [event name]";
+        return "/rivevent minigame <minigame_name>";
     }
 
     @Override
@@ -43,7 +44,7 @@ public class MinigameCommand extends SubCommand{
             return;
         }
 
-        MiniGameService miniGameService = MiniGameService.getInstance();
+        MinigameService miniGameService = MinigameService.getInstance();
 
         if (miniGameService.isUniqueMiniGameRunning()) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Error: a unique minigame is already running"));

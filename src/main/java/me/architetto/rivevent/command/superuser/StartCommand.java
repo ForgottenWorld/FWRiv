@@ -3,6 +3,7 @@ package me.architetto.rivevent.command.superuser;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public class StartCommand extends SubCommand{
     @Override
     public String getName(){
-        return "start";
+        return CommandName.START_COMMAND;
     }
 
     @Override

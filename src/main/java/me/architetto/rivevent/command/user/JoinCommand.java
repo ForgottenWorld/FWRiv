@@ -3,6 +3,7 @@ package me.architetto.rivevent.command.user;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -14,12 +15,12 @@ public class JoinCommand extends SubCommand {
 
     @Override
     public String getName(){
-        return "join";
+        return CommandName.JOIN_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return "Join an event.";
+        return "Join event.";
     }
 
     @Override

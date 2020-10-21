@@ -4,6 +4,7 @@ import me.architetto.rivevent.arena.Arena;
 import me.architetto.rivevent.arena.ArenaManager;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
@@ -14,17 +15,17 @@ public class CreateCommand extends SubCommand{
 
     @Override
     public String getName(){
-        return "create";
+        return CommandName.CREATE_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return "Create a RIV preset.";
+        return "Create a new RIV arena.";
     }
 
     @Override
     public String getSyntax(){
-        return "/rivevent create <preset_name>";
+        return "/rivevent create <arena_name>";
     }
 
     @Override

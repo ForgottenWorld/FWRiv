@@ -5,6 +5,7 @@ import me.architetto.rivevent.config.ConfigManager;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,17 +18,17 @@ import java.util.List;
 public class SetCommand extends SubCommand {
     @Override
     public String getName(){
-        return "set";
+        return CommandName.SET_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return null;
+        return "modify settings";
     }
 
     @Override
     public String getSyntax(){
-        return null;
+        return "/rivevent set <setting_name>";
     }
 
     @Override

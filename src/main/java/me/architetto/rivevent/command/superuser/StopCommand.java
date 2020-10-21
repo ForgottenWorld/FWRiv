@@ -4,6 +4,7 @@ import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -16,12 +17,12 @@ import java.util.UUID;
 public class StopCommand extends SubCommand{
     @Override
     public String getName(){
-        return "stop";
+        return CommandName.STOP_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return "Cancel the current event.";
+        return "Stop current event.";
     }
 
     @Override

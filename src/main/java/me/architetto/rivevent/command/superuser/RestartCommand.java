@@ -3,6 +3,7 @@ package me.architetto.rivevent.command.superuser;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -17,7 +18,7 @@ import java.util.List;
 public class RestartCommand extends SubCommand{
     @Override
     public String getName(){
-        return "restart";
+        return CommandName.RESTART_COMMAND;
     }
 
     @Override

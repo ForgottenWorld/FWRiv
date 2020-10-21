@@ -5,6 +5,7 @@ import me.architetto.rivevent.config.ConfigManager;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
@@ -13,12 +14,12 @@ import java.util.List;
 public class ReloadCommand extends SubCommand{
     @Override
     public String getName(){
-        return "reload";
+        return CommandName.RELOAD_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return "Reload Rivevent settings.";
+        return "Reload RIVe settings.";
     }
 
     @Override

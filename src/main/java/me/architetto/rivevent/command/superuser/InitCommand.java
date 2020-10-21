@@ -6,6 +6,7 @@ import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -15,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +24,7 @@ import java.util.Optional;
 public class InitCommand extends SubCommand{
     @Override
     public String getName(){
-        return "init";
+        return CommandName.INIT_COMMAND;
     }
 
     @Override
@@ -85,6 +87,14 @@ public class InitCommand extends SubCommand{
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args){
+
+        if (args.length == 2){
+
+            return new ArrayList<>(ArenaManager.getInstance().getArenaContainer().keySet());
+
+        }
+
+
         return null;
     }
 

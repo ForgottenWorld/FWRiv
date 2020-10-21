@@ -2,6 +2,7 @@ package me.architetto.rivevent.command.user;
 
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.entity.Player;
 
@@ -10,17 +11,17 @@ import java.util.List;
 public class InfoCommand extends SubCommand {
     @Override
     public String getName(){
-        return "info";
+        return CommandName.INFO_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return null;
+        return "info about RIVe gameplay";
     }
 
     @Override
     public String getSyntax(){
-        return null;
+        return "/rivevent info";
     }
 
     @Override

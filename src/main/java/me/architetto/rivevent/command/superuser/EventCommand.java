@@ -3,6 +3,7 @@ package me.architetto.rivevent.command.superuser;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ import java.util.List;
 public class EventCommand extends SubCommand{
     @Override
     public String getName(){
-        return "event";
+        return CommandName.EVENT_COMMAND;
     }
 
     @Override

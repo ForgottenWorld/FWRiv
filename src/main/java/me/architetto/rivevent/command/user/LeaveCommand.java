@@ -4,6 +4,7 @@ import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -14,12 +15,12 @@ import java.util.List;
 public class LeaveCommand extends SubCommand{
     @Override
     public String getName(){
-        return "leave";
+        return CommandName.LEAVE_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return "Leave a event.";
+        return "Leave event.";
     }
 
     @Override
