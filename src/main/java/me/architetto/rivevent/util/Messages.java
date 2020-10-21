@@ -25,6 +25,8 @@ public class Messages {
 
     public static String DELETE_CDM_SUCCESS = "Arena eliminata con successo";
 
+    public static String START_CD_MSG = "L'evento iniziera' tra 10 secondi ...";
+
     public static String RESTART_CMD_PLAYER_MESSAGE = "Evento restartato. Sei stato automaticamente aggiunto alla lista dei partecipanti";
 
     public static String STOP_CMD_PLAYER_MESSAGE = "Evento concluso";
@@ -34,6 +36,8 @@ public class Messages {
 
     public static String CURSE_MSG1 = "Ti hanno passato la maledizione. Colpisci qualcuno per liberartene.";
     public static String CURSE_MSG2 = "Ti sei liberato della maledizione.";
+
+    public static String DEATHRACE_MSG1 = "E' la prima regola del " + ChatColor.DARK_RED + "'deathreace club'" + ChatColor.RESET + " : non essere l'ultimo!";
 
 
     public static String RIV_GAMEPLAY_INFO = ChatColor.YELLOW + "[+] " + ChatColor.RESET + "Il cibo non scende mai a zero" +
