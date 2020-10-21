@@ -1,7 +1,7 @@
 package me.architetto.rivevent.listener.event;
 
 import me.architetto.rivevent.event.EventService;
-import me.architetto.rivevent.event.MiniGameService;
+import me.architetto.rivevent.event.MinigameService;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Material;
@@ -28,51 +28,49 @@ public class DamageListener implements Listener{
         if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player))
             return;
 
-            Player damager = (Player) event.getDamager();
-            Player damageTaker = (Player) event.getEntity();
+        Player damager = (Player) event.getDamager();
+        Player damageTaker = (Player) event.getEntity();
 
-            if (!eventService.getParticipantsPlayers().contains(damager.getUniqueId()))
-                return;
+        if (!eventService.getParticipantsPlayers().contains(damager.getUniqueId()))
+            return;
 
-            if (!eventService.isStarted()){
-                event.setCancelled(true);
-                return;
-            }
+        if (!eventService.isStarted()) {
+            event.setCancelled(true);
+            return;
+        }
 
-            // --- TRIDENT CODE --- //
+        if (MinigameService.getInstance().isCurseEventRunning()
+                && eventService.getParticipantsPlayers().contains(damageTaker.getUniqueId())) {
 
-            if (damager.getInventory().getItemInMainHand().getType() == Material.TRIDENT) {
+            if (MinigameService.getInstance().getCursedPlayer() == damager) {
 
-                event.setDamage(0.5);
+                MinigameService.getInstance().setCursedPlayer(damageTaker);
+                damageTaker.playSound(damageTaker.getLocation(), Sound.ENTITY_GHAST_HURT,4,1);
+                damageTaker.spawnParticle(Particle.MOB_APPEARANCE,damageTaker.getLocation(),1,0,0,0);
 
-                Vector knockbackVector = damageTaker.getLocation().getDirection()
-                        .multiply(7 * -1).setY(0.1);
-
-                damageTaker.setVelocity(knockbackVector);
-                damageTaker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,60,1));
-
-                damager.getInventory().setItemInMainHand(null);
-            }
-
-            // --- ----------- --- //
-
-            if (MiniGameService.getInstance().isCurseEventRunning()
-                    && eventService.getParticipantsPlayers().contains(damageTaker.getUniqueId())) {
-
-                if (MiniGameService.getInstance().getCursedPlayer() == damager) {
-
-                    MiniGameService.getInstance().setCursedPlayer(damageTaker);
-                    damageTaker.playSound(damageTaker.getLocation(), Sound.ENTITY_GHAST_HURT,4,1);
-                    damageTaker.spawnParticle(Particle.MOB_APPEARANCE,damageTaker.getLocation(),1,0,0,0);
-
-                    damageTaker.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG1));
-                    damager.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG2));
-
-                }
+                damageTaker.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG1));
+                damager.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG2));
 
             }
 
+        }
 
+        // --- TRIDENT CODE --- //
+
+        if (damager.getInventory().getItemInMainHand().getType() == Material.TRIDENT) {
+
+            event.setDamage(0.5);
+
+            Vector knockbackVector = damageTaker.getLocation().getDirection()
+                    .multiply(5 * -1).setY(0.5);
+
+            damageTaker.setVelocity(knockbackVector);
+            damageTaker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,60,1));
+
+            damager.getInventory().setItemInMainHand(null);
+        }
+
+        // --- ----------- --- //
 
     }
 
