@@ -5,6 +5,7 @@ import me.architetto.rivevent.arena.Arena;
 import me.architetto.rivevent.arena.ArenaManager;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,17 +21,17 @@ import java.util.Optional;
 public class ArenaCommand extends SubCommand{
     @Override
     public String getName(){
-        return "arena";
+        return CommandName.ARENA_COMMAND;
     }
 
     @Override
     public String getDescription(){
-        return null;
+        return "Info about selected arena";
     }
 
     @Override
     public String getSyntax(){
-        return null;
+        return "/rivevent arena <arena_name>";
     }
 
     @Override
@@ -80,6 +82,12 @@ public class ArenaCommand extends SubCommand{
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
+
+        if (args.length == 2){
+
+            return new ArrayList<>(ArenaManager.getInstance().getArenaContainer().keySet());
+
+        }
 
         return null;
     }
