@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.function.Consumer;
 
-public class CountdownDeathRace implements Runnable {
+public class CountdownMinigame implements Runnable {
 
     // Main class for bukkit scheduling
     private JavaPlugin plugin;
@@ -19,15 +19,15 @@ public class CountdownDeathRace implements Runnable {
     private int secondsLeft;
 
     // Actions to perform while counting down, before and after
-    private Consumer<CountdownDeathRace> everySecond;
+    private Consumer<CountdownMinigame> everySecond;
     private Runnable beforeTimer;
     private Runnable afterTimer;
 
     // Construct a timer, you could create multiple so for example if
     // you do not want these "actions"
-    public CountdownDeathRace(JavaPlugin plugin, int seconds,
-                              Runnable beforeTimer, Runnable afterTimer,
-                              Consumer<CountdownDeathRace> everySecond) {
+    public CountdownMinigame(JavaPlugin plugin, int seconds,
+                             Runnable beforeTimer, Runnable afterTimer,
+                             Consumer<CountdownMinigame> everySecond) {
         // Initializing fields
         this.plugin = plugin;
 
