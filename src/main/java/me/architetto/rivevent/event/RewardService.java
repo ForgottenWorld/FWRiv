@@ -3,6 +3,7 @@ package me.architetto.rivevent.event;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -88,7 +89,7 @@ public class RewardService {
                         continue;
 
                     if (player.getInventory().firstEmpty() == -1){
-                        player.sendMessage(ChatFormatter.formatErrorMessage("Inventory full! No reward"));
+                        player.sendMessage(ChatFormatter.formatErrorMessage(Messages.REWARD_INVENTORY_FULL));
                         continue;
                     }
 
@@ -99,17 +100,18 @@ public class RewardService {
                         if (material == null)
                             return;
 
+                        ItemStack itemStack = new ItemStack(material, pickRandomAmount(material));
+
                         if (uniqueReward.contains(material) && player.getInventory().contains(material)) {
-                            player.sendMessage(ChatFormatter.formatEventMessage("reward obtained : " + ChatColor.AQUA
-                                    + "nothing" + ChatColor.RESET  + " ... better luck next time"));
+                            player.sendMessage(ChatFormatter.formatEventMessage(Messages.REWARD_NO_UNIQUE));
                             continue;
                         }
 
-                        ItemStack itemStack = new ItemStack(material, pickRandomAmount(material));
+
 
                         player.getInventory().addItem(itemStack);
 
-                        player.sendMessage(ChatFormatter.formatEventMessage("reward obtained: " + ChatColor.AQUA + itemStack.getI18NDisplayName()));
+                        player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + itemStack.getI18NDisplayName()));
 
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1,1);
 
@@ -131,7 +133,7 @@ public class RewardService {
 
             for(Material material : itemsListWeight.keySet()){
 
-                randomValue -= (itemsListWeight.get(material) + secureRandom.nextDouble());
+                randomValue -= (itemsListWeight.get(material) + secureRandom.nextInt(3));
 
                 //randomValue -= (itemsListWeight.get(material) * secureRandom.nextDouble());   <-todo: questo mi piace di più
 
