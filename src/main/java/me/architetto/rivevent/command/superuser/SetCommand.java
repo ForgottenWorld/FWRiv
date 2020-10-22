@@ -54,6 +54,7 @@ public class SetCommand extends SubCommand {
                 SettingsHandler.getInstance().respawnLocation = sender.getLocation();
 
                 FileConfiguration fileConfiguration = ConfigManager.getInstance().getConfig("Settings.yml");
+
                 ConfigManager.getInstance().addLocation(fileConfiguration,sender.getLocation(),"RESPAWN_POINT");
 
                 sender.sendMessage(ChatFormatter.formatSuccessMessage("respawn location saved"));
@@ -66,6 +67,16 @@ public class SetCommand extends SubCommand {
                         "ANTI_CAMPER_GROW_VALUE",Integer.parseInt(args[2]));
 
                 sender.sendMessage(ChatFormatter.formatSuccessMessage("anti camper grow value changed (new value: "
+                        + ChatColor.YELLOW + args[2] + ChatColor.RESET + " )"));
+                return;
+            case "acstartdelay":
+                if (args.length < 3)
+                    return;
+                SettingsHandler.getInstance().antiCamperStartDelay = Integer.parseInt(args[2]) * 20 ;
+                ConfigManager.getInstance().setData(ConfigManager.getInstance().getConfig("Settings.yml"),
+                        "ANTI_CAMPER_START_DELAY",Integer.parseInt(args[2]));
+
+                sender.sendMessage(ChatFormatter.formatSuccessMessage("anti camper start delay changed (new value: "
                         + ChatColor.YELLOW + args[2] + ChatColor.RESET + " )"));
                 return;
             case "acgrowperiod":
