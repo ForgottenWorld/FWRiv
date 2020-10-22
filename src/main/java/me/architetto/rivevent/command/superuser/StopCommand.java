@@ -1,5 +1,6 @@
 package me.architetto.rivevent.command.superuser;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
@@ -64,6 +65,11 @@ public class StopCommand extends SubCommand{
 
         eventService.stopEvent();
         sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.STOP_CMD_SENDER_MESSAGE));
+
+        if (args.length == 2) {
+            if (args[1].equalsIgnoreCase("force"))
+                Bukkit.getScheduler().cancelTasks(RIVevent.plugin);
+        }
 
 
     }
