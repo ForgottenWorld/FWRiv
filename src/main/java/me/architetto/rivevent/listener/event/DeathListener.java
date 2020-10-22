@@ -2,6 +2,7 @@ package me.architetto.rivevent.listener.event;
 
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.MinigameService;
 import org.bukkit.GameMode;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -43,6 +44,12 @@ public class DeathListener implements Listener{
 
         if (!eventService.isRunning())
             return;
+
+       //todo : questa parte di codice non dovrebbe stare in Priorità = MONITOR
+        if (MinigameService.getInstance().isCurseEventRunning()) {
+            if (MinigameService.getInstance().getCursedPlayer() == event.getEntity())
+                event.setCancelled(false);
+        }
 
         if (eventService.getParticipantsPlayers().contains(event.getEntity().getUniqueId())) {
 
