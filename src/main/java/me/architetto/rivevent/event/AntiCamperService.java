@@ -4,8 +4,6 @@ import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.util.ChatFormatter;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -130,7 +128,7 @@ public class AntiCamperService {
                         continue;
 
                     if (p.getLocation().getBlockY() < redLineValue)
-                        p.damage(antiCamperDamage, Entity.class.cast(EntityType.BLAZE));
+                        p.damage(antiCamperDamage);
 
                 }
 
