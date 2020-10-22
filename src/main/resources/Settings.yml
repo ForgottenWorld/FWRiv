@@ -3,7 +3,7 @@
 # --------------  made  by  Architetto  ------------ #
 # -------------------------------------------------- #
 
-RESPAWN_POINT: 'null'
+RESPAWN_POINT:
 
 FOOD_LEVEL: 12
 
@@ -23,8 +23,10 @@ SNOWBALL_KNOCKBACK_POWER: 10
 SNOWBALL_DAMAGE: 0.1
 
 ENABLE_TARGET_BLOCK: true
+TARGET_BLOCK_COOLDOWN: 30
 
 DEATH_RACE_PERIOD: 30
+CURSE_PERIOD: 60
 
 START_LOADOUT:
   - 'COOKED_PORKCHOP,15'
