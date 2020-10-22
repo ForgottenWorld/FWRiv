@@ -82,7 +82,8 @@ public class ConfigManager{
     public String getStringRaw(FileConfiguration conf, String path){
         //Create dummy if not available
         if (!conf.contains(path)) {
-            setData(conf, path, "null");
+            return null;
+           // setData(conf, path, "null"); //todo
         }
         return conf.getString(path);
     }
@@ -132,7 +133,7 @@ public class ConfigManager{
 
         String worldName = getStringRaw(conf, String.format("%s.world", path));
 
-        if (worldName.equalsIgnoreCase("null"))
+        if (worldName == null)
             return null;
 
         Bukkit.getServer().createWorld(new WorldCreator(worldName));
