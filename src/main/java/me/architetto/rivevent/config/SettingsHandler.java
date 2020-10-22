@@ -39,8 +39,11 @@ public class SettingsHandler {
     public double snowballHitDamage;
 
     public boolean enableTargetBlock;
+    public int targetBlockCooldown;
 
     public int deathRacePeriod;
+
+    public int cursePeriod;
 
     private SettingsHandler() {
 
@@ -84,9 +87,12 @@ public class SettingsHandler {
         this.snowballHitDamage = fileConfiguration.getDouble("SNOWBALL_DAMAGE",0.1);
 
         this.enableTargetBlock = fileConfiguration.getBoolean("ENABLE_TARGET_BLOCK",true);
+        this.targetBlockCooldown = fileConfiguration.getInt("TARGET_BLOCK_COOLDOWN",30);
 
         //non serve convertire in tick
         this.deathRacePeriod = fileConfiguration.getInt("DEATH_RACE_PERIOD",60);
+
+        this.cursePeriod = fileConfiguration.getInt("CURSE_PERIOD",60);
 
     }
 
