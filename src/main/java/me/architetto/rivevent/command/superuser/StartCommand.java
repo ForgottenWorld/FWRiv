@@ -40,6 +40,11 @@ public class StartCommand extends SubCommand{
             return;
         }
 
+        if (eventService.isStarted()) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
+            return;
+        }
+
         eventService.startEventTimer();
 
     }
