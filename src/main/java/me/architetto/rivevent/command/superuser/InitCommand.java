@@ -109,7 +109,7 @@ public class InitCommand extends SubCommand{
             p.sendMessage(new TextComponent(ChatFormatter.formatInitializationMessage("Click ")),joinClickMessage,
                     new TextComponent(" per partecipare all'evento 'RIV'"));
             p.sendMessage(ChatFormatter.formatInitializationMessage(ChatColor.RED + "ATTENZIONE : " + ChatColor.RESET + "Partecipando il tuo inventario verra' cancellato !!"));
-            p.sendTitle("", ChatColor.AQUA + "EVENTO 'RIV'",15,200,15);
+            p.sendTitle("Evento" + ChatColor.YELLOW + " 'RESTA IN VETTA'", ChatColor.ITALIC + "Vieni a giocare con noi!",15,200,15);
 
         }
 
