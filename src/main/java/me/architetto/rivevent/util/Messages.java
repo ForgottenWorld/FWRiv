@@ -25,6 +25,8 @@ public class Messages {
 
     public static String DELETE_CDM_SUCCESS = "Arena eliminata con successo";
 
+    public static String NOT_ENOUGH_PLAYERS = "Non ci sono abastanza pleyers ...";
+
     public static String START_CD_MSG = "L'evento iniziera' tra 10 secondi ...";
 
     public static String RESTART_CMD_PLAYER_MESSAGE = "Evento restartato. Sei stato automaticamente aggiunto alla lista dei partecipanti";
@@ -34,10 +36,20 @@ public class Messages {
 
     public static String LEAVE_OK = "Hai abbandonato l'evento";
 
+    public static String REWARD_INVENTORY_FULL = "Inventario pieno! Nessun reward ottenuto.";
+    public static String REWARD_NO_UNIQUE = "Nessun reward ottenuto... sarai più fortunato la prossima volta.";
+
+
+    public static String CURSED_PLAYER_START_TITLE = ChatColor.MAGIC + "Architetto" + ChatColor.RESET + ChatColor.RED + " ti ha maledetto!";
+    public static String CURSED_PLAYER_START_SUBTITLE = ChatColor.ITALIC + "colpisci qualcuno per passare la maledizione";
+    public static String NOT_CURSED_PLAYER_ALLERT = ChatColor.DARK_RED + "!! WARNING !!" + ChatColor.RESET + " uno dei partecipanti è stato maledetto!";
     public static String CURSE_MSG1 = "Ti hanno passato la maledizione. Colpisci qualcuno per liberartene.";
     public static String CURSE_MSG2 = "Ti sei liberato della maledizione.";
+    public static String CURSE_MSG3 = "La maledizione si è abbattuta su di te!";
+    public static String CURSED_PLAYER_DIE = "Il player maledetto e' morto !";
 
-    public static String DEATHRACE_MSG1 = "E' la prima regola del " + ChatColor.DARK_RED + "'deathreace club'" + ChatColor.RESET + " : non essere l'ultimo!";
+    public static String DEATHRACE_START_MSG = "EVENTO " + ChatColor.RED + "DEATH RACE " + ChatColor.RESET + ": 'ad ogni giro' muore il player più in basso. ";
+    public static String DEATHRACE_DEATH_MSG = "E' la prima regola del " + ChatColor.DARK_RED + "'deathreace club'" + ChatColor.RESET + " : non essere l'ultimo!";
 
 
     public static String RIV_GAMEPLAY_INFO = ChatColor.YELLOW + "[+] " + ChatColor.RESET + "Il cibo non scende mai a zero" +
@@ -48,7 +60,8 @@ public class Messages {
             ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Le snowball hanno knockback e danno" +
             ChatColor.YELLOW + "\n[+] " + ChatColor.RESET + "Puoi scambiarti di posizione con la canna da pesca (monouso)" +
             ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Il tridente ha un buon knockback quando utilizzato corpo a corpo (monouso)" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.RESET + "Il tridente, quando lanciato, applica slowness al bersaglio (monouso)";
+            ChatColor.YELLOW + "\n[+] " + ChatColor.RESET + "Il tridente, quando lanciato, applica slowness al bersaglio (monouso)" +
+            ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Il totem of undying ti teleporta in cima alla torre quando si muore";
 
 
 
