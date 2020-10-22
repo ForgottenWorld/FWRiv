@@ -4,8 +4,9 @@ package me.architetto.rivevent.event;
 import com.destroystokyo.paper.Title;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.config.SettingsHandler;
-import me.architetto.rivevent.event.eventTask.CountdownDeathRace;
+import me.architetto.rivevent.event.eventTask.CountdownMinigame;
 import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -18,9 +19,9 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
-public class MiniGameService {
+public class MinigameService{
 
-    private static MiniGameService miniGameService;
+    private static MinigameService miniGameService;
 
     private HashMap<String,Integer> taskIDs; //todo: enum invece di striga..
 
@@ -30,7 +31,7 @@ public class MiniGameService {
     private boolean deathRaceEventFlag = false;
 
 
-    private MiniGameService() {
+    private MinigameService() {
 
         if(miniGameService != null) {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
@@ -40,19 +41,16 @@ public class MiniGameService {
 
     }
 
-    public static MiniGameService getInstance() {
+    public static MinigameService getInstance() {
 
         if(miniGameService == null) {
-            miniGameService = new MiniGameService();
+            miniGameService = new MinigameService();
         }
 
         return miniGameService;
 
     }
 
-    public boolean isMiniGameRunning() {
-        return curseEventFlag || deathRaceEventFlag;
-    }
     public boolean isUniqueMiniGameRunning() {
         return curseEventFlag || deathRaceEventFlag;
     }
@@ -74,7 +72,7 @@ public class MiniGameService {
 
         if (eventService.getParticipantsPlayers().size() < 2) {
             if (sender != null)
-                sender.sendMessage(ChatFormatter.formatErrorMessage("there aren't enough participants to start this event!"));
+                sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
             return;
         }
 
@@ -88,8 +86,7 @@ public class MiniGameService {
 
         curseEventFlag = true;
 
-        cursedPlayer.sendTitle(  ChatColor.MAGIC + "Architetto" + ChatColor.RESET
-                + ChatColor.RED + " cursed you!",ChatColor.ITALIC + "hit someone to pass the curse",20,120,20);
+        cursedPlayer.sendTitle(  Messages.CURSED_PLAYER_START_TITLE,Messages.CURSED_PLAYER_START_SUBTITLE,20,120,20);
         cursedPlayer.getWorld().playSound(cursedPlayer.getLocation(), Sound.ENTITY_GHAST_HURT,5,2);
 
         cursedPlayer.spawnParticle(Particle.MOB_APPEARANCE,cursedPlayer.getLocation(),1,0,0,0);
@@ -98,9 +95,8 @@ public class MiniGameService {
 
             Player p = Bukkit.getPlayer(u);
 
-            if (p != cursedPlayer)
-                p.sendMessage(ChatFormatter.formatEventMessage(ChatColor.DARK_RED + "!! WARNING !!"
-                        + ChatColor.RESET + " one of the participants is cursed"));
+            if (p != null && p != cursedPlayer)
+                p.sendMessage(ChatFormatter.formatEventMessage(Messages.NOT_CURSED_PLAYER_ALLERT));
 
         }
 
@@ -118,20 +114,23 @@ public class MiniGameService {
 
                 curseEventFlag = false;
 
-                cursedPlayer.damage(30);
-                cursedPlayer.sendMessage(ChatFormatter.formatEventMessage("the curse has come upon you!"));
+                cursedPlayer.setHealth(0); //Il totem non deve attivarsi in questo caso ?
+                cursedPlayer.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG3));
 
                 for (UUID u : eventService.getParticipantsPlayers()) {
 
                     Player p = Bukkit.getPlayer(u);
-                    p.sendTitle( ChatColor.DARK_RED + cursedPlayer.getDisplayName() + ChatColor.RESET +  "is dead!",
-                            "The curse has been fulfilled!",20,60,20);
+                    if (p != null){
+                        p.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSED_PLAYER_DIE));
+                        p.playSound(p.getLocation(),Sound.ENTITY_PARROT_IMITATE_WITCH,1,1); //todo
+                    }
 
                 }
+                taskIDs.remove("CURSE");
 
 
             }
-        }.runTaskLater(RIVevent.plugin,400L);
+        }.runTaskLater(RIVevent.plugin,SettingsHandler.getInstance().cursePeriod);
         taskIDs.put("CURSE",bukkitTask.getTaskId());
 
     }
@@ -143,16 +142,20 @@ public class MiniGameService {
 
         if (eventService.getParticipantsPlayers().size() < 2) {
             if (sender != null)
-                sender.sendMessage(ChatFormatter.formatErrorMessage("there aren't enough participants to start this event!"));
+                sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
             return;
         }
 
         deathRaceEventFlag = true;
 
         for (UUID u : eventService.getParticipantsPlayers()) {
+
             Player p  = Bukkit.getPlayer(u);
-            p.sendMessage(ChatFormatter.formatEventMessage(ChatColor.YELLOW + "DEATH RACE" + ChatColor.RESET + ": every 60 seconds the lowest location player dies! "));
-            p.sendTitle(ChatColor.YELLOW + "DEATH RACE EVENT", "",20,60,20);
+            if (p == null)
+                return;
+
+            p.sendMessage(ChatFormatter.formatEventMessage(Messages.DEATHRACE_START_MSG));
+            p.sendTitle("" ,ChatColor.RED + "DEATH RACE EVENT",20,60,20);
 
         }
 
@@ -160,43 +163,45 @@ public class MiniGameService {
 
     }
 
-
-    public Player getLastPlayer() {
+    public Player getLowestPlayer() { //todo testare il fix
         EventService eventService = EventService.getInstance();
-        Player lastPlayer = Bukkit.getPlayer(eventService.getParticipantsPlayers().get(0));
+        Player lowestPlayer = Bukkit.getPlayer(eventService.getParticipantsPlayers().get(0));
         for (UUID u : eventService.getParticipantsPlayers()) {
-            if (lastPlayer.getLocation().getBlockY() < Bukkit.getPlayer(u).getLocation().getBlockY())
-                lastPlayer = Bukkit.getPlayer(u);
+            if (lowestPlayer.getLocation().getBlockY() > Bukkit.getPlayer(u).getLocation().getBlockY())
+                lowestPlayer = Bukkit.getPlayer(u);
         }
-        return lastPlayer;
+        return lowestPlayer;
     }
 
     public void deathRaceRunnable() {
         SettingsHandler settingsHandler = SettingsHandler.getInstance();
         EventService eventService = EventService.getInstance();
-        //VA SICURAMENTE RIVISTO
 
-        CountdownDeathRace timer = new CountdownDeathRace(RIVevent.getPlugin(RIVevent.class),
+        CountdownMinigame timer = new CountdownMinigame(RIVevent.getPlugin(RIVevent.class),
                 settingsHandler.deathRacePeriod,
                 () -> {},
                 () -> {
 
-                    Player lastPlayer = getLastPlayer();
-                    lastPlayer.setHealth(0);
-                    lastPlayer.sendMessage(ChatFormatter.formatEventMessage("first rule of the" + ChatColor.YELLOW
-                            + "'death reace club'" + ChatColor.RESET + " : don't be the lowest player"));
+                    Player lastPlayer = getLowestPlayer();
+                    lastPlayer.setHealth(0); //IL totem non deve attivarsi in questo caso ?
+                    lastPlayer.sendMessage(ChatFormatter.formatEventMessage(Messages.DEATHRACE_DEATH_MSG));
 
                 },
                 (t) -> {
 
-                    if (eventService.isFinished())
+                    if (eventService.isFinished()) {
                         Bukkit.getScheduler().cancelTask(taskIDs.get("DEATHRACE"));
+                        taskIDs.remove("DEATHRACE");
+                        deathRaceEventFlag = false;
+                        return;
+                    }
 
                     if(t.getSecondsLeft() <= 10) {
 
                         for (UUID u : eventService.getParticipantsPlayers()) {
                             Player p = Bukkit.getPlayer(u);
-                            p.sendTitle(new Title(String.valueOf(t.getSecondsLeft()), "", 1, 18, 1));
+                            if (p != null)
+                                p.sendTitle(new Title(String.valueOf(t.getSecondsLeft()), "", 1, 18, 1));
                         }
 
                     }
@@ -208,12 +213,6 @@ public class MiniGameService {
 
 
     // - - - - - - - - //
-
-
-
-    public void stopMiniGameTask(String s) {
-        Bukkit.getScheduler().cancelTask(taskIDs.get(s));
-    }
 
     public void stopMiniGameTask() {
 
