@@ -11,9 +11,13 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +116,10 @@ public class EventService {
         return mergedList;
     }
 
+    public boolean isPartecipant(UUID u) {   //todo da implementare nel codice
+        return participantsPlayers.contains(u);
+    }
+
     public void teleportToSpawnPoint(Player player) {
 
         switch(arenaSpawnID) {
@@ -140,7 +148,8 @@ public class EventService {
                 10,
                 () -> {
 
-                    String matchMessage = ChatFormatter.formatInitializationMessage("the event will start in 10 seconds...");
+                    String matchMessage = ChatFormatter.formatInitializationMessage(Messages.START_CD_MSG);
+                    setStarted(true);
 
                     for (UUID u : getParticipantsPlayers()) {
                         Player player = Bukkit.getPlayer(u);
@@ -162,7 +171,6 @@ public class EventService {
                     }
 
                     setDoorsStatus(true);
-                    setStarted(true);
                     AntiCamperService.getInstance().startAntiCamperSystem();
                     RewardService.getInstance().startRewardSystem();
 
@@ -202,11 +210,6 @@ public class EventService {
         Player removedPlayer = Bukkit.getPlayer(u);
 
         if (removedPlayer != null){
-            /*
-            removedPlayer.teleport(SettingsHandler.getInstance().respawnLocation);
-            removedPlayer.playSound(removedPlayer.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-
-             */
             removedPlayer.getInventory().clear();
         }
 
@@ -218,13 +221,14 @@ public class EventService {
             for (UUID uuid : getAllPlayerEvent()) {
 
                 Player partecipants = Bukkit.getPlayer(uuid);
-                partecipants.sendTitle("VINCETORE : " + ChatColor.GOLD + winner.getDisplayName(),
+                partecipants.sendTitle("VINCITORE : " + ChatColor.GOLD + winner.getDisplayName(),
                         "",20,100,20);
             }
 
+            victoryFireworksEffect(2);
             AntiCamperService.getInstance().stopAnticamperTasks();
             RewardService.getInstance().stopRewardTask();
-            MiniGameService.getInstance().stopMiniGameTask();
+            MinigameService.getInstance().stopMiniGameTask();
             isFinished = true;
 
             return;
@@ -235,12 +239,12 @@ public class EventService {
 
             for (UUID uuid : getAllPlayerEvent()) {
                 Player p = Bukkit.getPlayer(uuid);
-                p.sendMessage(ChatFormatter.formatSuccessMessage("No winner :( ?"));
+                p.sendMessage(ChatFormatter.formatSuccessMessage("WTF :( ?"));
             }
 
             AntiCamperService.getInstance().stopAnticamperTasks();
             RewardService.getInstance().stopRewardTask();
-            MiniGameService.getInstance().stopMiniGameTask();
+            MinigameService.getInstance().stopMiniGameTask();
 
         }
 
@@ -289,7 +293,7 @@ public class EventService {
 
         AntiCamperService.getInstance().stopAnticamperTasks();
         RewardService.getInstance().stopRewardTask();
-        MiniGameService.getInstance().stopMiniGameTask();
+        MinigameService.getInstance().stopMiniGameTask();
 
 
     }
@@ -301,7 +305,8 @@ public class EventService {
         if (isStarted) {
             AntiCamperService.getInstance().stopAnticamperTasks();
             RewardService.getInstance().stopRewardTask();
-            MiniGameService.getInstance().stopMiniGameTask();
+            if (MinigameService.getInstance().isUniqueMiniGameRunning())
+                MinigameService.getInstance().stopMiniGameTask();
             isStarted = false;
         }
 
@@ -309,6 +314,42 @@ public class EventService {
 
         this.participantsPlayers.clear();
         this.eliminatedPlayers.clear();
+
+    }
+
+    public static void victoryFireworksEffect(int amount) {
+
+        new BukkitRunnable() {
+            int cicle = 0;
+            Location loc = EventService.getInstance().summonedArena.getTower().clone().add(0,3,0); //todo
+
+            @Override
+            public void run() {
+
+                Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+                FireworkMeta fwm = fw.getFireworkMeta();
+
+                fwm.setPower(1);
+                fwm.addEffect(FireworkEffect.builder().flicker(true).trail(true)
+                        .with(FireworkEffect.Type.BALL).with(FireworkEffect.Type.BALL_LARGE)
+                        .with(FireworkEffect.Type.STAR).withColor(Color.ORANGE)
+                        .withColor(Color.YELLOW).withFade(Color.PURPLE).withFade(Color.RED).build());
+
+                fw.setFireworkMeta(fwm);
+
+                for (int i = 0;i<amount; i++) {
+
+                    Firework fw2 = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+                    fw2.setFireworkMeta(fwm);
+                }
+
+                cicle++;
+
+                if (cicle == 4)
+                    this.cancel();
+
+            }
+        }.runTaskTimer(RIVevent.plugin,20,100);
 
     }
 
