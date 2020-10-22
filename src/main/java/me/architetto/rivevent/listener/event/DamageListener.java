@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class DamageListener implements Listener{
@@ -59,13 +57,14 @@ public class DamageListener implements Listener{
 
         if (damager.getInventory().getItemInMainHand().getType() == Material.TRIDENT) {
 
+            Vector knockbackVector = damager.getLocation().toVector().subtract(damageTaker.getLocation().toVector()).multiply(-1); //new code, test it
+
             event.setDamage(0.5);
 
-            Vector knockbackVector = damageTaker.getLocation().getDirection()
-                    .multiply(5 * -1).setY(0.5);
+           // Vector knockbackVector = damageTaker.getLocation().getDirection().multiply(5 * -1).setY(0.5); //old code
 
             damageTaker.setVelocity(knockbackVector);
-            damageTaker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,60,1));
+           // damageTaker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,60,1));
 
             damager.getInventory().setItemInMainHand(null);
         }
