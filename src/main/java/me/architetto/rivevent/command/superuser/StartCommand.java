@@ -40,6 +40,11 @@ public class StartCommand extends SubCommand{
             return;
         }
 
+       if (eventService.getParticipantsPlayers().isEmpty()) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
+            return;
+        }
+
         if (eventService.isStarted()) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
             return;

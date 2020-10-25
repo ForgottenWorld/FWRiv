@@ -53,12 +53,12 @@ public class RightClickListener implements Listener{
 
             int targetBlockEffect = new SecureRandom().nextInt(100);
 
-            if (targetBlockEffect < 40) {
+            if (targetBlockEffect < 45) {
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,200, 3));
                 playerCooldown.add(player.getUniqueId());
 
-            } else if (targetBlockEffect > 60) {
+            } else if (targetBlockEffect > 55) {
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 400 , 1));
                 playerCooldown.add(player.getUniqueId());
@@ -73,14 +73,12 @@ public class RightClickListener implements Listener{
             } else {
 
                 Vector knockbackVector = eventService.getSummonedArena().getTower()
-                        .toVector().subtract(player.getLocation().toVector()).multiply(-3);
+                        .toVector().subtract(player.getLocation().toVector()).multiply(-2);
 
                 player.getWorld().spawnParticle(Particle.EXPLOSION_LARGE,player.getLocation(),2);
                 player.getWorld().playSound(player.getLocation(),Sound.ENTITY_GENERIC_EXPLODE,2,1);
 
                 player.setVelocity(knockbackVector);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 100 , 1));
-
 
                 playerCooldown.add(player.getUniqueId());
 

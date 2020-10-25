@@ -92,7 +92,7 @@ public class SettingsHandler {
         //non serve convertire in tick
         this.deathRacePeriod = fileConfiguration.getInt("DEATH_RACE_PERIOD",60);
 
-        this.cursePeriod = fileConfiguration.getInt("CURSE_PERIOD",60);
+        this.cursePeriod = fileConfiguration.getInt("CURSE_PERIOD",60) * 20;
 
     }
 
