@@ -54,7 +54,7 @@ public class Arena {
     }
 
 
-    public List<Location> getAllSpawnLocations() {
+    public List<Location> getSpawnLocations() {
 
         return new ArrayList<>(
                 Arrays.asList(spawn1,
@@ -68,7 +68,7 @@ public class Arena {
 
         List<Block> doorsList = new ArrayList<>();
 
-        for (Location loc : getAllSpawnLocations()) {
+        for (Location loc : getSpawnLocations()) {
             Block middle = loc.getBlock();
             for (int x = 10; x >= -10; x--) {
                 for (int y = 10; y >= -10; y--) {
@@ -86,6 +86,7 @@ public class Arena {
 
         return doorsList;
     }
+
 
     public int getLowestY() {
 
