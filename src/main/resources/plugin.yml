@@ -4,9 +4,12 @@ main: me.architetto.rivevent.RIVevent
 api-version: 1.16
 authors: [Architetto]
 description: Automatizza l'evento 'Resta In Vetta'
+prefix: RIVevent
 commands:
   rivevent:
     description: Automatizza l'evento 'Resta in Vetta'.
+    aliases:
+      - riv
 
 permissions:
   rivevent.admin:
