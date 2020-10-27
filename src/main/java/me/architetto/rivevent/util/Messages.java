@@ -19,7 +19,6 @@ public class Messages {
 
     public static String CONFIG_RELOADED = "Config file ricaricato";
 
-
     public static String JOIN_STARTED_EVENT = "Sei stato aggiunto alla lista dei partecipanti";
     public static String JOIN_EVENT = "Sei stato aggiunto alla lista dei partecipanti";
 
@@ -39,7 +38,6 @@ public class Messages {
     public static String REWARD_INVENTORY_FULL = "Inventario pieno! Nessun reward ottenuto.";
     public static String REWARD_NO_UNIQUE = "Nessun reward ottenuto... sarai più fortunato la prossima volta.";
 
-
     public static String CURSED_PLAYER_START_TITLE = ChatColor.MAGIC + "Architetto" + ChatColor.RESET + ChatColor.RED + " ti ha maledetto!";
     public static String CURSED_PLAYER_START_SUBTITLE = ChatColor.ITALIC + "colpisci qualcuno per passare la maledizione";
     public static String NOT_CURSED_PLAYER_ALLERT = ChatColor.DARK_RED + "!! WARNING !!" + ChatColor.RESET + " uno dei partecipanti è stato maledetto!";
@@ -50,7 +48,6 @@ public class Messages {
 
     public static String DEATHRACE_START_MSG = "EVENTO " + ChatColor.RED + "DEATH RACE " + ChatColor.RESET + ": 'ad ogni giro' muore il player più in basso. ";
     public static String DEATHRACE_DEATH_MSG = "E' la prima regola del " + ChatColor.DARK_RED + "'deathreace club'" + ChatColor.RESET + " : non essere l'ultimo!";
-
 
     public static String RIV_GAMEPLAY_INFO = ChatColor.YELLOW + "[+] " + ChatColor.RESET + "Il cibo non scende mai a zero" +
             ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Ricevi premi stando in cima alla torre" +
