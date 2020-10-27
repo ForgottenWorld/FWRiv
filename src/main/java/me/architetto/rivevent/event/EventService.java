@@ -28,10 +28,11 @@ public class EventService {
     private static EventService eventService;
 
     private Arena summonedArena;
-    private int arenaSpawnID;
+    private int spawnID;
 
-    private List<UUID> participantsPlayers;
-    private List<UUID> eliminatedPlayers;
+
+    private List<UUID> playersIN;
+    private List<UUID> playersOUT;
 
     public List<Block> spawnDoorsList;
 
@@ -39,15 +40,17 @@ public class EventService {
     private boolean isStarted = false;
     private boolean isFinished = false;
 
+    private boolean isDamageEnabled = false;
+
     private EventService() {
         if(eventService != null) {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
 
         this.spawnDoorsList = new ArrayList<>();
-        this.participantsPlayers = new ArrayList<>();
-        this.eliminatedPlayers = new ArrayList<>();
-        this.arenaSpawnID = 0;
+        this.playersIN = new ArrayList<>();
+        this.playersOUT = new ArrayList<>();
+        this.spawnID = 0;
 
     }
 
@@ -66,34 +69,28 @@ public class EventService {
     }
 
     public Arena getSummonedArena() {
-        return summonedArena;
-    }
-    public void setSummonedArena(Arena arena) {
-        summonedArena = arena;
+        return this.summonedArena;
     }
 
-    public List<UUID> getParticipantsPlayers() {
-        return new ArrayList<>(participantsPlayers);
+    public List<UUID> getPlayerIN() {
+        return new ArrayList<>(playersIN);
     }
     public void addPartecipant(UUID player) {
-        participantsPlayers.add(player);
+        playersIN.add(player);
     }
 
-    public List<UUID> getEliminatedPlayers() {
-        return new ArrayList<>(eliminatedPlayers);
+    public List<UUID> getPlayerOUT() {
+        return new ArrayList<>(playersOUT);
     }
-    public void addEliminated(UUID player) {
-        eliminatedPlayers.add(player);
+    public void addPlayerOUT(UUID player) {
+        playersOUT.add(player);
     }
-    public void removeEliminated(UUID u) {
-        eliminatedPlayers.remove(u);
+    public void removePlayerOUT(UUID u) {
+        playersOUT.remove(u);
     }
 
     public boolean isRunning() {
         return isRunning;
-    }
-    public void setRunning(boolean running) {
-        isRunning = running;
     }
 
     public boolean isStarted() {
@@ -106,38 +103,39 @@ public class EventService {
     public boolean isFinished() {
         return isFinished;
     }
-    public void setFinished(boolean finished) {
-        isFinished = finished;
-    }
 
-    public List<UUID> getAllPlayerEvent() {
-        List<UUID> mergedList = new ArrayList<>(getParticipantsPlayers());
-        mergedList.addAll(getEliminatedPlayers());
-        return mergedList;
+    public boolean isDamageEnabled() { return this.isDamageEnabled; }
+
+    public List<UUID> getEventPlayerList() {
+
+        ArrayList<UUID> list = new ArrayList<>(getPlayerIN());
+        list.addAll(getPlayerOUT());
+
+        return list;
     }
 
     public boolean isPartecipant(UUID u) {   //todo da implementare nel codice
-        return participantsPlayers.contains(u);
+        return playersIN.contains(u);
     }
 
     public void teleportToSpawnPoint(Player player) {
 
-        switch(arenaSpawnID) {
+        switch(spawnID) {
             case 0:
                 player.teleport(summonedArena.getSpawn1());
-                arenaSpawnID = 1;
+                spawnID = 1;
                 break;
             case 1:
                 player.teleport(summonedArena.getSpawn2());
-                arenaSpawnID = 2;
+                spawnID = 2;
                 break;
             case 2:
                 player.teleport(summonedArena.getSpawn3());
-                arenaSpawnID = 3;
+                spawnID = 3;
                 break;
             case 3:
                 player.teleport(summonedArena.getSpawn4());
-                arenaSpawnID = 0;
+                spawnID = 0;
         }
 
     }
@@ -151,7 +149,8 @@ public class EventService {
                     String matchMessage = ChatFormatter.formatInitializationMessage(Messages.START_CD_MSG);
                     setStarted(true);
 
-                    for (UUID u : getParticipantsPlayers()) {
+
+                    for (UUID u : getPlayerIN()) {
                         Player player = Bukkit.getPlayer(u);
                         if (player != null) {
                             player.sendMessage(matchMessage);
@@ -164,13 +163,15 @@ public class EventService {
                 },
                 () -> {
 
-                    for (UUID u : getParticipantsPlayers()) {
+                    for (UUID u : getPlayerIN()) {
                         Player p = Bukkit.getPlayer(u);
                         p.sendTitle(new Title(ChatColor.RED + "GO !!!", "", 1, 18, 1));
 
                     }
 
                     setDoorsStatus(true);
+
+                    isDamageEnabled = true;
                     AntiCamperService.getInstance().startAntiCamperSystem();
                     RewardService.getInstance().startRewardSystem();
 
@@ -179,7 +180,7 @@ public class EventService {
                 (t) -> {
                     if( t.getSecondsLeft() <= 5) {
 
-                        for (UUID u : getParticipantsPlayers()) {
+                        for (UUID u : getPlayerIN()) {
                             Player p = Bukkit.getPlayer(u);
                             p.sendTitle(new Title(String.valueOf(t.getSecondsLeft()), "", 1, 18, 1));
                         }
@@ -205,8 +206,8 @@ public class EventService {
 
     public void removePartecipant(UUID u) {
 
-        participantsPlayers.remove(u);
-        eliminatedPlayers.add(u);
+        playersIN.remove(u);
+        playersOUT.add(u);
         Player removedPlayer = Bukkit.getPlayer(u);
 
         if (removedPlayer != null){
@@ -216,9 +217,9 @@ public class EventService {
         if (!isStarted)
             return;
 
-        if (participantsPlayers.size() == 1) {
-            Player winner = Bukkit.getPlayer(getParticipantsPlayers().get(0));
-            for (UUID uuid : getAllPlayerEvent()) {
+        if (playersIN.size() == 1) {
+            Player winner = Bukkit.getPlayer(getPlayerIN().get(0));
+            for (UUID uuid : getEventPlayerList()) {
 
                 Player partecipants = Bukkit.getPlayer(uuid);
                 partecipants.sendTitle("VINCITORE : " + ChatColor.GOLD + winner.getDisplayName(),
@@ -234,10 +235,10 @@ public class EventService {
             return;
         }
 
-        if (participantsPlayers.isEmpty() && !isFinished) {
+        if (playersIN.isEmpty() && !isFinished) {
 
 
-            for (UUID uuid : getAllPlayerEvent()) {
+            for (UUID uuid : getEventPlayerList()) {
                 Player p = Bukkit.getPlayer(uuid);
                 p.sendMessage(ChatFormatter.formatSuccessMessage("WTF :( ?"));
             }
@@ -273,11 +274,12 @@ public class EventService {
         isRunning = true;
         isStarted = false;
         isFinished = false;
+        isDamageEnabled = false;
 
-        participantsPlayers.addAll(eliminatedPlayers);
-        eliminatedPlayers.clear();
+        playersIN.addAll(playersOUT);
+        playersOUT.clear();
 
-        for (UUID u : getParticipantsPlayers()) {
+        for (UUID u : getPlayerIN()) {
 
             Player player = Bukkit.getPlayer(u);
             if (player == null) continue;
@@ -311,9 +313,10 @@ public class EventService {
         }
 
         isFinished = false;
+        isDamageEnabled = false;
 
-        this.participantsPlayers.clear();
-        this.eliminatedPlayers.clear();
+        this.playersIN.clear();
+        this.playersOUT.clear();
 
     }
 
@@ -350,6 +353,32 @@ public class EventService {
 
             }
         }.runTaskTimer(RIVevent.plugin,20,100);
+
+    }
+
+    public void sendMessages(String s,List<UUID> uuidPlayersList) {
+
+        for (UUID uuid : uuidPlayersList) {
+
+            Player p = Bukkit.getPlayer(uuid);
+
+            if (p !=  null)
+                p.sendMessage(ChatFormatter.formatSuccessMessage(s));
+        }
+
+
+    }
+
+    public void sendTitle(String title,String subtitle,int inTime,int stayTime,int outTime,List<UUID> uuidPlayersList) {
+
+        for (UUID uuid : uuidPlayersList) {
+
+            Player p = Bukkit.getPlayer(uuid);
+
+            if (p !=  null)
+                p.sendTitle(title,subtitle,inTime,stayTime,outTime);
+        }
+
 
     }
 
