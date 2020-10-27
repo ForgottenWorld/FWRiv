@@ -44,14 +44,14 @@ public class LeaveCommand extends SubCommand{
             return;
         }
 
-        if (eventService.getParticipantsPlayers().contains(sender.getUniqueId())) {
+        if (eventService.getPlayerIN().contains(sender.getUniqueId())) {
             eventService.removePartecipant(sender.getUniqueId());
             sender.teleport(SettingsHandler.getInstance().respawnLocation);
             sender.playSound(sender.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
             sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.LEAVE_OK));
 
-        } else if (eventService.getEliminatedPlayers().contains(sender.getUniqueId())) {
-            eventService.removeEliminated(sender.getUniqueId());
+        } else if (eventService.getPlayerOUT().contains(sender.getUniqueId())) {
+            eventService.removePlayerOUT(sender.getUniqueId());
             sender.setGameMode(GameMode.SURVIVAL);
             sender.teleport(settingsHandler.respawnLocation);
             sender.playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,1,1);

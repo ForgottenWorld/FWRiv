@@ -21,7 +21,7 @@ public class FoodLevelListener implements Listener{
 
         Player entity = (Player) event.getEntity();
 
-        if (eventService.getAllPlayerEvent().contains(entity.getUniqueId())) {
+        if (eventService.getEventPlayerList().contains(entity.getUniqueId())) {
 
             if (event.getFoodLevel() <= foodLevel)
                 event.setFoodLevel(foodLevel); //event.setCancelled(true)

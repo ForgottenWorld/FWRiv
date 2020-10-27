@@ -42,17 +42,18 @@ public class JoinCommand extends SubCommand {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
 
         } else {
-            if (eventService.getAllPlayerEvent().contains(sender.getUniqueId())) {
+            if (eventService.getEventPlayerList().contains(sender.getUniqueId())) {
                 sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ALREADY_JOINED));
                 return;
             }
 
             if (eventService.isStarted()) {
-                eventService.addEliminated(sender.getUniqueId());
+                eventService.addPlayerOUT(sender.getUniqueId());
+                sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.JOIN_STARTED_EVENT));
                 sender.setGameMode(GameMode.SPECTATOR);
                 sender.teleport(eventService.getSummonedArena().getTower());
                 sender.getWorld().playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-                sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.JOIN_STARTED_EVENT));
+
             } else {
                 eventService.addPartecipant(sender.getUniqueId());
                 eventService.teleportToSpawnPoint(sender);
