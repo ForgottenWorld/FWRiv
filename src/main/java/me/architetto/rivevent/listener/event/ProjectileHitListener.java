@@ -35,7 +35,7 @@ public class ProjectileHitListener implements Listener {
 
         Player playerHitted = (Player) event.getHitEntity();
 
-        if (!eventService.getParticipantsPlayers().contains(playerHitted.getUniqueId()))
+        if (!eventService.getPlayerIN().contains(playerHitted.getUniqueId()))
             return;
 
         Projectile pj = event.getEntity();
@@ -73,7 +73,7 @@ public class ProjectileHitListener implements Listener {
                 else
                     return; //se non trova una fishing rod non esegue nulla
 
-                Location shooterLoc = shooter.getLocation();
+                Location shooterLoc = shooter.getLocation().clone();
 
                 shooter.teleport(playerHitted.getLocation());
                 shooter.playSound(shooter.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
@@ -96,7 +96,7 @@ public class ProjectileHitListener implements Listener {
 
             }
 
-            return;
+
 
         }
 

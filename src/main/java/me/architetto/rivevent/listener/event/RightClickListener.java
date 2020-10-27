@@ -39,7 +39,7 @@ public class RightClickListener implements Listener{
 
         Player player = event.getPlayer();
 
-        if (eventService.getParticipantsPlayers().contains(event.getPlayer().getUniqueId())
+        if (eventService.getPlayerIN().contains(event.getPlayer().getUniqueId())
                 && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
                 && Objects.requireNonNull(event.getClickedBlock()).getType() == Material.TARGET
                 && Objects.equals(event.getHand(), EquipmentSlot.HAND)) {

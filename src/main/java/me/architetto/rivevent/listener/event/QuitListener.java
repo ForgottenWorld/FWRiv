@@ -21,14 +21,14 @@ public class QuitListener implements Listener {
             return;
 
         Player player = event.getPlayer();
-        if (eventService.getParticipantsPlayers().contains(player.getUniqueId())) {
+        if (eventService.getPlayerIN().contains(player.getUniqueId())) {
 
             eventService.removePartecipant(player.getUniqueId());
             player.teleport(settingsHandler.respawnLocation);
 
-        } else if (eventService.getEliminatedPlayers().contains(event.getPlayer().getUniqueId())) {
+        } else if (eventService.getPlayerOUT().contains(event.getPlayer().getUniqueId())) {
 
-            eventService.removeEliminated(event.getPlayer().getUniqueId());
+            eventService.removePlayerOUT(event.getPlayer().getUniqueId());
             event.getPlayer().teleport(SettingsHandler.getInstance().respawnLocation);
             event.getPlayer().setGameMode(GameMode.SURVIVAL);
 

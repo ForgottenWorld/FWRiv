@@ -73,7 +73,7 @@ public class RestartCommand extends SubCommand{
 
         for (Player p : Bukkit.getOnlinePlayers()) {
 
-            if (eventService.getAllPlayerEvent().contains(p.getUniqueId()) || p == sender)
+            if (eventService.getEventPlayerList().contains(p.getUniqueId()) || p == sender)
                 continue;
 
             p.sendMessage(new TextComponent(ChatFormatter.formatInitializationMessage("Click ")),joinClickMessage,

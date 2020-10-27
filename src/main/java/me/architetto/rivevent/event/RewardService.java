@@ -68,13 +68,13 @@ public class RewardService {
                 .sum();
         this.uniqueReward = settingsHandler.uniquerewardItemList;
 
-        rewardPlayerOnTop();
+        rewardPlayers();
 
     }
 
 
 
-    private void rewardPlayerOnTop() {
+    private void rewardPlayers() {
 
         EventService eventService = EventService.getInstance();
         BukkitTask bukkitTask = new BukkitRunnable() {
@@ -82,7 +82,7 @@ public class RewardService {
             @Override
             public void run(){
 
-                for (UUID uuid : eventService.getParticipantsPlayers()) {
+                for (UUID uuid : eventService.getPlayerIN()) {
 
                     Player player = Bukkit.getPlayer(uuid);
                     if (player == null)

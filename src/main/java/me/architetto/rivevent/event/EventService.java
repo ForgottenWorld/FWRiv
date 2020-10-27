@@ -287,7 +287,6 @@ public class EventService {
             player.setGameMode(GameMode.SURVIVAL);
             teleportToSpawnPoint(player);
             player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-            equipLoadout(player);
 
             player.sendMessage(ChatFormatter.formatSuccessMessage(Messages.RESTART_CMD_PLAYER_MESSAGE));
 
