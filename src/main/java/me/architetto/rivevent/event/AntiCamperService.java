@@ -85,11 +85,11 @@ public class AntiCamperService {
                     redLineValue = redLineFinalValue;
 
 
-                    for (UUID u : eventService.getParticipantsPlayers()) {
+                    for (UUID u : eventService.getPlayerIN()) {
 
                         Objects.requireNonNull(Bukkit.getPlayer(u)).sendMessage(ChatFormatter
                                 .formatEventAllert(ChatColor.RED + "!! WARNING !!" + ChatColor.YELLOW
-                                        + " anti-camper damage boost activated "));
+                                        + " danno anticamper aumentato "));
 
                     }
 
@@ -99,10 +99,10 @@ public class AntiCamperService {
 
                 particleEffectPoint = getCircle(50);
 
-                for (UUID u : eventService.getParticipantsPlayers()) {
+                for (UUID u : eventService.getPlayerIN()) {
 
                     Objects.requireNonNull(Bukkit.getPlayer(u)).sendMessage(ChatFormatter
-                            .formatEventAllert("AntiCamper allert: minimum height " + ChatColor.GOLD + redLineValue));
+                            .formatEventAllert("AntiCamper : altezza minima : " + ChatColor.GOLD + redLineValue));
 
                 }
 
@@ -122,7 +122,7 @@ public class AntiCamperService {
             @Override
             public void run(){
 
-                for (UUID u : eventService.getParticipantsPlayers()) {
+                for (UUID u : eventService.getPlayerIN()) {
                     Player p = Bukkit.getPlayer(u);
                     if (p == null)
                         continue;
