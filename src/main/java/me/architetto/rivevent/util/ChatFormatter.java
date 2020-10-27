@@ -17,7 +17,7 @@ public class ChatFormatter{
 
     public static String chatHeaderPresetInfo() {
         return  ChatColor.AQUA + "[*]----------------[ " +
-                ChatColor.DARK_AQUA + ChatColor.BOLD + "PRESET INFO" +
+                ChatColor.DARK_AQUA + ChatColor.BOLD + "ARENA INFO" +
                 ChatColor.AQUA + " ]----------------[*]";
     }
 

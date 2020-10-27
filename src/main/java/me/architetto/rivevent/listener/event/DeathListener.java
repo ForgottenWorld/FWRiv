@@ -24,7 +24,7 @@ public class DeathListener implements Listener{
         if (!eventService.isRunning())
             return;
 
-        if (eventService.getParticipantsPlayers().contains(event.getEntity().getUniqueId())) {
+        if (eventService.getPlayerIN().contains(event.getEntity().getUniqueId())) {
 
             event.setCancelled(true);
             event.getEntity().getInventory().clear();
@@ -51,7 +51,7 @@ public class DeathListener implements Listener{
                 event.setCancelled(false);
         }
 
-        if (eventService.getParticipantsPlayers().contains(event.getEntity().getUniqueId())) {
+        if (eventService.getPlayerIN().contains(event.getEntity().getUniqueId())) {
 
             new BukkitRunnable() {
 

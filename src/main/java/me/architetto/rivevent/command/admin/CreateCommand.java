@@ -6,6 +6,7 @@ import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -41,10 +42,10 @@ public class CreateCommand extends SubCommand{
             return;
         }
 
-        String presetName = args[1];
+        String arenaName = args[1];
 
         ArenaManager presetService = ArenaManager.getInstance();
-        Optional<Arena> preset = presetService.getArena(presetName);
+        Optional<Arena> preset = presetService.getArena(arenaName);
 
         if(preset.isPresent())
 
@@ -57,8 +58,9 @@ public class CreateCommand extends SubCommand{
                 return;
             }
 
-            sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 1 (Click destro)"));
-            ArenaManager.getInstance().addPlayerToArenaCreation(sender, presetName);
+            sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 1 ... "
+                    + ChatColor.AQUA + "" + ChatColor.ITALIC + "(CLICK DX con STICK equipaggiato)"));
+            ArenaManager.getInstance().addPlayerToArenaCreation(sender, arenaName);
         }
 
     }

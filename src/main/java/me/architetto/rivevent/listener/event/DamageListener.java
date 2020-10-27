@@ -29,16 +29,16 @@ public class DamageListener implements Listener{
         Player damager = (Player) event.getDamager();
         Player damageTaker = (Player) event.getEntity();
 
-        if (!eventService.getParticipantsPlayers().contains(damager.getUniqueId()))
+        if (!eventService.getPlayerIN().contains(damager.getUniqueId()))
             return;
 
-        if (!eventService.isStarted()) {
+        if (!eventService.isDamageEnabled()) {
             event.setCancelled(true);
             return;
         }
 
         if (MinigameService.getInstance().isCurseEventRunning()
-                && eventService.getParticipantsPlayers().contains(damageTaker.getUniqueId())) {
+                && eventService.getPlayerIN().contains(damageTaker.getUniqueId())) {
 
             if (MinigameService.getInstance().getCursedPlayer() == damager) {
 

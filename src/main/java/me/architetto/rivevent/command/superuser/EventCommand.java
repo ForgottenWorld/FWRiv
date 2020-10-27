@@ -5,10 +5,13 @@ import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class EventCommand extends SubCommand{
     @Override
@@ -42,17 +45,26 @@ public class EventCommand extends SubCommand{
         }
 
 
-        sender.sendMessage(ChatFormatter.formatSuccessMessage("PLAYERS JOINED : " + ChatColor.YELLOW
-                + eventService.getAllPlayerEvent().size()));
-        sender.sendMessage(ChatFormatter.formatSuccessMessage("PLAYERS LIST : " + ChatColor.YELLOW
-                + eventService.getAllPlayerEvent()));
-        sender.sendMessage(ChatFormatter.formatSuccessMessage("SPECTATORS : WIP"));
+
+        sender.sendMessage(ChatFormatter.formatSuccessMessage("GIOCATORI : " + ChatColor.YELLOW
+                + eventService.getEventPlayerList().size()));
+        sender.sendMessage(ChatFormatter.formatSuccessMessage(getPlayersName(eventService.getPlayerIN()).toString()));
 
     }
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args){
         return null;
+    }
+
+    private List<String> getPlayersName(List<UUID> playersList) {
+        List<String> list = new ArrayList<>();
+        for (UUID u : playersList) {
+            Player p = Bukkit.getPlayer(u);
+            if (p != null)
+                list.add(p.getDisplayName());
+        }
+        return list;
     }
 
 

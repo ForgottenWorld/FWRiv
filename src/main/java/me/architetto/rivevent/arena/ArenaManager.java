@@ -20,8 +20,9 @@ public class ArenaManager {
     private final int SPAWN4 = 4;
     private final int TOWER = 5;
 
-    private HashMap<String, Arena> arenaContainer;
     private static ArenaManager arenaManager;
+
+    private HashMap<String, Arena> arenaContainer;
     private HashMap<UUID, Integer> playerArenaCreation;
     private HashMap<UUID, String> playerArenaNameCreation;
     private HashMap<UUID, HashMap<Integer, Location>> playerArenaCoordinates;
@@ -81,25 +82,25 @@ public class ArenaManager {
             case SPAWN1:
                 playerArenaCoordinates.put(sender.getUniqueId(), new HashMap<>());
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN1, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 2 (Click destro)"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 2 ..."));
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 spawnEffectAtBlock(location);
                 break;
             case SPAWN2:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN2, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 3 (Click destro)"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 3 ..."));
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 spawnEffectAtBlock(location);
                 break;
             case SPAWN3:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN3, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 4 (Click destro)"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 4 ..."));
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 spawnEffectAtBlock(location);
                 break;
             case SPAWN4:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN4, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione TORRE (Click destro)"));
+                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione TORRE ..."));
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 spawnEffectAtBlock(location);
                 break;
@@ -122,7 +123,7 @@ public class ArenaManager {
                 this.playerArenaCoordinates.remove(sender.getUniqueId());
                 this.playerArenaCreation.remove(sender.getUniqueId());
 
-                break;
+                return;
         }
         playerArenaCreation.put(sender.getUniqueId(), senderStep+1);
     }
