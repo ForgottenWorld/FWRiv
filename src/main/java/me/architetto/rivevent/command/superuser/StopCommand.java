@@ -49,7 +49,7 @@ public class StopCommand extends SubCommand{
 
         SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
-        for (UUID u : eventService.getAllPlayerEvent()) {
+        for (UUID u : eventService.getEventPlayerList()) {
 
             Player p = Bukkit.getPlayer(u);
             if (p == null) continue;
@@ -63,6 +63,7 @@ public class StopCommand extends SubCommand{
 
         }
 
+        eventService.setDoorsStatus(false);
         eventService.stopEvent();
         sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.STOP_CMD_SENDER_MESSAGE));
 
