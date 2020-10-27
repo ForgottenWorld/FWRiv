@@ -47,7 +47,7 @@ public class MinigameCommand extends SubCommand{
         MinigameService miniGameService = MinigameService.getInstance();
 
         if (miniGameService.isUniqueMiniGameRunning()) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Error: a unique minigame is already running"));
+            sender.sendMessage(ChatFormatter.formatErrorMessage("Error: un minigame è attualmente in corso"));
             return;
         }
 
@@ -60,7 +60,7 @@ public class MinigameCommand extends SubCommand{
                     miniGameService.startDeathRaceEvent(sender);
                     return;
                 default:
-                    sender.sendMessage(ChatFormatter.formatErrorMessage("Error: no minigame with this name"));
+                    sender.sendMessage(ChatFormatter.formatErrorMessage("Error: nessun minigame con questo nome"));
 
             }
         }

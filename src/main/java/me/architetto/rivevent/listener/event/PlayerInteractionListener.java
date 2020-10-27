@@ -15,7 +15,7 @@ public class PlayerInteractionListener implements Listener{
     public void onBlockBreak(BlockBreakEvent event) {
 
         EventService eventService = EventService.getInstance();
-        if (eventService.getParticipantsPlayers().contains(event.getPlayer().getUniqueId()))
+        if (eventService.getPlayerIN().contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
 
     }
@@ -24,7 +24,7 @@ public class PlayerInteractionListener implements Listener{
     public void onBlockPlace(BlockPlaceEvent event) {
 
         EventService eventService = EventService.getInstance();
-        if (eventService.getParticipantsPlayers().contains(event.getPlayer().getUniqueId()))
+        if (eventService.getPlayerIN().contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
 
     }
@@ -33,7 +33,7 @@ public class PlayerInteractionListener implements Listener{
     public void onPlayerInteraction(PlayerInteractEvent event) {
 
         EventService eventService = EventService.getInstance();
-        if (eventService.getParticipantsPlayers().contains(event.getPlayer().getUniqueId())) {
+        if (eventService.getPlayerIN().contains(event.getPlayer().getUniqueId())) {
 
             Block block = event.getClickedBlock();
 

@@ -70,14 +70,14 @@ public class MinigameService{
     public void startCurseEvent(Player sender) {
         EventService eventService = EventService.getInstance();
 
-        if (eventService.getParticipantsPlayers().size() < 2) {
+        if (eventService.getPlayerIN().size() < 2) {
             if (sender != null)
                 sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
             return;
         }
 
-        cursedPlayer = Bukkit.getPlayer(EventService.getInstance().getAllPlayerEvent()
-                .get(new Random().nextInt(EventService.getInstance().getAllPlayerEvent().size() - 1))) ;
+        cursedPlayer = Bukkit.getPlayer(EventService.getInstance().getEventPlayerList()
+                .get(new Random().nextInt(EventService.getInstance().getEventPlayerList().size() - 1))) ;
 
         if (cursedPlayer == null) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Error: cursed player choise issue"));
@@ -91,7 +91,7 @@ public class MinigameService{
 
         cursedPlayer.spawnParticle(Particle.MOB_APPEARANCE,cursedPlayer.getLocation(),1,0,0,0);
 
-        for (UUID u : eventService.getParticipantsPlayers()) {
+        for (UUID u : eventService.getPlayerIN()) {
 
             Player p = Bukkit.getPlayer(u);
 
@@ -114,10 +114,10 @@ public class MinigameService{
 
                 curseEventFlag = false;
 
-                cursedPlayer.setHealth(0); //Il totem non deve attivarsi in questo caso ?
+                cursedPlayer.setHealth(0);
                 cursedPlayer.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG3));
 
-                for (UUID u : eventService.getParticipantsPlayers()) {
+                for (UUID u : eventService.getPlayerIN()) {
 
                     Player p = Bukkit.getPlayer(u);
                     if (p != null){
@@ -140,7 +140,7 @@ public class MinigameService{
     public void startDeathRaceEvent(Player sender) {
         EventService eventService = EventService.getInstance();
 
-        if (eventService.getParticipantsPlayers().size() < 2) {
+        if (eventService.getPlayerIN().size() < 2) {
             if (sender != null)
                 sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
             return;
@@ -148,14 +148,14 @@ public class MinigameService{
 
         deathRaceEventFlag = true;
 
-        for (UUID u : eventService.getParticipantsPlayers()) {
+        for (UUID u : eventService.getPlayerIN()) {
 
             Player p  = Bukkit.getPlayer(u);
             if (p == null)
                 return;
 
             p.sendMessage(ChatFormatter.formatEventMessage(Messages.DEATHRACE_START_MSG));
-            p.sendTitle("" ,ChatColor.RED + "DEATH RACE EVENT",20,60,20);
+            p.sendTitle("" ,ChatColor.RED + "DEATH RACE",20,60,20);
 
         }
 
@@ -165,8 +165,8 @@ public class MinigameService{
 
     public Player getLowestPlayer() { //todo testare il fix
         EventService eventService = EventService.getInstance();
-        Player lowestPlayer = Bukkit.getPlayer(eventService.getParticipantsPlayers().get(0));
-        for (UUID u : eventService.getParticipantsPlayers()) {
+        Player lowestPlayer = Bukkit.getPlayer(eventService.getPlayerIN().get(0));
+        for (UUID u : eventService.getPlayerIN()) {
             if (lowestPlayer.getLocation().getBlockY() > Bukkit.getPlayer(u).getLocation().getBlockY())
                 lowestPlayer = Bukkit.getPlayer(u);
         }
@@ -183,7 +183,7 @@ public class MinigameService{
                 () -> {
 
                     Player lastPlayer = getLowestPlayer();
-                    lastPlayer.setHealth(0); //IL totem non deve attivarsi in questo caso ?
+                    lastPlayer.setHealth(0);
                     lastPlayer.sendMessage(ChatFormatter.formatEventMessage(Messages.DEATHRACE_DEATH_MSG));
 
                 },
@@ -198,7 +198,7 @@ public class MinigameService{
 
                     if(t.getSecondsLeft() <= 10) {
 
-                        for (UUID u : eventService.getParticipantsPlayers()) {
+                        for (UUID u : eventService.getPlayerIN()) {
                             Player p = Bukkit.getPlayer(u);
                             if (p != null)
                                 p.sendTitle(new Title(String.valueOf(t.getSecondsLeft()), "", 1, 18, 1));
