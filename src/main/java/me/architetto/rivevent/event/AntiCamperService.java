@@ -10,7 +10,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class AntiCamperService {
@@ -80,16 +79,18 @@ public class AntiCamperService {
                 redLineValue += redLineGrowValue;
 
                 if (redLineValue >= redLineFinalValue) {
+                    eventService.getSummonedArena().getTower().getWorld().playSound(eventService.getSummonedArena().getTower(),Sound.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
                     taskID.remove((Integer) this.getTaskId());
                     antiCamperDamage += antiCamperDamageBoost;
                     redLineValue = redLineFinalValue;
 
 
-                    for (UUID u : eventService.getPlayerIN()) {
+                    for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
 
-                        Objects.requireNonNull(Bukkit.getPlayer(u)).sendMessage(ChatFormatter
-                                .formatEventAllert(ChatColor.RED + "!! WARNING !!" + ChatColor.YELLOW
-                                        + " danno anticamper aumentato "));
+                        Player player = Bukkit.getPlayer(u);
+                        if (player != null)
+                            player.sendMessage(ChatFormatter.formatEventAllert(ChatColor.RED + "!! WARNING !!"
+                                    + ChatColor.YELLOW + " il danno dell'anticamper è aumentato "));
 
                     }
 
@@ -99,15 +100,14 @@ public class AntiCamperService {
 
                 particleEffectPoint = getCircle(50);
 
-                for (UUID u : eventService.getPlayerIN()) {
+                for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
 
-                    Objects.requireNonNull(Bukkit.getPlayer(u)).sendMessage(ChatFormatter
-                            .formatEventAllert("AntiCamper : altezza minima : " + ChatColor.GOLD + redLineValue));
+                    Player player = Bukkit.getPlayer(u);
+                    if (player != null)
+                        player.sendMessage(ChatFormatter.formatEventAllert("AntiCamper : altezza minima : "
+                                + ChatColor.GOLD + redLineValue));
 
                 }
-
-
-
             }
         }.runTaskTimer(RIVevent.plugin,antiCamperStartDelay,redLineGrowPeriod);
         taskID.add(bukkitTask.getTaskId());
@@ -117,12 +117,11 @@ public class AntiCamperService {
 
     private void checkPlayersPosition() {
 
-        EventService eventService = EventService.getInstance();
         BukkitTask bukkitTask =  new BukkitRunnable() {
             @Override
             public void run(){
 
-                for (UUID u : eventService.getPlayerIN()) {
+                for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
                     Player p = Bukkit.getPlayer(u);
                     if (p == null)
                         continue;
@@ -141,8 +140,6 @@ public class AntiCamperService {
     private void redLineParticleEffect() {
 
         BukkitTask bukkitTask = new BukkitRunnable() {
-
-
 
             final Particle.DustOptions dustOptions = new Particle.DustOptions(org.bukkit.Color.fromRGB(200, 0, 0),10);
             final Particle.DustOptions dustOptions2 = new Particle.DustOptions(org.bukkit.Color.fromRGB(255, 255, 51),2);
@@ -194,9 +191,5 @@ public class AntiCamperService {
             Bukkit.getScheduler().cancelTask(id);
         }
     }
-
-
-
-
 
 }

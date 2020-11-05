@@ -44,24 +44,23 @@ public class CreateCommand extends SubCommand{
 
         String arenaName = args[1];
 
-        ArenaManager presetService = ArenaManager.getInstance();
-        Optional<Arena> preset = presetService.getArena(arenaName);
+        ArenaManager arenaManager = ArenaManager.getInstance();
+        Optional<Arena> arena = arenaManager.getArena(arenaName);
 
-        if(preset.isPresent())
-
+        if (arena.isPresent()) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ARENA_NAME));
-
-        else {
-
-            if (presetService.isPlayerInCreationMode(sender)) {
-                sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_CREATION1));
-                return;
-            }
-
-            sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 1 ... "
-                    + ChatColor.AQUA + "" + ChatColor.ITALIC + "(CLICK DX con STICK equipaggiato)"));
-            ArenaManager.getInstance().addPlayerToArenaCreation(sender, arenaName);
+            return;
         }
+
+        if (arenaManager.isPlayerInCreationMode(sender)) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_CREATION1));
+            return;
+        }
+
+        sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 1 ... "
+                + ChatColor.AQUA + "" + ChatColor.ITALIC + "(CLICK DX con STICK equipaggiato)"));
+
+        ArenaManager.getInstance().addPlayerToArenaCreation(sender, arenaName);
 
     }
 

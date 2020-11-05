@@ -13,12 +13,11 @@ public class CommandName {
     public static String SET_COMMAND = "set";
     public static String MINIGAME_COMMAND = "minigame";
     public static String ARENA_COMMAND = "arena";
-    public static String EVENT_COMMAND = "event";
+    public static String EVENTINFO_COMMAND = "eventinfo";
 
     public static String JOIN_COMMAND = "join";
     public static String LEAVE_COMMAND = "leave";
     public static String INFO_COMMAND = "info";
-    public static String SPECTATE_COMMAND = "spectate";
 
 
 
