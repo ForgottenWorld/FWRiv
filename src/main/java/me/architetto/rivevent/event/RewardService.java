@@ -76,13 +76,12 @@ public class RewardService {
 
     private void rewardPlayers() {
 
-        EventService eventService = EventService.getInstance();
         BukkitTask bukkitTask = new BukkitRunnable() {
 
             @Override
             public void run(){
 
-                for (UUID uuid : eventService.getPlayerIN()) {
+                for (UUID uuid : PlayersManager.getInstance().getActivePlayers()) {
 
                     Player player = Bukkit.getPlayer(uuid);
                     if (player == null)

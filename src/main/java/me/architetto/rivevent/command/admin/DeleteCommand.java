@@ -43,9 +43,7 @@ public class DeleteCommand extends SubCommand{
             return;
         }
 
-        EventService eventService = EventService.getInstance();
-
-        if (eventService.isRunning()) {
+        if (EventService.getInstance().isRunning()) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
             return;
         }
@@ -53,12 +51,15 @@ public class DeleteCommand extends SubCommand{
         String presetName = args[1];
 
         ArenaManager presetService = ArenaManager.getInstance();
-        Optional<Arena> preset = presetService.getArena(presetName);
+        Optional<Arena> arena = presetService.getArena(presetName);
 
-        if(preset.isPresent()) {
+        if(arena.isPresent()) {
+
             presetService.removeArena(presetName);
             sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.DELETE_CDM_SUCCESS));
+
         } else
+
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_ARENA_NAME));
 
     }
@@ -66,7 +67,7 @@ public class DeleteCommand extends SubCommand{
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args){
 
-        if (args.length == 2){
+        if (args.length == 2) {
 
             return new ArrayList<>(ArenaManager.getInstance().getArenaContainer().keySet());
 

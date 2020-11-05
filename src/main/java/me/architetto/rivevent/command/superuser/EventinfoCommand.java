@@ -2,6 +2,7 @@ package me.architetto.rivevent.command.superuser;
 
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.PlayersManager;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
@@ -13,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class EventCommand extends SubCommand{
+public class EventinfoCommand extends SubCommand{
     @Override
     public String getName(){
-        return CommandName.EVENT_COMMAND;
+        return CommandName.EVENTINFO_COMMAND;
     }
 
     @Override
@@ -47,8 +48,8 @@ public class EventCommand extends SubCommand{
 
 
         sender.sendMessage(ChatFormatter.formatSuccessMessage("GIOCATORI : " + ChatColor.YELLOW
-                + eventService.getEventPlayerList().size()));
-        sender.sendMessage(ChatFormatter.formatSuccessMessage(getPlayersName(eventService.getPlayerIN()).toString()));
+                + PlayersManager.getInstance().getAllEventPlayers().size()));
+        sender.sendMessage(ChatFormatter.formatSuccessMessage(getPlayersName(PlayersManager.getInstance().getAllEventPlayers()).toString()));
 
     }
 

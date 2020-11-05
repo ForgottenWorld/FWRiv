@@ -39,8 +39,13 @@ public class MinigameCommand extends SubCommand{
 
         EventService eventService = EventService.getInstance();
 
-        if (!eventService.isStarted()){
+        if (!eventService.isStarted()) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
+            return;
+        }
+
+        if (eventService.isFinished()) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage("L'evento e' gia' terminato"));
             return;
         }
 

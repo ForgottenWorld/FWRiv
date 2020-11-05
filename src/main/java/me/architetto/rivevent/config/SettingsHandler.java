@@ -12,7 +12,7 @@ public class SettingsHandler {
 
     private static SettingsHandler instance;
 
-    public Location respawnLocation;
+    public Location safeRespawnLocation;
 
     public int foodLevel;
 
@@ -70,7 +70,7 @@ public class SettingsHandler {
 
         this.rewardPeriod = fileConfiguration.getInt("REWARD_PERIOD",20) * 20;
 
-        this.respawnLocation = ConfigManager.getInstance()
+        this.safeRespawnLocation = ConfigManager.getInstance()
                 .getLocation(ConfigManager.getInstance().getConfig("Settings.yml"), "RESPAWN_POINT");
 
         this.antiCamperStartDelay = fileConfiguration.getInt("ANTI_CAMPER_START_DELAY",60) * 20;
@@ -87,7 +87,7 @@ public class SettingsHandler {
         this.snowballHitDamage = fileConfiguration.getDouble("SNOWBALL_DAMAGE",0.1);
 
         this.enableTargetBlock = fileConfiguration.getBoolean("ENABLE_TARGET_BLOCK",true);
-        this.targetBlockCooldown = fileConfiguration.getInt("TARGET_BLOCK_COOLDOWN",30);
+        this.targetBlockCooldown = fileConfiguration.getInt("TARGET_BLOCK_COOLDOWN",15) * 20;
 
         //non serve convertire in tick
         this.deathRacePeriod = fileConfiguration.getInt("DEATH_RACE_PERIOD",60);

@@ -68,33 +68,29 @@ public class MinigameService{
     // - CURSE EVENT - //
 
     public void startCurseEvent(Player sender) {
-        EventService eventService = EventService.getInstance();
 
-        if (eventService.getPlayerIN().size() < 2) {
+        if (PlayersManager.getInstance().getActivePlayers().size() < 1) {
             if (sender != null)
                 sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
             return;
         }
 
-        cursedPlayer = Bukkit.getPlayer(EventService.getInstance().getEventPlayerList()
-                .get(new Random().nextInt(EventService.getInstance().getEventPlayerList().size() - 1))) ;
+        this.cursedPlayer = selectCursedPlayer();
 
         if (cursedPlayer == null) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Error: cursed player choise issue"));
             return;
         }
 
-        curseEventFlag = true;
+        this.curseEventFlag = true;
 
-        cursedPlayer.sendTitle(  Messages.CURSED_PLAYER_START_TITLE,Messages.CURSED_PLAYER_START_SUBTITLE,20,120,20);
+        cursedPlayer.sendTitle(Messages.CURSED_PLAYER_START_TITLE,Messages.CURSED_PLAYER_START_SUBTITLE,20,120,20);
         cursedPlayer.getWorld().playSound(cursedPlayer.getLocation(), Sound.ENTITY_GHAST_HURT,5,2);
-
         cursedPlayer.spawnParticle(Particle.MOB_APPEARANCE,cursedPlayer.getLocation(),1,0,0,0);
 
-        for (UUID u : eventService.getPlayerIN()) {
+        for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
 
             Player p = Bukkit.getPlayer(u);
-
             if (p != null && p != cursedPlayer)
                 p.sendMessage(ChatFormatter.formatEventMessage(Messages.NOT_CURSED_PLAYER_ALLERT));
 
@@ -106,26 +102,29 @@ public class MinigameService{
 
     public void curseEventTask() {
 
-        EventService eventService = EventService.getInstance();
         BukkitTask bukkitTask = new BukkitRunnable() {
 
             @Override
             public void run(){
 
-                curseEventFlag = false;
-
                 cursedPlayer.setHealth(0);
+
+                //cursedPlayer.setHealth(2);
+                //cursedPlayer.damage(20);
                 cursedPlayer.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG3));
 
-                for (UUID u : eventService.getPlayerIN()) {
+                for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
 
                     Player p = Bukkit.getPlayer(u);
                     if (p != null){
                         p.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSED_PLAYER_DIE));
-                        p.playSound(p.getLocation(),Sound.ENTITY_PARROT_IMITATE_WITCH,1,1); //todo
+                        p.playSound(p.getLocation(),Sound.ENTITY_PARROT_IMITATE_WITCH,1,1);
                     }
 
                 }
+
+                curseEventFlag = false;
+
                 taskIDs.remove("CURSE");
 
 
@@ -135,24 +134,31 @@ public class MinigameService{
 
     }
 
+    public Player selectCursedPlayer() {
+
+        return Bukkit.getPlayer(PlayersManager.getInstance().getActivePlayers()
+                .get(new Random().nextInt(PlayersManager.getInstance().getActivePlayers().size()))) ;
+
+
+    }
+
     // - DEATH RACE - //
 
     public void startDeathRaceEvent(Player sender) {
-        EventService eventService = EventService.getInstance();
 
-        if (eventService.getPlayerIN().size() < 2) {
+        if (PlayersManager.getInstance().getActivePlayers().size() < 2) {
             if (sender != null)
                 sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
             return;
         }
 
-        deathRaceEventFlag = true;
+        this.deathRaceEventFlag = true;
 
-        for (UUID u : eventService.getPlayerIN()) {
+        for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
 
             Player p  = Bukkit.getPlayer(u);
             if (p == null)
-                return;
+                continue;
 
             p.sendMessage(ChatFormatter.formatEventMessage(Messages.DEATHRACE_START_MSG));
             p.sendTitle("" ,ChatColor.RED + "DEATH RACE",20,60,20);
@@ -163,11 +169,11 @@ public class MinigameService{
 
     }
 
-    public Player getLowestPlayer() { //todo testare il fix
-        EventService eventService = EventService.getInstance();
-        Player lowestPlayer = Bukkit.getPlayer(eventService.getPlayerIN().get(0));
-        for (UUID u : eventService.getPlayerIN()) {
-            if (lowestPlayer.getLocation().getBlockY() > Bukkit.getPlayer(u).getLocation().getBlockY())
+    public Player getLowestPlayer() {
+
+        Player lowestPlayer = Bukkit.getPlayer(PlayersManager.getInstance().getActivePlayers().get(0));
+        for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
+            if (lowestPlayer.getLocation().getBlockY() > Bukkit.getPlayer(u).getLocation().getBlockY()) //todo : non va benissimo qui
                 lowestPlayer = Bukkit.getPlayer(u);
         }
         return lowestPlayer;
@@ -190,15 +196,16 @@ public class MinigameService{
                 (t) -> {
 
                     if (eventService.isFinished()) {
-                        Bukkit.getScheduler().cancelTask(taskIDs.get("DEATHRACE"));
                         taskIDs.remove("DEATHRACE");
-                        deathRaceEventFlag = false;
+                        this.deathRaceEventFlag = false;
+                        Bukkit.getScheduler().cancelTask(taskIDs.get("DEATHRACE"));
+
                         return;
                     }
 
                     if(t.getSecondsLeft() <= 10) {
 
-                        for (UUID u : eventService.getPlayerIN()) {
+                        for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
                             Player p = Bukkit.getPlayer(u);
                             if (p != null)
                                 p.sendTitle(new Title(String.valueOf(t.getSecondsLeft()), "", 1, 18, 1));

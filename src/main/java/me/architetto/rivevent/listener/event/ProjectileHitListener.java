@@ -1,8 +1,10 @@
 package me.architetto.rivevent.listener.event;
 
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.PlayersManager;
 import me.architetto.rivevent.util.ChatFormatter;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 
@@ -35,7 +38,7 @@ public class ProjectileHitListener implements Listener {
 
         Player playerHitted = (Player) event.getHitEntity();
 
-        if (!eventService.getPlayerIN().contains(playerHitted.getUniqueId()))
+        if (!PlayersManager.getInstance().getActivePlayers().contains(playerHitted.getUniqueId()))
             return;
 
         Projectile pj = event.getEntity();
@@ -78,8 +81,18 @@ public class ProjectileHitListener implements Listener {
                 shooter.teleport(playerHitted.getLocation());
                 shooter.playSound(shooter.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
 
-                playerHitted.teleport(shooterLoc);
-                playerHitted.playSound(playerHitted.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
+                new BukkitRunnable() {
+
+                    @Override
+                    public void run(){
+
+                        playerHitted.teleport(shooterLoc);
+                        playerHitted.playSound(playerHitted.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
+
+                    }
+                }.runTaskLater(RIVevent.plugin,10L);
+
+
             }
             return;
 
@@ -87,7 +100,7 @@ public class ProjectileHitListener implements Listener {
 
         if (pj.getType() == EntityType.TRIDENT) {
 
-            if (pj.getShooter() instanceof Player) {
+            if (pj.getShooter() instanceof Player) { //todo accorpare con il precedente check
 
                 playerHitted.sendMessage(ChatFormatter.formatEventMessage("OUCH!"));
                 playerHitted.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 200, 4));

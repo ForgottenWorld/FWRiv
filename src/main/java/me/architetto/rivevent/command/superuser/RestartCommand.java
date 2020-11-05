@@ -2,6 +2,7 @@ package me.architetto.rivevent.command.superuser;
 
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.PlayersManager;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
@@ -69,11 +70,10 @@ public class RestartCommand extends SubCommand{
         TextComponent joinClickMessage = new TextComponent(ChatColor.YELLOW + "JOIN");
         joinClickMessage.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/rivevent join") );
         joinClickMessage.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text("Click to join event")));
-        EventService eventService = EventService.getInstance();
 
         for (Player p : Bukkit.getOnlinePlayers()) {
 
-            if (eventService.getEventPlayerList().contains(p.getUniqueId()) || p == sender)
+            if (PlayersManager.getInstance().getActivePlayers().contains(p.getUniqueId()) || p == sender)
                 continue;
 
             p.sendMessage(new TextComponent(ChatFormatter.formatInitializationMessage("Click ")),joinClickMessage,

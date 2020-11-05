@@ -2,6 +2,7 @@ package me.architetto.rivevent.listener.event;
 
 import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.PlayersManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +22,7 @@ public class FoodLevelListener implements Listener{
 
         Player entity = (Player) event.getEntity();
 
-        if (eventService.getEventPlayerList().contains(entity.getUniqueId())) {
+        if (PlayersManager.getInstance().getActivePlayers().contains(entity.getUniqueId())) {
 
             if (event.getFoodLevel() <= foodLevel)
                 event.setFoodLevel(foodLevel); //event.setCancelled(true)

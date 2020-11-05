@@ -1,6 +1,6 @@
 package me.architetto.rivevent.listener.event;
 
-import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.PlayersManager;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -14,8 +14,7 @@ public class PlayerInteractionListener implements Listener{
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
-        EventService eventService = EventService.getInstance();
-        if (eventService.getPlayerIN().contains(event.getPlayer().getUniqueId()))
+        if (PlayersManager.getInstance().getActivePlayers().contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
 
     }
@@ -23,8 +22,7 @@ public class PlayerInteractionListener implements Listener{
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        EventService eventService = EventService.getInstance();
-        if (eventService.getPlayerIN().contains(event.getPlayer().getUniqueId()))
+        if (PlayersManager.getInstance().getActivePlayers().contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
 
     }
@@ -32,8 +30,7 @@ public class PlayerInteractionListener implements Listener{
     @EventHandler
     public void onPlayerInteraction(PlayerInteractEvent event) {
 
-        EventService eventService = EventService.getInstance();
-        if (eventService.getPlayerIN().contains(event.getPlayer().getUniqueId())) {
+        if (PlayersManager.getInstance().getActivePlayers().contains(event.getPlayer().getUniqueId())) {
 
             Block block = event.getClickedBlock();
 

@@ -1,5 +1,6 @@
 package me.architetto.rivevent.command.superuser;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.arena.Arena;
 import me.architetto.rivevent.arena.ArenaManager;
 import me.architetto.rivevent.command.SubCommand;
@@ -9,9 +10,7 @@ import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -61,7 +60,7 @@ public class InitCommand extends SubCommand{
             return;
         }
 
-        if (SettingsHandler.getInstance().respawnLocation == null) {
+        if (SettingsHandler.getInstance().safeRespawnLocation == null) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_RESPAWN_LOCATION));
             return;
         }
@@ -75,46 +74,42 @@ public class InitCommand extends SubCommand{
 
         eventService.initializeEvent(arenaManager.getArenaContainer().get(presetName));
         eventService.setDoorsStatus(false);
-        broadcastNewEvent();
 
-        TextComponent startCMD = new TextComponent(ChatColor.YELLOW + "START");
-        startCMD.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/rivevent start") );
-        startCMD.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text("Click to start event")));
+        TextComponent startCMD = new TextComponent(ChatColor.YELLOW + "" + ChatColor.BOLD + "START");
+        startCMD.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rivevent start"));
         sender.sendMessage(new TextComponent(ChatFormatter.formatSuccessMessage("Evento 'RIV' inizializzato. Click ")),startCMD,
-                new TextComponent(" per startare."));
+                new TextComponent(" per startare l'evento."));
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(RIVevent.plugin, this::broadcastNewEvent,10L);
 
     }
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args){
 
-        if (args.length == 2){
-
+        if (args.length == 2)
             return new ArrayList<>(ArenaManager.getInstance().getArenaContainer().keySet());
-
-        }
-
 
         return null;
     }
 
     public void broadcastNewEvent() {
 
-        TextComponent joinClickMessage = new TextComponent(ChatColor.YELLOW + "JOIN");
-        joinClickMessage.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/rivevent join") );
-        joinClickMessage.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text("Click to join event")));
+        TextComponent joinClickMessage = new TextComponent(ChatColor.YELLOW + "" + ChatColor.BOLD + "JOIN");
+        joinClickMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rivevent join"));
 
         for (Player p : Bukkit.getOnlinePlayers()) {
 
             p.sendMessage(new TextComponent(ChatFormatter.formatInitializationMessage("Click ")),joinClickMessage,
                     new TextComponent(" per partecipare all'evento 'RIV'"));
-            p.sendMessage(ChatFormatter.formatInitializationMessage(ChatColor.RED + "ATTENZIONE : " + ChatColor.RESET + "Partecipando il tuo inventario verra' cancellato !!"));
+
+            p.sendMessage(ChatFormatter.formatInitializationMessage(ChatColor.RED + ""
+                    + ChatColor.BOLD + "ATTENZIONE : " + ChatColor.RESET + ChatColor.ITALIC
+                    + "Partecipando all'evento il tuo inventario verra' cancellato !!"));
+
             p.sendTitle("",  "Evento "+ ChatColor.YELLOW + " RESTA IN VETTA " + ChatColor.RESET + " | "
                     +ChatColor.ITALIC + "Vieni a giocare con noi!",15,200,15);
 
         }
-
     }
-
-
 }

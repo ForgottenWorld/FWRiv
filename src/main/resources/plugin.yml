@@ -18,6 +18,7 @@ permissions:
     children:
       rivevent.eventmanager: true
       rivevent.user: true
+      rivevent.echo: true
 
   rivevent.eventmanager:
     description: description

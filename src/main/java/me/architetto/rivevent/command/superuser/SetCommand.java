@@ -51,7 +51,7 @@ public class SetCommand extends SubCommand {
 
         switch(args[1].toLowerCase()) {
             case "respawn":
-                SettingsHandler.getInstance().respawnLocation = sender.getLocation();
+                SettingsHandler.getInstance().safeRespawnLocation = sender.getLocation();
 
                 FileConfiguration fileConfiguration = ConfigManager.getInstance().getConfig("Settings.yml");
 

@@ -2,6 +2,7 @@ package me.architetto.rivevent.command.superuser;
 
 import me.architetto.rivevent.command.SubCommand;
 import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.PlayersManager;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
@@ -40,7 +41,7 @@ public class StartCommand extends SubCommand{
             return;
         }
 
-       if (eventService.getPlayerIN().isEmpty()) {
+       if (PlayersManager.getInstance().getActivePlayers().isEmpty()) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
             return;
         }

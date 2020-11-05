@@ -54,7 +54,7 @@ public final class RIVevent extends JavaPlugin {
         ConfigManager.getInstance().getConfig("Settings.yml");
         SettingsHandler.getInstance().load();
 
-        if (SettingsHandler.getInstance().respawnLocation == null)
+        if (SettingsHandler.getInstance().safeRespawnLocation == null)
             Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "RIVe >> " + ChatColor.UNDERLINE + "Respawn point missing ...");
 
 

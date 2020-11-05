@@ -37,7 +37,7 @@ public class ReloadCommand extends SubCommand{
 
         EventService eventService = EventService.getInstance();
 
-        if (eventService.isRunning()){
+        if (eventService.isRunning()) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
             return;
         }

@@ -2,6 +2,7 @@ package me.architetto.rivevent.listener.event;
 
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.event.MinigameService;
+import me.architetto.rivevent.event.PlayersManager;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.Messages;
 import org.bukkit.Material;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
 public class DamageListener implements Listener{
@@ -29,7 +31,7 @@ public class DamageListener implements Listener{
         Player damager = (Player) event.getDamager();
         Player damageTaker = (Player) event.getEntity();
 
-        if (!eventService.getPlayerIN().contains(damager.getUniqueId()))
+        if (!PlayersManager.getInstance().isPlayerActive(damager.getUniqueId()))
             return;
 
         if (!eventService.isDamageEnabled()) {
@@ -38,7 +40,7 @@ public class DamageListener implements Listener{
         }
 
         if (MinigameService.getInstance().isCurseEventRunning()
-                && eventService.getPlayerIN().contains(damageTaker.getUniqueId())) {
+                && PlayersManager.getInstance().isPlayerActive(damageTaker.getUniqueId())) {
 
             if (MinigameService.getInstance().getCursedPlayer() == damager) {
 
@@ -50,21 +52,17 @@ public class DamageListener implements Listener{
                 damager.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG2));
 
             }
-
         }
 
         // --- TRIDENT CODE --- //
 
         if (damager.getInventory().getItemInMainHand().getType() == Material.TRIDENT) {
 
-            Vector knockbackVector = damager.getLocation().toVector().subtract(damageTaker.getLocation().toVector()).multiply(-1); //new code, test it
+            Vector knockbackVector = damager.getLocation().toVector().subtract(damageTaker.getLocation().toVector()).multiply(-1.5); //new code, test it
 
             event.setDamage(0.5);
-
-           // Vector knockbackVector = damageTaker.getLocation().getDirection().multiply(5 * -1).setY(0.5); //old code
-
+            
             damageTaker.setVelocity(knockbackVector);
-           // damageTaker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,60,1));
 
             damager.getInventory().setItemInMainHand(null);
         }
@@ -73,4 +71,18 @@ public class DamageListener implements Listener{
 
     }
 
+    @EventHandler
+    public void noPearlDamage(PlayerTeleportEvent event) {
+        Player p = event.getPlayer();
+
+        if (!PlayersManager.getInstance().getAllEventPlayers().contains(p.getUniqueId()))
+            return;
+
+        if(event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            event.setCancelled(true);
+            p.setNoDamageTicks(1);
+            p.teleport(event.getTo());
+            p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
+        }
+    }
 }

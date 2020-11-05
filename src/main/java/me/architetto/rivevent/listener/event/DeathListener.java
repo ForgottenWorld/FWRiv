@@ -3,7 +3,9 @@ package me.architetto.rivevent.listener.event;
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.event.MinigameService;
-import org.bukkit.GameMode;
+import me.architetto.rivevent.event.PlayersManager;
+import me.architetto.rivevent.util.ChatFormatter;
+import me.architetto.rivevent.util.Messages;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,34 +26,36 @@ public class DeathListener implements Listener{
         if (!eventService.isRunning())
             return;
 
-        if (eventService.getPlayerIN().contains(event.getEntity().getUniqueId())) {
+        if (PlayersManager.getInstance().getActivePlayers().contains(event.getEntity().getUniqueId())) {
 
             event.setCancelled(true);
-            event.getEntity().getInventory().clear();
-            event.getEntity().setGameMode(GameMode.SPECTATOR);
 
-            eventService.removePartecipant(event.getEntity().getUniqueId());
+            eventService.activePlayerDeath(event.getEntity().getUniqueId());
 
         }
-
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onTotemEvent(EntityResurrectEvent event) {
-
-        if (event.isCancelled())
-            return;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerResurection(EntityResurrectEvent event) {
 
         if (!eventService.isRunning())
             return;
 
-       //todo : questa parte di codice non dovrebbe stare in Priorità = MONITOR
+        if (!(event.getEntity() instanceof Player))
+            return;
+
+        if (event.isCancelled())
+            return;
+
         if (MinigameService.getInstance().isCurseEventRunning()) {
-            if (MinigameService.getInstance().getCursedPlayer() == event.getEntity())
-                event.setCancelled(false);
+            if (MinigameService.getInstance().getCursedPlayer().equals(event.getEntity())) {
+                event.setCancelled(true);
+                event.getEntity().sendMessage(ChatFormatter.formatEventMessage(Messages.CURSED_PLAYER_DIE_WITH_TOTEM));
+                return;
+            }
         }
 
-        if (eventService.getPlayerIN().contains(event.getEntity().getUniqueId())) {
+        if (PlayersManager.getInstance().getActivePlayers().contains(event.getEntity().getUniqueId())) {
 
             new BukkitRunnable() {
 
@@ -65,9 +69,10 @@ public class DeathListener implements Listener{
                     player.teleport(eventService.getSummonedArena().getTower());
 
                 }
-            }.runTaskLater(RIVevent.plugin,5);
+            }.runTaskLater(RIVevent.plugin,10);
 
         }
 
     }
+
 }

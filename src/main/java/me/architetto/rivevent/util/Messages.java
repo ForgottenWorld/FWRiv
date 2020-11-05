@@ -15,7 +15,7 @@ public class Messages {
     public static String ERR_NO_ARENA_NAME = "Errore: Nessuna arena con questo nome";
     public static String ERR_ARENA_NAME = "Errore: E' già presente un'arena con questo nome";
     public static String ERR_CREATION1 = "Errore: Stai già creando un'arena";
-    public static String ERR_NO_RESPAWN_LOCATION = "Errore: Zona di respawn mancante. Utilizza " + ChatColor.YELLOW + "/rivevent set respawn ";
+    public static String ERR_NO_RESPAWN_LOCATION = "Errore: Zona di respawn sicuro mancante. Utilizza " + ChatColor.YELLOW + "/rivevent set respawn ";
 
     public static String CONFIG_RELOADED = "Config file ricaricato";
 
@@ -24,7 +24,7 @@ public class Messages {
 
     public static String DELETE_CDM_SUCCESS = "Arena eliminata con successo";
 
-    public static String NOT_ENOUGH_PLAYERS = "Non ci sono abastanza pleyers ...";
+    public static String NOT_ENOUGH_PLAYERS = "Non ci sono abastanza players ...";
 
     public static String START_CD_MSG = "L'evento iniziera' tra 10 secondi ...";
 
@@ -45,6 +45,8 @@ public class Messages {
     public static String CURSE_MSG2 = "Ti sei liberato della maledizione.";
     public static String CURSE_MSG3 = "La maledizione si è abbattuta su di te!";
     public static String CURSED_PLAYER_DIE = "Il player maledetto e' morto !";
+    public static String CURSED_PLAYER_DIE_WITH_TOTEM = "La maledizione era troppo potente, il totem non è riuscito a proteggerti!";
+
 
     public static String DEATHRACE_START_MSG = "EVENTO " + ChatColor.RED + "DEATH RACE " + ChatColor.RESET + ": 'ad ogni giro' muore il player più in basso. ";
     public static String DEATHRACE_DEATH_MSG = "E' la prima regola del " + ChatColor.DARK_RED + "'deathreace club'" + ChatColor.RESET + " : non essere l'ultimo!";

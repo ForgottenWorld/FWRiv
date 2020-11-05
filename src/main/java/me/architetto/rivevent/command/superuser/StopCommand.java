@@ -2,8 +2,8 @@ package me.architetto.rivevent.command.superuser;
 
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.command.SubCommand;
-import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
+import me.architetto.rivevent.event.PlayersManager;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.CommandName;
 import me.architetto.rivevent.util.Messages;
@@ -47,17 +47,17 @@ public class StopCommand extends SubCommand{
             return;
         }
 
-        SettingsHandler settingsHandler = SettingsHandler.getInstance();
-
-        for (UUID u : eventService.getEventPlayerList()) {
+        for (UUID u : PlayersManager.getInstance().getAllEventPlayers()) {
 
             Player p = Bukkit.getPlayer(u);
+
             if (p == null) continue;
+
+            p.teleport(PlayersManager.getInstance().getPlayerLocation(u));
+            p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
 
             p.setGameMode(GameMode.SURVIVAL);
             p.getInventory().clear();
-            p.teleport(settingsHandler.respawnLocation);
-            p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
 
             p.sendMessage(ChatFormatter.formatInitializationMessage(Messages.STOP_CMD_PLAYER_MESSAGE));
 
@@ -65,6 +65,7 @@ public class StopCommand extends SubCommand{
 
         eventService.setDoorsStatus(false);
         eventService.stopEvent();
+
         sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.STOP_CMD_SENDER_MESSAGE));
 
         if (args.length == 2) {

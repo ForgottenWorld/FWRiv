@@ -1,8 +1,7 @@
 package me.architetto.rivevent.listener.event;
 
-import me.architetto.rivevent.config.SettingsHandler;
 import me.architetto.rivevent.event.EventService;
-import org.bukkit.GameMode;
+import me.architetto.rivevent.event.PlayersManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +11,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class QuitListener implements Listener {
 
     EventService eventService = EventService.getInstance();
-    SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -21,16 +19,13 @@ public class QuitListener implements Listener {
             return;
 
         Player player = event.getPlayer();
-        if (eventService.getPlayerIN().contains(player.getUniqueId())) {
+        if (PlayersManager.getInstance().getActivePlayers().contains(player.getUniqueId())) {
 
-            eventService.removePartecipant(player.getUniqueId());
-            player.teleport(settingsHandler.respawnLocation);
+            eventService.activePlayerLeave(player.getUniqueId());
 
-        } else if (eventService.getPlayerOUT().contains(event.getPlayer().getUniqueId())) {
+        } else if (PlayersManager.getInstance().getDeathPlayers().contains(event.getPlayer().getUniqueId())) {
 
-            eventService.removePlayerOUT(event.getPlayer().getUniqueId());
-            event.getPlayer().teleport(SettingsHandler.getInstance().respawnLocation);
-            event.getPlayer().setGameMode(GameMode.SURVIVAL);
+            eventService.spectatorPlayerLeave(player.getUniqueId());
 
         }
     }
