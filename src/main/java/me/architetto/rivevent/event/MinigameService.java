@@ -107,10 +107,10 @@ public class MinigameService{
             @Override
             public void run(){
 
+                cursedPlayer.getWorld().playSound(cursedPlayer.getLocation(),Sound.ENTITY_PARROT_IMITATE_WITCH,1,1);
+
                 cursedPlayer.setHealth(0);
 
-                //cursedPlayer.setHealth(2);
-                //cursedPlayer.damage(20);
                 cursedPlayer.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG3));
 
                 for (UUID u : PlayersManager.getInstance().getActivePlayers()) {

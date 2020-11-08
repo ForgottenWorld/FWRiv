@@ -1,23 +1,27 @@
 package me.architetto.rivevent.listener.event;
 
+import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.event.EventService;
 import me.architetto.rivevent.event.MinigameService;
 import me.architetto.rivevent.event.PlayersManager;
 import me.architetto.rivevent.util.ChatFormatter;
 import me.architetto.rivevent.util.Messages;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class DamageListener implements Listener{
 
     EventService eventService = EventService.getInstance();
+    PlayersManager playersManager = PlayersManager.getInstance();
+    MinigameService minigameService = MinigameService.getInstance();
+
+    private boolean tranferCooldown = false;
 
     @EventHandler
     public void onPlayerDamageByPlayer(EntityDamageByEntityEvent event){
@@ -31,30 +35,45 @@ public class DamageListener implements Listener{
         Player damager = (Player) event.getDamager();
         Player damageTaker = (Player) event.getEntity();
 
-        if (!PlayersManager.getInstance().isPlayerActive(damager.getUniqueId()))
+        if (!playersManager.isPlayerActive(damager.getUniqueId())) {
             return;
+        }
+
+        if (!playersManager.isPlayerActive(damageTaker.getUniqueId())) {
+            return;
+        }
 
         if (!eventService.isDamageEnabled()) {
             event.setCancelled(true);
             return;
         }
 
-        if (MinigameService.getInstance().isCurseEventRunning()
-                && PlayersManager.getInstance().isPlayerActive(damageTaker.getUniqueId())) {
+        if (eventService.isEarlyDamagePrank()) {
+            damager.sendTitle(ChatColor.YELLOW + "KEEP CALM","DON'T BE SO RUDE",10,100,10);
+            damager.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,1));
+            damageTaker.setNoDamageTicks(60);
+        }
 
-            if (MinigameService.getInstance().getCursedPlayer() == damager) {
+        if (minigameService.isCurseEventRunning()
+                && playersManager.isPlayerActive(damageTaker.getUniqueId())) {
 
-                MinigameService.getInstance().setCursedPlayer(damageTaker);
+            if (minigameService.getCursedPlayer() == damager && !tranferCooldown) {
+
+                tranferCooldown = true;
+                Bukkit.getScheduler().scheduleSyncDelayedTask(RIVevent.plugin, () -> tranferCooldown = false, 60);
+
+                minigameService.setCursedPlayer(damageTaker);
+
                 damageTaker.playSound(damageTaker.getLocation(), Sound.ENTITY_GHAST_HURT,4,1);
                 damageTaker.spawnParticle(Particle.MOB_APPEARANCE,damageTaker.getLocation(),1,0,0,0);
 
                 damageTaker.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG1));
+
                 damager.sendMessage(ChatFormatter.formatEventMessage(Messages.CURSE_MSG2));
+                damager.playSound(damager.getLocation(),Sound.BLOCK_ANVIL_BREAK,1,1);
 
             }
         }
-
-        // --- TRIDENT CODE --- //
 
         if (damager.getInventory().getItemInMainHand().getType() == Material.TRIDENT) {
 
@@ -67,22 +86,5 @@ public class DamageListener implements Listener{
             damager.getInventory().setItemInMainHand(null);
         }
 
-        // --- ----------- --- //
-
-    }
-
-    @EventHandler
-    public void noPearlDamage(PlayerTeleportEvent event) {
-        Player p = event.getPlayer();
-
-        if (!PlayersManager.getInstance().getAllEventPlayers().contains(p.getUniqueId()))
-            return;
-
-        if(event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
-            event.setCancelled(true);
-            p.setNoDamageTicks(1);
-            p.teleport(event.getTo());
-            p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-        }
     }
 }

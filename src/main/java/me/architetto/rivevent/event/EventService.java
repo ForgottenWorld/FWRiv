@@ -38,6 +38,7 @@ public class EventService {
     private boolean isFinished = false;
 
     private boolean isDamageEnabled = false;
+    private boolean isEarlyDamagePrank = false;
 
     private EventService() {
         if(eventService != null) {
@@ -72,14 +73,15 @@ public class EventService {
         PlayersManager playersManager = PlayersManager.getInstance();
 
         playersManager.removeActivePlayer(uuid);
-        playersManager.addDeathPlayer(uuid);
+        playersManager.addSpectatorPlayer(uuid);
 
         Player player = Bukkit.getPlayer(uuid);
 
         if (player != null) {
+
             player.getInventory().clear();
             player.setGameMode(GameMode.SPECTATOR);
-            player.teleport(summonedArena.getTower());
+
         }
 
         if (isStarted && !isFinished)
@@ -98,11 +100,11 @@ public class EventService {
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
 
-            player.teleport(playersManager.getPlayerLocation(uuid));
+            player.teleport(playersManager.getReturnLocation(uuid));
 
         }
 
-        playersManager.clearPlayerInformation(uuid);
+        playersManager.removeReturnLocation(uuid);
 
         if (isStarted && !isFinished)
             checkVictoryCondition();
@@ -112,7 +114,7 @@ public class EventService {
     public void spectatorPlayerLeave(UUID uuid) {
         PlayersManager playersManager = PlayersManager.getInstance();
 
-        playersManager.removeDeathPlayer(uuid);
+        playersManager.removeSpectatorPlayer(uuid);
 
         Player player = Bukkit.getPlayer(uuid);
 
@@ -121,11 +123,11 @@ public class EventService {
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
 
-            player.teleport(playersManager.getPlayerLocation(uuid));
+            player.teleport(playersManager.getReturnLocation(uuid));
 
         }
 
-        playersManager.clearPlayerInformation(uuid);
+        playersManager.removeReturnLocation(uuid);
 
     }
 
@@ -160,7 +162,7 @@ public class EventService {
 
     private void victoryAnimation(String playerWinner) {
         PlayersManager playersManager = PlayersManager.getInstance();
-        for (UUID uuid : playersManager.getAllEventPlayers()) {
+        for (UUID uuid : playersManager.getPartecipants()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null)
                 player.sendTitle(ChatColor.GOLD + playerWinner,
@@ -189,11 +191,9 @@ public class EventService {
         return isFinished;
     }
 
-    public void setStarted(boolean started) {
-        isStarted = started;
-    }
-
     public boolean isDamageEnabled() { return this.isDamageEnabled; }
+
+    public boolean isEarlyDamagePrank() { return this.isEarlyDamagePrank; }
 
     public void teleportToSpawnPoint(Player player) {
 
@@ -223,16 +223,14 @@ public class EventService {
                 10,
                 () -> {
 
-                    String matchMessage = ChatFormatter.formatInitializationMessage(Messages.START_CD_MSG);
-                    setStarted(true);
-
+                    this.isStarted = true;
 
                     for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
                         Player player = Bukkit.getPlayer(u);
                         if (player == null)
                             continue;
 
-                        player.sendMessage(matchMessage);
+                        player.sendMessage(ChatFormatter.formatInitializationMessage(Messages.START_CD_MSG));
                         equipLoadout(player); //clear inventory,max health, max food, remove potion effects, set loadout
 
                     }
@@ -245,13 +243,19 @@ public class EventService {
                         if (p == null)
                             continue;
 
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,300,4));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,1200,2));
+
 
                         p.sendTitle(new Title(ChatColor.RED + "GO !!!", "", 1, 18, 1));
 
                     }
 
                     setDoorsStatus(true);
+
+                    isDamageEnabled = true;
+                    isEarlyDamagePrank = true;
+
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(RIVevent.plugin, () -> isEarlyDamagePrank = false, 600);
 
                     AntiCamperService.getInstance().startAntiCamperSystem();
 
@@ -312,9 +316,10 @@ public class EventService {
         isStarted = false;
         isFinished = false;
         isDamageEnabled = false;
+        isEarlyDamagePrank = false;
 
-        PlayersManager.getInstance().addActivePlayer(PlayersManager.getInstance().getDeathPlayers());
-        PlayersManager.getInstance().removeDeathPlayer();
+        PlayersManager.getInstance().addActivePlayer(PlayersManager.getInstance().getSpectatorPlayers());
+        PlayersManager.getInstance().removeSpectatorPlayer();
 
         for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
 
@@ -350,9 +355,10 @@ public class EventService {
 
         isFinished = false;
         isDamageEnabled = false;
+        isEarlyDamagePrank = false;
 
         PlayersManager.getInstance().removeActivePlayer();
-        PlayersManager.getInstance().removeDeathPlayer();
+        PlayersManager.getInstance().removeSpectatorPlayer();
 
     }
 

@@ -45,23 +45,21 @@ public class Messages {
     public static String CURSE_MSG2 = "Ti sei liberato della maledizione.";
     public static String CURSE_MSG3 = "La maledizione si è abbattuta su di te!";
     public static String CURSED_PLAYER_DIE = "Il player maledetto e' morto !";
-    public static String CURSED_PLAYER_DIE_WITH_TOTEM = "La maledizione era troppo potente, il totem non è riuscito a proteggerti!";
-
 
     public static String DEATHRACE_START_MSG = "EVENTO " + ChatColor.RED + "DEATH RACE " + ChatColor.RESET + ": 'ad ogni giro' muore il player più in basso. ";
     public static String DEATHRACE_DEATH_MSG = "E' la prima regola del " + ChatColor.DARK_RED + "'deathreace club'" + ChatColor.RESET + " : non essere l'ultimo!";
 
-    public static String RIV_GAMEPLAY_INFO = ChatColor.YELLOW + "[+] " + ChatColor.RESET + "Il cibo non scende mai a zero" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Ricevi premi stando in cima alla torre" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.RESET + "Ricevi danni stando sotto l'altezza minima dell'anti-camper" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Non è possibile droppare items, piazzare e rompere blocchi" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.RESET + "I target block danno effetti particolari (click destro)" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Le snowball hanno knockback e danno" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.RESET + "Puoi scambiarti di posizione con la canna da pesca (monouso)" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Il tridente ha un buon knockback quando utilizzato corpo a corpo (monouso)" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.RESET + "Il tridente, quando lanciato, applica slowness al bersaglio (monouso)" +
-            ChatColor.YELLOW + "\n[+] " + ChatColor.GREEN + "Il totem of undying ti teleporta in cima alla torre quando si muore";
-
-
-
+    public static String RIV_GAMEPLAY_INFO = ChatColor.YELLOW + "[OBIETTIVO] " + ChatColor.RESET + "Conquista la torre ed elimina i tuoi avversari" +
+            ChatColor.LIGHT_PURPLE + "\n[TIPS] " + ChatColor.RESET + "I punti fame non scendona mai a zero" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Ricevi ricompense stando in cima alla torre" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Allo start tutti i players ricevono resistenza al danno per alcuni secondi" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "E' meglio evitare di colpire gli avversari subito dopo il VIA" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Non è possibile droppare items, piazzare e rompere blocchi" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "I target block possono darti delle ricompense e non solo.." +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Le snowball hanno knockback e danno" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Le ender pearl sono estremamente utili, provale.." +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "La canna da pesca è utile per scalzare un avversario dalla cima della torre" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Il tridente ha un buon knockback se utilizzato corpo a corpo" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Il tridente, quando lanciato, applica slowness al bersaglio colpito" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Il totem of undying ti teletrasporta in cima alla torre se muori";
 }

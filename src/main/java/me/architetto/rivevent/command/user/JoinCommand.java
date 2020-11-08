@@ -49,31 +49,31 @@ public class JoinCommand extends SubCommand {
             return;
         }
 
-        if (PlayersManager.getInstance().getAllEventPlayers().contains(sender.getUniqueId())) {
+        if (PlayersManager.getInstance().getPartecipants().contains(sender.getUniqueId())) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ALREADY_JOINED));
             return;
         }
 
-        PlayersManager.getInstance().addPlayerLocation(sender.getUniqueId(),sender.getLocation());
+        PlayersManager.getInstance().addReturnLocation(sender.getUniqueId(),sender.getLocation());
 
-        if (!eventService.isStarted()) {
 
-            PlayersManager.getInstance().addActivePlayer(sender.getUniqueId());
-            eventService.teleportToSpawnPoint(sender);
-            sender.getInventory().clear();
-            sender.setGameMode(GameMode.SURVIVAL);
-            sender.getWorld().playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-            sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.JOIN_EVENT));
+        if (eventService.isStarted()) {
 
-        } else {
-
-            PlayersManager.getInstance().addDeathPlayer(sender.getUniqueId());
+            PlayersManager.getInstance().addSpectatorPlayer(sender.getUniqueId());
             sender.setGameMode(GameMode.SPECTATOR);
             sender.teleport(eventService.getSummonedArena().getTower());
             sender.getWorld().playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
             sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.JOIN_STARTED_EVENT));
+            return;
 
         }
+
+        PlayersManager.getInstance().addActivePlayer(sender.getUniqueId());
+        eventService.teleportToSpawnPoint(sender);
+        sender.getInventory().clear();
+        sender.setGameMode(GameMode.SURVIVAL);
+        sender.getWorld().playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
+        sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.JOIN_EVENT));
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(RIVevent.plugin, () -> infoAboutEventMessage(sender), 20L);
 
@@ -90,8 +90,8 @@ public class JoinCommand extends SubCommand {
     public void echoMessage(String playername) {
 
         Bukkit.getServer().broadcast(ChatFormatter.formatEventMessage(ChatColor.YELLOW + playername
-                + ChatColor.RESET + ChatColor.GRAY + "" + ChatColor.ITALIC + " ha joinato l'evento RIV. " + ChatColor.RESET
-                + ChatColor.GREEN + "#" + PlayersManager.getInstance().getAllEventPlayers().size()),"riveven.echo");
+                + ChatColor.RESET + ChatColor.GRAY + "" + ChatColor.ITALIC + " ha " + ChatColor.GREEN + "joinato" + ChatColor.WHITE + " l'evento RIV. " + ChatColor.RESET
+                + ChatColor.GREEN + "#" + PlayersManager.getInstance().getPartecipants().size()),"riveven.echo");
 
     }
 

@@ -45,11 +45,9 @@ public class EventinfoCommand extends SubCommand{
             return;
         }
 
-
-
         sender.sendMessage(ChatFormatter.formatSuccessMessage("GIOCATORI : " + ChatColor.YELLOW
-                + PlayersManager.getInstance().getAllEventPlayers().size()));
-        sender.sendMessage(ChatFormatter.formatSuccessMessage(getPlayersName(PlayersManager.getInstance().getAllEventPlayers()).toString()));
+                + PlayersManager.getInstance().getPartecipants().size()));
+        sender.sendMessage(ChatFormatter.formatSuccessMessage(getPlayersName(PlayersManager.getInstance().getPartecipants()).toString()));
 
     }
 

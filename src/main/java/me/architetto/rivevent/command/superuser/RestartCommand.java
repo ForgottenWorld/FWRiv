@@ -51,7 +51,7 @@ public class RestartCommand extends SubCommand{
         eventService.restartEvent();
         broadcastRestartedEvent(sender);
 
-        TextComponent startCMD = new TextComponent(ChatColor.YELLOW + "START");
+        TextComponent startCMD = new TextComponent(ChatColor.YELLOW + "" + ChatColor.BOLD + "START");
         startCMD.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/rivevent start") );
         startCMD.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text("Click to start event")));
         sender.sendMessage(new TextComponent(ChatFormatter.formatSuccessMessage("Evento 'RIV' re-inizializzato. Click ")),startCMD,

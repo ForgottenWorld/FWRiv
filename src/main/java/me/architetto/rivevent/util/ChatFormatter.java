@@ -14,7 +14,6 @@ public class ChatFormatter{
                 ChatColor.RESET;
     }
 
-
     public static String chatHeaderPresetInfo() {
         return  ChatColor.AQUA + "[*]----------------[ " +
                 ChatColor.DARK_AQUA + ChatColor.BOLD + "ARENA INFO" +

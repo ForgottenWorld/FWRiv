@@ -9,12 +9,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class PlayerInteractionListener implements Listener{
+public class Interactionlistener implements Listener {
+    PlayersManager playersManager = PlayersManager.getInstance();
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (PlayersManager.getInstance().getActivePlayers().contains(event.getPlayer().getUniqueId()))
+        if (playersManager.isPlayerActive(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
 
     }
@@ -22,7 +23,7 @@ public class PlayerInteractionListener implements Listener{
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        if (PlayersManager.getInstance().getActivePlayers().contains(event.getPlayer().getUniqueId()))
+        if (playersManager.isPlayerActive(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
 
     }
@@ -30,19 +31,13 @@ public class PlayerInteractionListener implements Listener{
     @EventHandler
     public void onPlayerInteraction(PlayerInteractEvent event) {
 
-        if (PlayersManager.getInstance().getActivePlayers().contains(event.getPlayer().getUniqueId())) {
+        if (!playersManager.isPlayerActive(event.getPlayer().getUniqueId()))
+            return;
 
-            Block block = event.getClickedBlock();
+        Block block = event.getClickedBlock();
 
-            if (block != null) {
+        if (block != null && (Tag.DOORS.getValues().contains(block.getType()) || Tag.TRAPDOORS.getValues().contains(block.getType())))
+            event.setCancelled(true);
 
-                if (Tag.DOORS.getValues().contains(block.getType()) || Tag.TRAPDOORS.getValues().contains(block.getType()))
-                    event.setCancelled(true);
-            }
-
-
-        }
     }
-
-
 }

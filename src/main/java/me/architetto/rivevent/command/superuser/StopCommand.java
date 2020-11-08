@@ -47,13 +47,13 @@ public class StopCommand extends SubCommand{
             return;
         }
 
-        for (UUID u : PlayersManager.getInstance().getAllEventPlayers()) {
+        for (UUID u : PlayersManager.getInstance().getPartecipants()) {
 
             Player p = Bukkit.getPlayer(u);
 
             if (p == null) continue;
 
-            p.teleport(PlayersManager.getInstance().getPlayerLocation(u));
+            p.teleport(PlayersManager.getInstance().getReturnLocation(u));
             p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
 
             p.setGameMode(GameMode.SURVIVAL);

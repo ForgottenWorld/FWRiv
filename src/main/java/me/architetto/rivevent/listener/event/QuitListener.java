@@ -7,10 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-
 public class QuitListener implements Listener {
 
     EventService eventService = EventService.getInstance();
+    PlayersManager playersManager = PlayersManager.getInstance();
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -19,14 +19,14 @@ public class QuitListener implements Listener {
             return;
 
         Player player = event.getPlayer();
-        if (PlayersManager.getInstance().getActivePlayers().contains(player.getUniqueId())) {
 
+        if (playersManager.isPlayerActive(player.getUniqueId())) {
             eventService.activePlayerLeave(player.getUniqueId());
+            return;
+        }
 
-        } else if (PlayersManager.getInstance().getDeathPlayers().contains(event.getPlayer().getUniqueId())) {
-
+        if (playersManager.isPlayerSpectator(player.getUniqueId()))
             eventService.spectatorPlayerLeave(player.getUniqueId());
 
-        }
     }
 }

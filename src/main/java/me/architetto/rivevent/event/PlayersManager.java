@@ -16,7 +16,7 @@ public class PlayersManager {
     private HashMap<UUID, Location> playersLocation;
 
     private List<UUID> activePlayers;
-    private List<UUID> deathPlayers;
+    private List<UUID> spectatorPlayers;
 
     private PlayersManager() {
         if(playersManager != null) {
@@ -26,7 +26,7 @@ public class PlayersManager {
         this.playersLocation = new HashMap<>();
 
         this.activePlayers = new ArrayList<>();
-        this.deathPlayers = new ArrayList<>();
+        this.spectatorPlayers = new ArrayList<>();
 
     }
 
@@ -61,37 +61,37 @@ public class PlayersManager {
         return activePlayers.contains(uuid);
     }
 
-    public List<UUID> getDeathPlayers() {
-        return new ArrayList<>(deathPlayers);
+    public List<UUID> getSpectatorPlayers() {
+        return new ArrayList<>(spectatorPlayers);
     }
 
-    public void addDeathPlayer(UUID uuid) {
-        deathPlayers.add(uuid);
+    public void addSpectatorPlayer(UUID uuid) {
+        spectatorPlayers.add(uuid);
     }
 
-    public void removeDeathPlayer() {
-        deathPlayers.clear();
+    public void removeSpectatorPlayer() {
+        spectatorPlayers.clear();
     }
 
-    public void removeDeathPlayer(UUID uuid) {
-        deathPlayers.remove(uuid);
+    public void removeSpectatorPlayer(UUID uuid) {
+        spectatorPlayers.remove(uuid);
     }
 
-    public boolean isPlayerDeath(UUID uuid) {
-        return deathPlayers.contains(uuid);
+    public boolean isPlayerSpectator(UUID uuid) {
+        return spectatorPlayers.contains(uuid);
     }
 
-    public List<UUID> getAllEventPlayers() {
+    public List<UUID> getPartecipants() {
         List<UUID> returnList = new ArrayList<>(activePlayers);
-        returnList.addAll(deathPlayers);
+        returnList.addAll(spectatorPlayers);
         return returnList;
     }
     
-    public boolean isInsideEvent(UUID uuid) {
-        return getAllEventPlayers().contains(uuid);
+    public boolean isPartecipants(UUID uuid) {
+        return getPartecipants().contains(uuid);
     }
 
-    public Location getPlayerLocation(UUID uuid) {
+    public Location getReturnLocation(UUID uuid) {
         Location tpLocation = playersLocation.get(uuid);
 
         if (tpLocation == null)
@@ -102,18 +102,12 @@ public class PlayersManager {
             return playersLocation.get(uuid);
     }
 
-    public void addPlayerLocation(UUID uuid, Location location) {
+    public void addReturnLocation(UUID uuid, Location location) {
         playersLocation.put(uuid, location);
     }
 
-    public void removePlayerLocation(UUID uuid) {
+    public void removeReturnLocation(UUID uuid) {
         playersLocation.remove(uuid);
     }
-
-    public void clearPlayerInformation(UUID uuid) {
-        this.playersLocation.remove(uuid);
-    }
-
-
 
 }

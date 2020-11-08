@@ -9,10 +9,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 
-public class FoodLevelListener implements Listener{
+public class FoodListener implements Listener{
 
     EventService eventService = EventService.getInstance();
-    int foodLevel = SettingsHandler.getInstance().foodLevel;
+    SettingsHandler settingsHandler = SettingsHandler.getInstance();
+    PlayersManager playersManager = PlayersManager.getInstance();
 
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
@@ -22,10 +23,10 @@ public class FoodLevelListener implements Listener{
 
         Player entity = (Player) event.getEntity();
 
-        if (PlayersManager.getInstance().getActivePlayers().contains(entity.getUniqueId())) {
+        if (playersManager.isPartecipants(entity.getUniqueId())) {
 
-            if (event.getFoodLevel() <= foodLevel)
-                event.setFoodLevel(foodLevel); //event.setCancelled(true)
+            if (event.getFoodLevel() < settingsHandler.foodLevel)
+                event.setFoodLevel(settingsHandler.foodLevel);
 
         }
 

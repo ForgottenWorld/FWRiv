@@ -28,6 +28,7 @@ public class RightClickListener implements Listener{
 
     EventService eventService = EventService.getInstance();
     SettingsHandler settingsHandler = SettingsHandler.getInstance();
+    PlayersManager playersManager = PlayersManager.getInstance();
 
     public final List<UUID> playerCooldown = new ArrayList<>();
 
@@ -39,15 +40,27 @@ public class RightClickListener implements Listener{
 
         Player player = event.getPlayer();
         Block clickedBlock = event.getClickedBlock();
+        Material material = player.getInventory().getItemInMainHand().getType();
 
-        if (clickedBlock == null || clickedBlock.getType() != Material.TARGET)
+
+        if (playersManager.isPlayerActive(player.getUniqueId())
+                && material.equals(Material.FIREWORK_ROCKET)) {
+
+            player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+            player.setVelocity(new Vector(0,1.5,0));
+            player.getWorld().playSound(player.getLocation(),Sound.ENTITY_FIREWORK_ROCKET_LAUNCH,3,1);
             return;
 
-        if (PlayersManager.getInstance().getActivePlayers().contains(event.getPlayer().getUniqueId())
-                && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-                && Objects.equals(event.getHand(), EquipmentSlot.HAND)) {
+        }
 
-            player.playSound(player.getLocation(),Sound.BLOCK_STONE_BUTTON_CLICK_ON,1,1);
+
+        if (playersManager.isPlayerActive(player.getUniqueId())
+                && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+                && Objects.equals(event.getHand(), EquipmentSlot.HAND)
+                && clickedBlock != null
+                && clickedBlock.getType() == Material.TARGET) {
+
+            player.playSound(player.getLocation(),Sound.BLOCK_STONE_BUTTON_CLICK_ON,2,1);
 
             if (playerCooldown.contains(player.getUniqueId())){
                 player.sendMessage(ChatFormatter.formatErrorMessage("target-block in ricarica..."));
@@ -70,15 +83,15 @@ public class RightClickListener implements Listener{
 
     public void targetBlockRewardSystem(Player player, Block targetBlock) {
 
-        int randomInteger = new SecureRandom().nextInt(13);
+        int randomInteger = new SecureRandom().nextInt(12);
 
         switch(randomInteger) {
             case 0:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,200, 3));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,600, 3));
                 player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Regeneration"));
                 break;
             case 1:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 400 , 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600 , 1));
                 player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Damage resistance "));
                 break;
             case 3:
@@ -90,23 +103,34 @@ public class RightClickListener implements Listener{
                 player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Fishing rod"));
                 break;
             case 5:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 400 , 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 1200 , 1));
                 player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Health boost"));
                 break;
             case 7:
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 400 , 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 600 , 1));
                 player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Invisibility"));
                 break;
             case 8:
                 player.getInventory().addItem(new ItemStack(Material.COOKED_PORKCHOP, 5));
                 player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Cooked porkchop"));
                 break;
-            case 12:
+            case 9:
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 180 , 1));
+                player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Levitation"));
+                break;
+            case 10:
                 player.getInventory().addItem(new ItemStack(Material.SNOWBALL, 5));
                 player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Snowball"));
                 break;
+            case 11:
+
+                Bukkit.getScheduler().scheduleSyncDelayedTask(RIVevent.plugin, () ->
+                        player.getInventory().addItem(new ItemStack(Material.FIREWORK_ROCKET, 2)), 10);
+
+                player.sendMessage(ChatFormatter.formatEventMessage("Reward : " + ChatColor.AQUA + "Firewok rocket"));
+                break;
             default:
-                Vector knockbackVector = targetBlock.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(-2);
+                Vector knockbackVector = targetBlock.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(-1.6);
 
                 player.getWorld().spawnParticle(Particle.EXPLOSION_LARGE,player.getLocation(),2);
                 player.getWorld().playSound(player.getLocation(),Sound.ENTITY_GENERIC_EXPLODE,2,1);
