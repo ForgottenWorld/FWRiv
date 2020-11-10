@@ -48,19 +48,13 @@ public class ProjectileListener implements Listener {
 
         if (pj.getType() == EntityType.SNOWBALL) {
 
-            //todo: testare sti vettori
-            Vector knockbackVector = playerHitted.getLocation().toVector().subtract(playerShooter.getLocation().toVector()).normalize().multiply(settings.snowballKnockbackPower);
-
-          //  Vector knockbackVector = playerHitted.getLocation().getDirection().multiply(settings.snowballKnockbackPower * -1).setY(0.3);
-         // Vector knockbackVector = pj.getVelocity(); //precedente versione
-
-          //  Vector knockbackVector = pj.getVelocity().normalize().multiply(settings.snowballKnockbackPower); //settings.snowballKnockbackPower lo teniamo o no ?
+            Vector knockbackVector = playerHitted.getLocation().toVector()
+                    .subtract(playerShooter.getLocation().toVector())
+                    .normalize().multiply(settings.snowballKnockbackPower);
 
             playerHitted.setVelocity(knockbackVector);
 
             playerHitted.damage(settings.snowballHitDamage);
-
-            playerHitted.playSound(playerHitted.getLocation(), Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK,2,1);
 
             return;
         }
@@ -77,13 +71,11 @@ public class ProjectileListener implements Listener {
                 else
                     return;
 
-                //todo: testare bontà della canna da pesca
-                Vector vector = playerHitted.getLocation().add(0,3,0).toVector().subtract(playerShooter.getLocation().toVector()).normalize().multiply(-4);
-                //Vector vector = playerHitted.getLocation().toVector().subtract(playerShooter.getLocation().toVector()).normalize().multiply(-4);
-                playerHitted.setVelocity(vector);
+                Vector vector = playerHitted.getLocation().add(0,3,0).toVector().subtract(playerShooter.getLocation().toVector()).normalize().multiply(-10);
+                playerHitted.setVelocity(vector.add(new Vector(0,2,0)));
 
                 playerHitted.sendMessage(ChatFormatter.formatSuccessMessage("Hai abboccato all'amo!"));
-                playerHitted.playSound(playerHitted.getLocation(),Sound.ENTITY_DOLPHIN_PLAY,2,1);
+                playerHitted.getWorld().playSound(playerHitted.getLocation(),Sound.ENTITY_DOLPHIN_SPLASH,2,1);
                 playerShooter.sendMessage(ChatFormatter.formatSuccessMessage("WoW! Hai preso un pesce bello grosso ...")); // :)
 
             return;
@@ -118,9 +110,13 @@ public class ProjectileListener implements Listener {
         if (pj.getType() == EntityType.ENDER_PEARL) {
 
             event.setCancelled(true);
+            shooter.getInventory().getItemInMainHand().setAmount(shooter.getInventory().getItemInMainHand().getAmount() - 1);
+
             shooter.setNoDamageTicks(30);
 
-            shooter.teleport(eventService.getSummonedArena().getTower());
+            shooter.teleport(eventService.getSummonedArena().getTower().clone().add(0,0.5,0));
+            shooter.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,10,1));
+            shooter.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,40,1));
 
             shooter.getWorld().strikeLightningEffect(shooter.getLocation());
 
@@ -129,9 +125,7 @@ public class ProjectileListener implements Listener {
 
             shooter.getWorld().playSound(shooter.getLocation(),Sound.ENTITY_LIGHTNING_BOLT_IMPACT,3,1);
             shooter.getWorld().playSound(shooter.getLocation(),Sound.ENTITY_LIGHTNING_BOLT_THUNDER,3,1);
-            shooter.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,80,1));
 
-            shooter.getInventory().getItemInMainHand().setAmount(shooter.getInventory().getItemInMainHand().getAmount() - 1);
 
         }
 

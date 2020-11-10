@@ -43,9 +43,11 @@ public class RightClickListener implements Listener{
         Block clickedBlock = event.getClickedBlock();
         Material material = player.getInventory().getItemInMainHand().getType();
 
+        if (!playersManager.isPlayerActive(player.getUniqueId()))
+            return;
 
-        if (playersManager.isPlayerActive(player.getUniqueId())
-                && material.equals(Material.FIREWORK_ROCKET)) {
+
+        if (material.equals(Material.FIREWORK_ROCKET)) {
 
             event.setCancelled(true);
             player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
@@ -55,9 +57,17 @@ public class RightClickListener implements Listener{
 
         }
 
+        if (material.equals(Material.HONEYCOMB)) {
 
-        if (playersManager.isPlayerActive(player.getUniqueId())
-                && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+            player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+            player.setHealth(Math.min(player.getHealth() + 1,20));
+            player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_BURP,2,1);
+            return;
+
+        }
+
+
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
                 && Objects.equals(event.getHand(), EquipmentSlot.HAND)
                 && clickedBlock != null
                 && clickedBlock.getType() == Material.TARGET) {
