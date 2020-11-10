@@ -57,8 +57,10 @@ public class Messages {
             ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Non è possibile droppare items, piazzare e rompere blocchi" +
             ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "I target block possono darti delle ricompense e non solo.." +
             ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Le snowball hanno knockback e danno" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Il miele è buono e salutare, lo dice sempre mia nonna" +
             ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Le ender pearl sono estremamente utili, provale.." +
             ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "La canna da pesca è utile per scalzare un avversario dalla cima della torre" +
+            ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "I fuochi d'artificio sono spettacolari.." +
             ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Il tridente ha un buon knockback se utilizzato corpo a corpo" +
             ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Il tridente, quando lanciato, applica slowness al bersaglio colpito" +
             ChatColor.LIGHT_PURPLE + "\n[+] " + ChatColor.RESET + "Il totem of undying ti teletrasporta in cima alla torre se muori";
