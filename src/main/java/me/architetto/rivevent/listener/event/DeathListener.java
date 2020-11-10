@@ -2,7 +2,6 @@ package me.architetto.rivevent.listener.event;
 
 import me.architetto.rivevent.RIVevent;
 import me.architetto.rivevent.event.EventService;
-import me.architetto.rivevent.event.MinigameService;
 import me.architetto.rivevent.event.PlayersManager;
 import me.architetto.rivevent.util.ChatFormatter;
 import org.bukkit.Particle;
@@ -18,8 +17,6 @@ public class DeathListener implements Listener{
 
     EventService eventService = EventService.getInstance();
     PlayersManager playersManager = PlayersManager.getInstance();
-    MinigameService minigameService = MinigameService.getInstance();
-
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -58,7 +55,7 @@ public class DeathListener implements Listener{
             @Override
             public void run(){
 
-                player.getWorld().createExplosion(eventService.getSummonedArena().getTower(),2,false,false);
+                player.getWorld().createExplosion(eventService.getSummonedArena().getTower(),1,false,false);
                 player.getWorld().spawnParticle(Particle.EXPLOSION_LARGE,player.getLocation(),1);
                 player.teleport(eventService.getSummonedArena().getTower());
                 event.getEntity().sendMessage(ChatFormatter.formatEventMessage("Il totem ti ha protetto da una morte certa!"));
