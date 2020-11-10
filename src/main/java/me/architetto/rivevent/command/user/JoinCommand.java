@@ -54,7 +54,7 @@ public class JoinCommand extends SubCommand {
             return;
         }
 
-        PlayersManager.getInstance().addReturnLocation(sender.getUniqueId(),sender.getLocation());
+        PlayersManager.getInstance().addReturnLocation(sender.getUniqueId(),sender.getLocation().toVector(),sender.getLocation().getWorld().getName());
 
 
         if (eventService.isStarted()) {
