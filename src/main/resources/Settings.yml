@@ -1,62 +1,61 @@
-# -------------------------------------------------- #
-# -----------      [RIV CONFIG FILE]       --------- #
-# --------------  made  by  Architetto  ------------ #
-# -------------------------------------------------- #
-
-RESPAWN_POINT:
+##################################################################
+## ------------------------------------------------------------ ##
+##          ███████╗██╗    ██╗    ██████╗ ██╗██╗   ██╗          ##
+##          ██╔════╝██║    ██║    ██╔══██╗██║██║   ██║          ##
+##          █████╗  ██║ █╗ ██║    ██████╔╝██║██║   ██║          ##
+##          ██╔══╝  ██║███╗██║    ██╔══██╗██║╚██╗ ██╔╝          ##
+##          ██║     ╚███╔███╔╝    ██║  ██║██║ ╚████╔╝           ##
+##          ╚═╝      ╚══╝╚══╝     ╚═╝  ╚═╝╚═╝  ╚═══╝            ##
+##                      Made by: Architetto                     ##
+##     SOURCE CODE: https://github.com/ForgottenWorld/FWRiv     ##
+## ------------------------------------------------------------ ##
+##################################################################
 
 FOOD_LEVEL: 12
 
-ANTI_CAMPER_START_DELAY: 15
-ANTI_CAMPER_DAMAGE_PERIOD: 1
-ANTI_CAMPER_DAMAGE: 2
-ANTI_CAMPER_DAMAGE_FINAL_BOOST: 2
-ANTI_CAMPER_GROW_PERIOD: 10
-ANTI_CAMPER_GROW_VALUE: 3
+START_LOADOUT:
+  - 'COOKED_PORKCHOP,15'
+  - 'HONEYCOMB,10'
+
+ANTI_CAMPER_START_DELAY: 30
+ANTI_CAMPER_START_DAMAGE: 2
+ANTI_CAMPER_FINAL_DAMAGE: 6
+ANTI_CAMPER_GROW_PERIOD: 15
+ANTI_CAMPER_GROW_VALUE: 5
 ANTI_CAMPER_RL_DIF: 5
 
 RED_LINE_ANIMATION_RADIUS: 15
 
 REWARD_PERIOD: 20
 
-SNOWBALL_KNOCKBACK_POWER: 10
+#MATERIAL, WEIGHT, MAX_AMOUNT, UNIQUE
+REWARD_LIST:
+  - 'SNOWBALL,3,8,false'
+  - 'LEATHER_LEGGINGS,3,1,true'
+  - 'LEATHER_BOOTS,3,1,true'
+  - 'LEATHER_HELMET,3,1,true'
+  - 'LEATHER_CHESTPLATE,2,1,true'
+  - 'GOLDEN_APPLE,1.1,1,false'
+  - 'ENDER_PEARL,1.1,1,false'
+  - 'MILK_BUCKET,1.5,1,false'
+  - 'TRIDENT,0.2,1,false'
+  - 'COOKED_PORKCHOP,5,16,false'
+  - 'FISHING_ROD,0.4,1,true'
+  - 'ENCHANTED_GOLDEN_APPLE,0.01,1,true'
+  - 'TOTEM_OF_UNDYING,0.1,1,true'
+  - 'HONEYCOMB,0.5,3,false'
+
+SNOWBALL_KNOCKBACK_POWER: 1
 SNOWBALL_DAMAGE: 0.1
 
+FISHINGROD_POWER: 3
+
+TRIDENT_KNOCKBACK_POWER: 1
+
 ENABLE_TARGET_BLOCK: true
+TRAGET_BLOCK_KNOCKBACK_POWER: 1.4 #da implementare
 TARGET_BLOCK_COOLDOWN: 30
-
-DEATH_RACE_PERIOD: 30
-CURSE_PERIOD: 60
-
-START_LOADOUT:
-  - 'COOKED_PORKCHOP,15'
-
-LIST_ITEMS_REWARD:
-  - 'SNOWBALL,3,16'
-  - 'LEATHER_LEGGINGS,3,1'
-  - 'LEATHER_BOOTS,3,1'
-  - 'LEATHER_HELMET,3,1'
-  - 'LEATHER_CHESTPLATE,2,1'
-  - 'GOLDEN_APPLE,1.1,1'
-  - 'ENDER_PEARL,1.1,2'
-  - 'MILK_BUCKET,1.5,1'
-  - 'TRIDENT,0.2,1'
-  - 'COOKED_PORKCHOP,5,16'
-  - 'FISHING_ROD,0.4,1'
-  - 'ENCHANTED_GOLDEN_APPLE,0.01,1'
-  - 'TOTEM_OF_UNDYING,0.1,1'
-  - 'HONEYCOMB,0.05,3'
-
-LIST_UNIQUE_ITEMS:
-  - 'LEATHER_BOOTS'
-  - 'LEATHER_LEGGINGS'
-  - 'LEATHER_CHESTPLATE'
-  - 'LEATHER_HELMET'
-  - 'FISHING_ROD'
-  - 'TOTEM_OF_UNDYING'
-  - 'ENCHANTED_GOLDEN_APPLE'
-
-
+TARGETBLOCK_REWARD_LIST:    #da implementare
 
 
 
