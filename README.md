@@ -1,62 +1,68 @@
 **FWRiv** - Plugin per la gestione dell'evento "Resta in vetta" (RIV)
 
-**LISTA COMANDI NON AGGIORNATA**
+### LISTA COMANDI
 
-### COMANDI
+(permesso necessario: rivevent.admin)
+```sh
+/fwriv create <nome _arena>
+```
+Inizia la procedura di creazione di una nuova arena.
+```sh
+/fwriv delete <nome_arena>
+```
+Rimuove l'arena.
+```sh
+/fwriv reload
+```
+Ricarica tutti i file di configurazione (Setting.yml, RespawnPoint.yml, Preset.yml).
+
+(permesso necessario: rivevent.eventmanager)
 
 ```sh
-/rivevent create <nome_preset>
+/fwriv setrespawn
 ```
-Inizia la procedura di inserimento di un nuovo preset.
+Imposta il punto di respawn sicuro.
 ```sh
-/rivevent list
+/fwriv arena <nome_arena>
 ```
-Mostra la lista di tutti i preset salvati.
+Stampa a schermo le coordinate dei punti salvati per l'arena indicata.
 ```sh
-/rivevent list <nome_preset>
+/fwriv init <nome_arena>
 ```
-Mostra tutte le coordinate relative al preset inicato.
+Inizializza l'evento RIV per l'arena indicata (da questo momento i players potranno partecipare all'evento tramite il comando /fwriv join).
 ```sh
-/rivevent delete <nome_preset>
+/fwriv eventinfo
 ```
-Rimuove il preset.
+Mostra i nomi dei players partecipanti all'evento (se l'evento è in corso mostra anche la lista dei players ancora in gioco).
 ```sh
-/rivevent reload
+/fwriv start
 ```
-Ricarica i settings.
+Fa partire l'evento RIV.
 ```sh
-/rivevent init <nome_preset>
+/fwriv restart
 ```
-Inizializza l'evento RIV utilizzando il preset indicato.
+Ripristina l'evento riportando i partecipanti ai punti di spawn.
 ```sh
-/rivevent eventinfo
+/fwriv stop
 ```
-Mostra in numero di player che partecipano all'evento.
+Termina l'evento e teletrasporta tutti i partecipanti nel punto in cui avevano eseguito /fwriv join. (Se la posizione è ostruita il player viene teletrasportano nel punto di respawn sicuro).
+
+(permesso necessario: rivevent.user)
+
 ```sh
-/rivevent setup
+/fwriv join
 ```
-Teletrasporta i players partecipanti ai punti di partenza.
+Teletrasporta il player nell'arena dell'evento e lo inserisce nella lista dei partecipanti.
 ```sh
-/rivevent start
+/fwriv leave
 ```
-Starta l'evento.
+Teletrasporta il player nel punto in cui aveva eseguito /fwriv join (se la posizione è ostruita il player viene teletrasportato nel punto di respawn sicuro).
 ```sh
-/rivevent restart
+/fwriv info
 ```
-Restarta l'evento.
-```sh
-/rivevent stop
-```
-Termina l'evento e teletrasporta tutti i player dell'evento allo spawn. (Le coordinate vanno inserite nel config)
-```sh
-/rivevent join
-```
-Teletrasporta il player all'arena dell'evento e lo inserisce nella lista dei partecipanti.
-```sh
-/rivevent spectate
-```
-Teletrasporta il player all'arena dell'evento e lo inserisce nella lista degli spettatori.
-```sh
-/rivevent leave
-```
-Teletrasporta il player allo spawn rimuovendolo dall'elenco.
+Stampa a schermo le principali caratteristiche del gameplay del RIV.
+
+
+
+
+
