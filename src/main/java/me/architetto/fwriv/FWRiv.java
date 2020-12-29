@@ -132,7 +132,6 @@ public final class FWRiv extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "FWEchelon not found...");
 
         SettingsHandler.getSettingsHandler().echelonSupport = false;
-
     }
 
     public  void secureInventoryClear() {
