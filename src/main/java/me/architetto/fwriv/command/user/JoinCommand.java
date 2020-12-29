@@ -2,6 +2,8 @@ package me.architetto.fwriv.command.user;
 
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.command.SubCommand;
+import me.architetto.fwriv.config.SettingsHandler;
+import me.architetto.fwriv.echelon.EchelonHolder;
 import me.architetto.fwriv.event.PlayersManager;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.utils.ChatFormatter;
@@ -53,6 +55,14 @@ public class JoinCommand extends SubCommand {
         if (PlayersManager.getInstance().getPartecipants().contains(sender.getUniqueId())) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ALREADY_JOINED));
             return;
+        }
+
+        if (SettingsHandler.getSettingsHandler().echelonSupport) {
+            if (EchelonHolder.getEchelonHolder().isPlayerInMutexActivity(sender))
+                sender.sendMessage(ChatFormatter.formatErrorMessage("Non puoi partecipare a questo evento : " +
+                        EchelonHolder.getEchelonHolder().getPlayerMutexActivityName(sender)));
+            else
+                EchelonHolder.getEchelonHolder().addPlayerMutexActivity(sender);
         }
 
         PlayersManager.getInstance().addReturnLocation(sender.getUniqueId(),sender.getLocation().toVector(),sender.getLocation().getWorld().getName());

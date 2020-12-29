@@ -13,6 +13,8 @@ public class SettingsHandler {
 
     private static SettingsHandler settingsHandler;
 
+    public boolean echelonSupport;
+
     public Location safeRespawnLocation;
 
     public int foodLevel;

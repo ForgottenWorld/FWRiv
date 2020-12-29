@@ -1,6 +1,8 @@
 package me.architetto.fwriv.command.user;
 
 import me.architetto.fwriv.command.SubCommand;
+import me.architetto.fwriv.config.SettingsHandler;
+import me.architetto.fwriv.echelon.EchelonHolder;
 import me.architetto.fwriv.event.PlayersManager;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.utils.ChatFormatter;
@@ -83,8 +85,5 @@ public class LeaveCommand extends SubCommand{
                 + ChatColor.GREEN + "#" + PlayersManager.getInstance().getPartecipants().size()),"riveven.echo");
 
     }
-
-
-
 }
 

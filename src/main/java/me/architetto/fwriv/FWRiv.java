@@ -4,6 +4,7 @@ import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.CommandManager;
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.config.SettingsHandler;
+import me.architetto.fwriv.echelon.EchelonHolder;
 import me.architetto.fwriv.event.PlayersManager;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.listener.arena.ArenaCreationListener;
@@ -41,8 +42,12 @@ public final class FWRiv extends JavaPlugin {
         loadListener();
 
         Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading presets ...");
-        Bukkit.getConsoleSender().sendMessage("=============================================================");
         loadPresetFile();
+
+        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading FWEchelon support ...");
+        loadEchelon();
+
+        Bukkit.getConsoleSender().sendMessage("=============================================================");
 
     }
 
@@ -110,6 +115,23 @@ public final class FWRiv extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ProjectileListener(),this);
         getServer().getPluginManager().registerEvents(new QuitListener(),this);
         getServer().getPluginManager().registerEvents(new RightClickListener(),this);
+
+    }
+
+    public void loadEchelon() {
+
+        if (Bukkit.getPluginManager().getPlugin("FWEchelon") != null) {
+
+            if (EchelonHolder.getEchelonHolder().loadEchelonService()) {
+                Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "Support to FWEchelon enabled ! ");
+                SettingsHandler.getSettingsHandler().echelonSupport = true;
+                return;
+            } else
+                Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "Error on register mutex activity !");
+        } else
+            Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "FWEchelon not found...");
+
+        SettingsHandler.getSettingsHandler().echelonSupport = false;
 
     }
 

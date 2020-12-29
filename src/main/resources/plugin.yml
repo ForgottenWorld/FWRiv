@@ -4,6 +4,8 @@ main: me.architetto.fwriv.FWRiv
 api-version: 1.16
 authors: [Architetto]
 description: Automatizza l'evento 'Resta In Vetta'
+softdepend:
+  - FWEchelon
 prefix: FWRiv
 commands:
   fwriv:

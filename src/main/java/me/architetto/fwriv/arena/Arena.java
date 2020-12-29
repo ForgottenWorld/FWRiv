@@ -53,7 +53,6 @@ public class Arena {
         return tower;
     }
 
-
     public List<Location> getSpawnLocations() {
 
         return new ArrayList<>(

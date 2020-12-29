@@ -4,6 +4,7 @@ import com.destroystokyo.paper.Title;
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.config.SettingsHandler;
+import me.architetto.fwriv.echelon.EchelonHolder;
 import me.architetto.fwriv.event.PlayersManager;
 import me.architetto.fwriv.event.utils.Countdown;
 import me.architetto.fwriv.utils.ChatFormatter;
@@ -111,6 +112,7 @@ public class EventService {
 
             player.teleport(playersManager.getReturnLocation(uuid));
 
+            mutexActivityLeaveSupport(player);
 
         }
 
@@ -136,6 +138,7 @@ public class EventService {
 
             player.teleport(playersManager.getReturnLocation(uuid));
 
+            mutexActivityLeaveSupport(player);
 
         }
 
@@ -363,6 +366,8 @@ public class EventService {
         isDamageEnabled = false;
         isEarlyDamagePrank = false;
 
+        removeAllPlayerMutexActivitySupport();
+
         PlayersManager.getInstance().removeActivePlayer();
         PlayersManager.getInstance().removeSpectatorPlayer();
 
@@ -410,6 +415,20 @@ public class EventService {
             if (player != null)
                 player.sendActionBar(msg);
         }
+    }
+
+    public void mutexActivityLeaveSupport(Player player) {
+        if (!SettingsHandler.getSettingsHandler().echelonSupport)
+            return;
+
+        EchelonHolder.getEchelonHolder().removePlayerMutexActivity(player);
+    }
+
+    public void removeAllPlayerMutexActivitySupport() {
+        if (!SettingsHandler.getSettingsHandler().echelonSupport)
+            return;
+
+        EchelonHolder.getEchelonHolder().removeAllMutexActivityRIVPlayer();
     }
 
 }
