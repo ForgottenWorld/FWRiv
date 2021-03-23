@@ -1,8 +1,7 @@
 package me.architetto.fwriv.echelon;
 
 import it.forgottenworld.echelonapi.FWEchelonApi;
-import it.forgottenworld.echelonapi.services.MutexActivityService;
-import me.architetto.fwriv.listener.MyMutexActivity;
+import it.forgottenworld.echelonapi.mutexactivity.MutexActivityService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -31,7 +30,7 @@ public class EchelonHolder {
         FWEchelonApi echelon = (FWEchelonApi) Bukkit.getPluginManager().getPlugin("FWEchelon");
         this.mutexActivityService = echelon.getMutexActivityService();
 
-        return this.mutexActivityService.registerMutexActivity(("FWRiv"), new MyMutexActivity());
+        return this.mutexActivityService.registerMutexActivity(new MyMutexActivity());
     }
 
     public boolean isPlayerInMutexActivity(Player player) {
