@@ -6,7 +6,7 @@
 
     <groupId>me.architetto</groupId>
     <artifactId>FWRiv</artifactId>
-    <version>v1.6</version>
+    <version>1.9.0</version>
     <packaging>jar</packaging>
 
     <name>FWRiv</name>
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>com.github.ForgottenWorld.FWEchelon</groupId>
             <artifactId>fwechelon-api</artifactId>
-            <version>v0.0.6</version>
+            <version>v0.1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

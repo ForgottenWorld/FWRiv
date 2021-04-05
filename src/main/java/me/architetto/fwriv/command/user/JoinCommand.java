@@ -58,10 +58,11 @@ public class JoinCommand extends SubCommand {
         }
 
         if (SettingsHandler.getSettingsHandler().echelonSupport) {
-            if (EchelonHolder.getEchelonHolder().isPlayerInMutexActivity(sender))
-                sender.sendMessage(ChatFormatter.formatErrorMessage("Non puoi partecipare a questo evento : " +
+            if (EchelonHolder.getEchelonHolder().isPlayerInMutexActivity(sender)) {
+                sender.sendMessage(ChatFormatter.formatErrorMessage("Stai già partecipando ad una attività : " +
                         EchelonHolder.getEchelonHolder().getPlayerMutexActivityName(sender)));
-            else
+                return;
+            } else
                 EchelonHolder.getEchelonHolder().addPlayerMutexActivity(sender);
         }
 
