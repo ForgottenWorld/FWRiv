@@ -1,12 +1,11 @@
 package me.architetto.fwriv.config;
 
-import me.architetto.fwriv.reward.ItemReward;
-import org.bukkit.Location;
+import me.architetto.fwriv.localization.LocalizationManager;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class SettingsHandler {
@@ -15,24 +14,18 @@ public class SettingsHandler {
 
     public boolean echelonSupport;
 
-    public Location safeRespawnLocation;
-
-    public int foodLevel;
-
     public int antiCamperStartDelay;
     public int antiCamperDamage;
     public int antiCamperFinalDamage;
     public int antiCamperGrowPeriod;
     public int antiCamperGrowValue;
-    public int antiCamperRedLineTopTowerDif;
+    public int antiCamperRedLineTopTowerDif; //Questo non è indispensabile
 
     public int redLineAnimationRadius;
 
     public int rewardPeriod;
 
-    public List<ItemReward> itemRewardList = new ArrayList<>();
-
-    public HashMap<Material,Integer> startEquipItems = new HashMap<>();
+    public List<ItemStack> startEquipItems = new ArrayList<>();
 
     public double snowballKnockbackPower;
     public double snowballHitDamage;
@@ -63,16 +56,9 @@ public class SettingsHandler {
 
         FileConfiguration fileConfiguration = ConfigManager.getInstance().getConfig("Settings.yml");
 
-        loadRewards();
-
         loadStartEquip();
 
-        this.foodLevel = fileConfiguration.getInt("FOOD_LEVEL",18);
-
         this.rewardPeriod = fileConfiguration.getInt("REWARD_PERIOD",20) * 20;
-
-        this.safeRespawnLocation = ConfigManager.getInstance()
-                .getLocation(ConfigManager.getInstance().getConfig("RespawnPoint.yml"), "RESPAWN_POINT");
 
         this.antiCamperStartDelay = fileConfiguration.getInt("ANTI_CAMPER_START_DELAY",60) * 20;
         this.antiCamperDamage = fileConfiguration.getInt("ANTI_CAMPER_START_DAMAGE",2);
@@ -96,52 +82,26 @@ public class SettingsHandler {
 
     }
 
-    private void loadRewards() {
-
-        List<String> materialsStringList = ConfigManager.getInstance().getConfig("Settings.yml")
-                .getStringList("REWARD_LIST");
-
-        if (!materialsStringList.isEmpty()) {
-            for(String materialName : materialsStringList) {
-
-                String [] parts = materialName.split(",");
-
-                if (Material.getMaterial(parts[0]) != null) {
-
-                    ItemReward itemReward = new ItemReward(Material.getMaterial(parts[0]),Double.parseDouble(parts[1]),
-                            Integer.parseInt(parts[2]),Boolean.parseBoolean(parts[3]));
-
-                    this.itemRewardList.add(itemReward);
-                }
-            }
-        }
-    }
-
     private void loadStartEquip() {
 
         FileConfiguration fileConfiguration = ConfigManager.getInstance().getConfig("Settings.yml");
-        List<String> MaterialName = fileConfiguration.getStringList("START_LOADOUT");
+        LocalizationManager lm = LocalizationManager.getInstance();
+        List<String> materialName = fileConfiguration.getStringList("START_LOADOUT");
 
-        if (!MaterialName.isEmpty()){
-
-            for(String name : MaterialName){
-
-                String [] parts = name.split(",");
-
-                if (Material.getMaterial(parts[0]) != null) {
-                    this.startEquipItems.put(Material.getMaterial(parts[0]),Math.abs(Integer.parseInt(parts[1])));
-                }
-
-            }
-        }
+        materialName.forEach(s -> {
+            String[] parts = s.split(",");
+            if (parts.length != 2) return;
+            Material material = Material.valueOf(parts[0]);
+            ItemStack is = new ItemStack(material,Integer.parseInt(parts[1]));
+            is.setLore(lm.localizeItemLore(material));
+            this.startEquipItems.add(is);
+        });
 
     }
 
     public void reload() {
 
         this.startEquipItems.clear();
-
-        this.itemRewardList.clear();
 
         load();
     }

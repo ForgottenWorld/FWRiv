@@ -5,26 +5,23 @@ import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
-import me.architetto.fwriv.event.PlayersManager;
-import me.architetto.fwriv.event.utils.Countdown;
+import me.architetto.fwriv.obj.ArenaDoors;
+import me.architetto.fwriv.obj.RoundSpawn;
+import me.architetto.fwriv.partecipant.PartecipantStatus;
+import me.architetto.fwriv.event.PartecipantsManager;
+import me.architetto.fwriv.utils.Countdown;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Openable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class EventService {
 
@@ -32,24 +29,18 @@ public class EventService {
 
     private Arena summonedArena;
 
-    private int spawnID;
+    private EventStatus eventStatus = EventStatus.INACTIVE;
 
-    public List<Block> spawnDoorsList;
+    private RoundSpawn roundSpawn;
 
-    private boolean isRunning = false;
-    private boolean isStarted = false;
-    private boolean isFinished = false;
+    private ArenaDoors arenaDoors;
 
-    private boolean isDamageEnabled = false;
-    private boolean isEarlyDamagePrank = false;
+    private Countdown startCountdown;
 
     private EventService() {
         if(eventService != null) {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
-
-        this.spawnDoorsList = new ArrayList<>();
-        this.spawnID = 0;
 
     }
 
@@ -60,237 +51,163 @@ public class EventService {
         return eventService;
     }
 
-    public void initializeEvent(Arena arena) {
-
-        this.summonedArena = arena;
-        this.spawnDoorsList = arena.getSpawnDoors();
-        this.isRunning = true;
-    }
-
-    public void changeArena(Arena arena) {
-        this.summonedArena = arena;
-        this.spawnDoorsList.clear();
-        this.spawnDoorsList = arena.getSpawnDoors();
-    }  //todo: aggiungere comando che permette di cambiare arena senza stoppare l'evento
-
-    public Arena getSummonedArena() {
+    public Arena getArena() {
         return this.summonedArena;
     }
 
-    public void activePlayerDeath(UUID uuid) {
-        PlayersManager playersManager = PlayersManager.getInstance();
+    public EventStatus getEventStatus() {
+        return eventStatus;
+    }
 
-        playersManager.removeActivePlayer(uuid);
-        playersManager.addSpectatorPlayer(uuid);
+    public RoundSpawn getRoundSpawn() {
+        return this.roundSpawn;
+    }
 
-        Player player = Bukkit.getPlayer(uuid);
+    public boolean initRIV(Arena arena) {
+        if (!this.eventStatus.equals(EventStatus.INACTIVE))
+            return false;
 
-        if (player != null) {
+        this.summonedArena = arena;
+        this.roundSpawn = new RoundSpawn(arena);
+        this.arenaDoors = new ArenaDoors(arena);
+        this.eventStatus = EventStatus.READY;
 
+        this.arenaDoors.close();
+
+        return true;
+    }
+
+
+    public void partecipantDeath(Player player) {
+        PartecipantsManager.getInstance().getPartecipant(player).ifPresent(partecipant -> {
             player.getInventory().clear();
             player.setGameMode(GameMode.SPECTATOR);
+            partecipant.setPartecipantStatus(PartecipantStatus.DEAD);
+        });
 
-        }
-
-        if (isStarted && !isFinished)
+        if (eventStatus.equals(EventStatus.RUNNING))
             checkVictoryCondition();
 
     }
 
-    public void activePlayerLeave(UUID uuid) {
-        PlayersManager playersManager = PlayersManager.getInstance();
+    public void partecipantLeave(Player player) {
 
-        playersManager.removeActivePlayer(uuid);
+        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
-        Player player = Bukkit.getPlayer(uuid);
-
-        if (player != null) {
-
+        partecipantsManager.getPartecipant(player).ifPresent(partecipant -> {
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
-
-
-            player.teleport(playersManager.getReturnLocation(uuid));
-
+            player.teleport(partecipant.getReturnLocation());
             mutexActivityLeaveSupport(player);
+        });
 
-        }
+        partecipantsManager.removePartecipant(player);
 
-        playersManager.removeReturnLocation(uuid);
-
-        if (isStarted && !isFinished)
+        if (eventStatus.equals(EventStatus.RUNNING))
             checkVictoryCondition();
 
     }
 
-    public void spectatorPlayerLeave(UUID uuid) {
-        PlayersManager playersManager = PlayersManager.getInstance();
+    public void spectatorPlayerLeave(Player player) {
+        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
-        playersManager.removeSpectatorPlayer(uuid);
-
-        Player player = Bukkit.getPlayer(uuid);
-
-        if (player != null) {
-
+        partecipantsManager.getPartecipant(player).ifPresent(partecipant -> {
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
-
-
-            player.teleport(playersManager.getReturnLocation(uuid));
-
+            player.teleport(partecipant.getReturnLocation());
             mutexActivityLeaveSupport(player);
+        });
 
-        }
-
-        playersManager.removeReturnLocation(uuid);
+        partecipantsManager.removePartecipant(player);
 
     }
 
     private void checkVictoryCondition() {
-        PlayersManager playersManager = PlayersManager.getInstance();
 
-        if (playersManager.getActivePlayers().size() == 1) {
-            isFinished = true;
+        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
-            Player playerWinner = Bukkit.getPlayer(playersManager.getActivePlayers().get(0));
+        List<UUID> uuidSet = new ArrayList<>(partecipantsManager.getPartecipantsUUID(PartecipantStatus.PLAYING));
 
-            if (playerWinner != null)
-                victoryAnimation(playerWinner.getDisplayName());
+        if (uuidSet.size() == 1) {
+            eventStatus = EventStatus.ENDED;
+
+            partecipantsManager
+                    .getPartecipant(uuidSet.get(0)).ifPresent(partecipant -> victoryAnimation(partecipant.getName()));
 
             victoryFireworksEffect(2);
-
         }
 
-        if (playersManager.getActivePlayers().size() == 0 && !isFinished)
-            isFinished = true;
+        if (uuidSet.size() == 0)
+            eventStatus = EventStatus.ENDED;
 
-        if (isFinished)
+        if (eventStatus.equals(EventStatus.ENDED))
             stopTasks();
-
     }
 
     private void victoryAnimation(String playerWinner) {
-        PlayersManager playersManager = PlayersManager.getInstance();
-        for (UUID uuid : playersManager.getPartecipants()) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player != null)
-                player.sendTitle(ChatColor.GOLD + playerWinner,
-                        "E' IL VINCITORE DELL'EVENTO",20,100,20);
-
-        }
+        PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.ALL).stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull).forEach(p -> p.sendTitle(ChatColor.GOLD + playerWinner,
+                "E' IL VINCITORE DELL'EVENTO",20,100,20));
     }
 
     public void stopTasks() {
 
         AntiCamperService.getInstance().stopAnticamperTasks();
-        RewardService.getInstance().stopRewardTask();
-
-    }
-
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    public boolean isStarted() {
-        return isStarted;
-    }
-
-    public boolean isFinished() {
-        return isFinished;
-    }
-
-    public boolean isDamageEnabled() { return this.isDamageEnabled; }
-
-    public boolean isEarlyDamagePrank() { return this.isEarlyDamagePrank; }
-
-    public void teleportToSpawnPoint(Player player) {
-
-        switch(spawnID) {
-            case 0:
-                player.teleport(summonedArena.getSpawn1());
-                spawnID = 1;
-                break;
-            case 1:
-                player.teleport(summonedArena.getSpawn2());
-                spawnID = 2;
-                break;
-            case 2:
-                player.teleport(summonedArena.getSpawn3());
-                spawnID = 3;
-                break;
-            case 3:
-                player.teleport(summonedArena.getSpawn4());
-                spawnID = 0;
-        }
+        OldRewardService.getInstance().stopRewardTask();
 
     }
 
     public void startEventTimer() {
 
-        Countdown timer = new Countdown(FWRiv.getPlugin(FWRiv.class),
+        this.startCountdown = new Countdown(FWRiv.getPlugin(FWRiv.class),
                 10,
                 () -> {
+            //
+                    eventStatus = EventStatus.PRE_RUNNING;
 
-                    this.isStarted = true;
+                    PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
+                            .map(Bukkit::getPlayer)
+                            .filter(Objects::nonNull)
+                            .forEach(p -> {
+                                p.sendMessage(ChatFormatter.formatInitializationMessage(Messages.START_CD_MSG));
+                                equipLoadout(p);
+                            });
 
-                    for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
-                        Player player = Bukkit.getPlayer(u);
-                        if (player == null)
-                            continue;
-
-                        player.sendMessage(ChatFormatter.formatInitializationMessage(Messages.START_CD_MSG));
-                        equipLoadout(player);
-
-                    }
                 },
                 () -> {
+            //
+                    eventStatus = EventStatus.RUNNING;
 
-                    for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
-                        Player p = Bukkit.getPlayer(u);
+                    PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
+                            .map(Bukkit::getPlayer)
+                            .filter(Objects::nonNull)
+                            .forEach(p -> {
+                                p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,1200,2));
+                                p.sendTitle(new Title(ChatColor.DARK_RED + "GO !", "", 1, 18, 1));
+                            });
 
-                        if (p == null)
-                            continue;
-
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,1200,2));
-
-
-                        p.sendTitle(new Title(ChatColor.DARK_RED + "GO !", "", 1, 18, 1));
-
-                    }
-
-                    setDoorsStatus(true);
-
-                    isDamageEnabled = true;
-                    isEarlyDamagePrank = true;
-
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin, () -> {
-
-                        isEarlyDamagePrank = false;
-                        sendActionBarToActivePlayers(ChatColor.BOLD + "PROTEZIONE INIZIALE " + ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "DISATTIVATA");
-
-                    }, 600L);
+                    this.arenaDoors.open();
 
                     AntiCamperService.getInstance().startAntiCamperSystem();
-                    RewardService.getInstance().startRewardSystem();
+                    OldRewardService.getInstance().startRewardSystem();
 
                 },
                 (t) -> {
                     if(t.getSecondsLeft() <= 5) {
 
-                        for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
-                            Player p = Bukkit.getPlayer(u);
+                        PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
+                                .map(Bukkit::getPlayer)
+                                .filter(Objects::nonNull)
+                                .forEach(p -> p.sendTitle(new Title(String.valueOf(t.getSecondsLeft()),
+                                        "", 1, 18, 1)));
 
-                            if (p == null)
-                                continue;
-
-                            p.sendTitle(new Title(String.valueOf(t.getSecondsLeft()), "", 1, 18, 1));
-                        }
                     }
                 });
-        timer.scheduleTimer();
+        this.startCountdown.scheduleTimer();
     }
 
-    public void equipLoadout (Player player) {
+    public void equipLoadout(Player player) {
 
         player.getInventory().clear();
         player.setHealth(20);
@@ -299,77 +216,69 @@ public class EventService {
         for (PotionEffect potionEffect : player.getActivePotionEffects())
             player.removePotionEffect(potionEffect.getType());
 
-        for (Material material : SettingsHandler.getSettingsHandler().startEquipItems.keySet())
-            player.getInventory().addItem(new ItemStack(material,SettingsHandler.getSettingsHandler().startEquipItems.get(material)));
-
-    }
-
-    public void setDoorsStatus(boolean status) {
-
-        for(org.bukkit.block.Block block : spawnDoorsList){
-
-            if (!Tag.DOORS.getValues().contains(block.getType())
-                    && !Tag.FENCE_GATES.getValues().contains(block.getType())){
-                continue;
-            }
-
-            BlockData data = block.getBlockData();
-            Openable door = (Openable) data;
-            door.setOpen(status);
-            block.setBlockData(door, true);
-
-        }
+        SettingsHandler.getSettingsHandler().startEquipItems.forEach(is -> player.getInventory().addItem(is));
 
     }
 
     public void restartEvent() {
 
-        isRunning = true;
-        isStarted = false;
-        isFinished = false;
-        isDamageEnabled = false;
-        isEarlyDamagePrank = false;
+        this.eventStatus = EventStatus.READY;
+        this.arenaDoors.close();
 
-        PlayersManager.getInstance().addActivePlayer(PlayersManager.getInstance().getSpectatorPlayers());
-        PlayersManager.getInstance().removeSpectatorPlayer();
+        PartecipantsManager.getInstance().replacePartecipantsStatus(PartecipantStatus.DEAD, PartecipantStatus.PLAYING);
 
-        for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
+        PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(p -> {
+                    p.setGameMode(GameMode.SURVIVAL);
+                    this.roundSpawn.teleport(p);
+                    p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
+                    p.sendMessage(ChatFormatter.formatSuccessMessage(Messages.RESTART_CMD_PLAYER_MESSAGE));
 
-            Player player = Bukkit.getPlayer(u);
+                });
 
-            if (player == null) continue;
-
-            player.setGameMode(GameMode.SURVIVAL);
-
-            teleportToSpawnPoint(player);
-            player.playSound(player.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-
-            player.sendMessage(ChatFormatter.formatSuccessMessage(Messages.RESTART_CMD_PLAYER_MESSAGE));
-        }
 
         AntiCamperService.getInstance().stopAnticamperTasks();
-        RewardService.getInstance().stopRewardTask();
+        OldRewardService.getInstance().stopRewardTask();
 
     }
 
     public void stopEvent() {
 
-        isRunning = false;
-
-        if (isStarted) {
+        if (!eventStatus.equals(EventStatus.READY)) {
+            this.startCountdown.cancelTimer();
             AntiCamperService.getInstance().stopAnticamperTasks();
-            RewardService.getInstance().stopRewardTask();
-            isStarted = false;
+            OldRewardService.getInstance().stopRewardTask();
         }
 
-        isFinished = false;
-        isDamageEnabled = false;
-        isEarlyDamagePrank = false;
+        this.eventStatus = EventStatus.INACTIVE;
+
+
+        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
+
+
+        partecipantsManager.getPartecipantsUUID(PartecipantStatus.ALL).stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(p -> {
+
+                    p.setGameMode(GameMode.SURVIVAL);
+                    p.getInventory().clear();
+
+                    partecipantsManager.getPartecipant(p).ifPresent(partecipant -> {
+                        p.teleport(partecipant.getReturnLocation());
+                        p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
+                        p.sendMessage(ChatFormatter.formatInitializationMessage(Messages.STOP_CMD_PLAYER_MESSAGE));
+                    });
+
+                    partecipantsManager.removePartecipant(p);
+
+                });
+
+        this.arenaDoors.close();
 
         removeAllPlayerMutexActivitySupport();
-
-        PlayersManager.getInstance().removeActivePlayer();
-        PlayersManager.getInstance().removeSpectatorPlayer();
 
     }
 
@@ -407,14 +316,6 @@ public class EventService {
             }
         }.runTaskTimer(FWRiv.plugin,20,80);
 
-    }
-
-    public void sendActionBarToActivePlayers(String msg) {
-        for (UUID uuid : PlayersManager.getInstance().getActivePlayers()) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player != null)
-                player.sendActionBar(msg);
-        }
     }
 
     public void mutexActivityLeaveSupport(Player player) {

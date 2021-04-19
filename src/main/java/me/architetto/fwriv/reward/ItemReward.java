@@ -1,39 +1,52 @@
 package me.architetto.fwriv.reward;
 
+import me.architetto.fwriv.localization.LocalizationManager;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import java.security.SecureRandom;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class ItemReward{
+public class ItemReward extends Reward {
 
-    private Material materialReward;
+    private final ItemStack itemStack;
+    private final int maxAmount;
+    private final boolean isUnique;
 
-    private Integer rewardMaxAmount;
-    private Double rewardWeight;
+    public ItemReward(Material material, int maxAmount, boolean isUnique) {
+        this.itemStack = new ItemStack(material, 1);
 
-    private boolean unique;
+        List<String> lore = LocalizationManager.getInstance().localizeItemLore(material);
+        if (lore != null)
+            this.itemStack.setLore(lore);
 
-    public ItemReward(Material materialReward, Double rewardWeight, Integer rewardMaxAmount, boolean unique) {
-
-        this.materialReward = materialReward;
-        this.rewardWeight = rewardWeight;
-        this.rewardMaxAmount = rewardMaxAmount;
-
-        this.unique = unique;
+        this.maxAmount = maxAmount;
+        this.isUnique = isUnique;
     }
 
-    public Material item() { return this.materialReward;}
+    @Override
+    public void give(Player player) {
 
-    public Double weight() { return this.rewardWeight; }
+        if (isUnique && player.getInventory().contains(itemStack.getType()))
+            return; //todo: aggiungere messaggio
 
-    public Integer amount() {
+        if (player.getInventory().firstEmpty() == -1)
+            return; //todo: message
 
-        if (rewardMaxAmount == 1)
-            return 1;
+        if (maxAmount != 1)
+            itemStack.setAmount(Math.min(itemStack.getMaxStackSize(), ThreadLocalRandom.current().nextInt(1,maxAmount)));
 
-        return new SecureRandom().nextInt(rewardMaxAmount) + 1;
+        player.getInventory().addItem(itemStack);
+
+        player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC,1,1);
+
+
     }
 
-    public boolean isUnique() { return this.unique; }
-
+    @Override
+    public String getName() {
+        return itemStack.getI18NDisplayName();
+    }
 }

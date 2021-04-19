@@ -4,11 +4,13 @@ import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
-import me.architetto.fwriv.event.PlayersManager;
+import me.architetto.fwriv.partecipant.PartecipantStatus;
+import me.architetto.fwriv.event.PartecipantsManager;
 import me.architetto.fwriv.event.service.EventService;
+import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.CommandDescription;
-import me.architetto.fwriv.utils.CommandName;
+import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -38,21 +40,29 @@ public class JoinCommand extends SubCommand {
     }
 
     @Override
+    public String getPermission() {
+        return "rivevent.user";
+    }
+
+    @Override
+    public int getArgsRequired() {
+        return 0;
+    }
+
+    @Override
     public void perform(Player sender, String[] args) {
 
-        if (!sender.hasPermission("rivevent.user")) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_PERMISSION));
-            return;
-        }
-
         EventService eventService = EventService.getInstance();
+        EventStatus eventStatus = eventService.getEventStatus();
 
-        if (!eventService.isRunning()) {
+        if (eventStatus.equals(EventStatus.INACTIVE)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
             return;
         }
 
-        if (PlayersManager.getInstance().getPartecipants().contains(sender.getUniqueId())) {
+        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
+
+        if (partecipantsManager.isPresent(sender)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ALREADY_JOINED));
             return;
         }
@@ -66,22 +76,20 @@ public class JoinCommand extends SubCommand {
                 EchelonHolder.getEchelonHolder().addPlayerMutexActivity(sender);
         }
 
-        PlayersManager.getInstance().addReturnLocation(sender.getUniqueId(),sender.getLocation().toVector(),sender.getLocation().getWorld().getName());
+        if (!eventStatus.equals(EventStatus.READY)) {
 
+            partecipantsManager.addPartecipant(sender, sender.getLocation(), PartecipantStatus.DEAD);
 
-        if (eventService.isStarted()) {
-
-            PlayersManager.getInstance().addSpectatorPlayer(sender.getUniqueId());
             sender.setGameMode(GameMode.SPECTATOR);
-            sender.teleport(eventService.getSummonedArena().getTower());
+            sender.teleport(eventService.getArena().getTower());
             sender.getWorld().playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
             sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.JOIN_STARTED_EVENT));
             return;
 
         }
 
-        PlayersManager.getInstance().addActivePlayer(sender.getUniqueId());
-        eventService.teleportToSpawnPoint(sender);
+        partecipantsManager.addPartecipant(sender, sender.getLocation(), PartecipantStatus.PLAYING);
+        eventService.getRoundSpawn().teleport(sender);
         sender.getInventory().clear();
         sender.setGameMode(GameMode.SURVIVAL);
         sender.getWorld().playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
@@ -103,7 +111,7 @@ public class JoinCommand extends SubCommand {
 
         Bukkit.getServer().broadcast(ChatFormatter.formatEventMessage(ChatColor.YELLOW + playername
                 + ChatColor.RESET + ChatColor.GRAY + "" + ChatColor.ITALIC + " ha " + ChatColor.GREEN + "joinato" + ChatColor.WHITE + " l'evento RIV. " + ChatColor.RESET
-                + ChatColor.GREEN + "#" + PlayersManager.getInstance().getPartecipants().size()),"riveven.echo");
+                + ChatColor.GREEN + "#" + PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.ALL).size()),"riveven.echo");
 
     }
 

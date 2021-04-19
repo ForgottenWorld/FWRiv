@@ -1,11 +1,13 @@
 package me.architetto.fwriv.command.superuser;
 
 import me.architetto.fwriv.command.SubCommand;
-import me.architetto.fwriv.event.PlayersManager;
+import me.architetto.fwriv.event.PartecipantsManager;
 import me.architetto.fwriv.event.service.EventService;
+import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.CommandDescription;
-import me.architetto.fwriv.utils.CommandName;
+import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.entity.Player;
 
@@ -28,26 +30,32 @@ public class StartCommand extends SubCommand{
     }
 
     @Override
+    public String getPermission() {
+        return "rivevent.eventmanager";
+    }
+
+    @Override
+    public int getArgsRequired() {
+        return 0;
+    }
+
+    @Override
     public void perform(Player sender, String[] args){
 
-        if (!sender.hasPermission("rivevent.eventmanager")) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_PERMISSION));
-            return;
-        }
-
         EventService eventService = EventService.getInstance();
+        EventStatus eventStatus = eventService.getEventStatus();
 
-        if (!eventService.isRunning()) {
+        if (eventStatus.equals(EventStatus.INACTIVE)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
             return;
         }
 
-       if (PlayersManager.getInstance().getActivePlayers().isEmpty()) {
+       if (PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).isEmpty()) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
             return;
         }
 
-        if (eventService.isStarted()) {
+        if (!eventStatus.equals(EventStatus.READY)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
             return;
         }

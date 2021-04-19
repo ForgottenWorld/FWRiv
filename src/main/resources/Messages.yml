@@ -1,0 +1,27 @@
+strings:
+  test: "placeholder"
+
+special_item_lore:
+  SNOWBALL:
+    - "Applica un forte knockback"
+    - "&ese colpisce&r un player"
+  FISHING_ROD:
+    - "Se un player &eabboca&r all'amo"
+    - "viene tirato verso di te"
+
+#Sono dell'idea di inibire al player di lanciare i tridenti... non saprei
+#Oppure inverire gli effetti ranged / melee con il knockback dipendente dalla distanza del lancio
+  TRIDENT:
+    - "&e[ATTACCO RANGED]"
+    - "applica un forte knockback al player colpito"
+    - "&r[ATTACCO MELEE]"
+    - "azzoppa il player colpito per qualche secondo"
+  ENDER_PEARL:
+    - "Permette di teletrasportarti"
+    - "sulla cima della torre"
+  FIREWORK_ROCKET:
+    - "Sfrutta la propulsione dei razzi"
+    - "per raggiungere agilmente"
+    - "la cima della torre"
+  HONEYCOMB:
+    - "un cibo ... &esalutare"

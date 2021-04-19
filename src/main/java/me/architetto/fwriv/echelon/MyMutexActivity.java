@@ -11,7 +11,7 @@ public class MyMutexActivity implements MutexActivity {
 
     @Override
     public void onPlayerForceRemoved(Player player, String s) {
-        EventService.getInstance().activePlayerLeave(player.getUniqueId());
+        EventService.getInstance().partecipantLeave(player);
     }
 
     @Override

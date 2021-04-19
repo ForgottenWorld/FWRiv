@@ -2,61 +2,45 @@ package me.architetto.fwriv.event.service;
 
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.SettingsHandler;
-import me.architetto.fwriv.event.PlayersManager;
-import me.architetto.fwriv.reward.ItemReward;
-import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.Messages;
+import me.architetto.fwriv.partecipant.PartecipantStatus;
+import me.architetto.fwriv.event.PartecipantsManager;
+import me.architetto.fwriv.reward.RewardService;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
-public class RewardService {
+public class OldRewardService {
 
-    private static RewardService rewardService;
+    private static OldRewardService oldRewardService;
 
     private int rewardLine;
     private int rewardPeriod;
 
-    private List<ItemReward> itemRewardList;
-    private Double rewardsWeightSum;
-
     private int taskID;
 
-    private RewardService(){
-        if(rewardService != null) {
+    private OldRewardService(){
+        if(oldRewardService != null) {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
 
-        this.itemRewardList = new ArrayList<>();
-
     }
 
-    public static RewardService getInstance() {
-        if(rewardService == null) {
-            rewardService = new RewardService();
+    public static OldRewardService getInstance() {
+        if(oldRewardService == null) {
+            oldRewardService = new OldRewardService();
         }
-        return rewardService;
+        return oldRewardService;
     }
 
     public void startRewardSystem() {
         EventService eventService = EventService.getInstance();
         SettingsHandler settingsHandler = SettingsHandler.getSettingsHandler();
 
-        this.rewardLine = eventService.getSummonedArena().getTower().getBlockY();
+        this.rewardLine = eventService.getArena().getTower().getBlockY();
         this.rewardPeriod = settingsHandler.rewardPeriod;
-
-        this.itemRewardList = settingsHandler.itemRewardList;
-        this.rewardsWeightSum = this.itemRewardList.stream().mapToDouble(ItemReward::weight).sum();
 
         towerRewardRunnable();
 
@@ -69,20 +53,23 @@ public class RewardService {
             @Override
             public void run() {
 
-                for (UUID uuid : PlayersManager.getInstance().getActivePlayers()) {
+                RewardService.getInstance().pickNextTowerReward();
+
+                for (UUID uuid : PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING)) {
 
                     Player player = Bukkit.getPlayer(uuid);
 
                     if (player == null)
                         continue;
 
-                    if (player.getInventory().firstEmpty() == -1) {
-                        player.sendMessage(ChatFormatter.formatErrorMessage(Messages.REWARD_INVENTORY_FULL));
-                        continue;
-                    }
-
                     if (player.getLocation().getBlockY() < rewardLine)
                         continue;
+
+                    RewardService.getInstance().giveTowerReward(player);
+
+
+                    /*
+
 
                     ItemReward itemReward = pickRandomReward(itemRewardList);
                     
@@ -100,30 +87,13 @@ public class RewardService {
 
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1,1);
 
+                     */
+
                 }
             }
         }.runTaskTimer(FWRiv.plugin,0,rewardPeriod);
         taskID = bukkitTask.getTaskId();
 
-    }
-
-    private ItemReward pickRandomReward(List<ItemReward> providedItemRewardList) {
-
-        double randomValue = rewardsWeightSum + new SecureRandom().nextInt((int) Math.round(rewardsWeightSum));
-
-        while (randomValue > 0) {
-
-            for(ItemReward itemReward : providedItemRewardList) {
-
-                randomValue -= itemReward.weight();
-
-                if (randomValue <= 0)
-                    return itemReward;
-
-            }
-        }
-
-        return null;
     }
 
     public void stopRewardTask() {

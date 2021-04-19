@@ -5,7 +5,7 @@ import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.CommandDescription;
-import me.architetto.fwriv.utils.CommandName;
+import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -31,12 +31,17 @@ public class CreateCommand extends SubCommand{
     }
 
     @Override
-    public void perform(Player sender, String[] args){
+    public String getPermission() {
+        return "rivevent.admin";
+    }
 
-        if (!sender.hasPermission("rivevent.admin")) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_PERMISSION));
-            return;
-        }
+    @Override
+    public int getArgsRequired() {
+        return 0;
+    }
+
+    @Override
+    public void perform(Player sender, String[] args){
 
         if (args.length < 2) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ARENA_CMD_SYNTAX));

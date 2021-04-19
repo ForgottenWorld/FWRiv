@@ -11,7 +11,7 @@
 ## ------------------------------------------------------------ ##
 ##################################################################
 
-FOOD_LEVEL: 12
+#ITEM LOADOUT: {Material material, int amount}
 
 START_LOADOUT:
   - 'COOKED_PORKCHOP,15'
@@ -28,22 +28,50 @@ RED_LINE_ANIMATION_RADIUS: 15
 
 REWARD_PERIOD: 20
 
-#MATERIAL, WEIGHT, MAX_AMOUNT, UNIQUE
-REWARD_LIST:
-  - 'SNOWBALL,3,8,false'
-  - 'LEATHER_LEGGINGS,3,1,true'
-  - 'LEATHER_BOOTS,3,1,true'
-  - 'LEATHER_HELMET,3,1,true'
-  - 'LEATHER_CHESTPLATE,2,1,true'
-  - 'GOLDEN_APPLE,1.1,1,false'
-  - 'ENDER_PEARL,1.1,1,false'
-  - 'MILK_BUCKET,1.5,1,false'
-  - 'TRIDENT,0.2,1,false'
-  - 'COOKED_PORKCHOP,5,16,false'
-  - 'FISHING_ROD,0.4,1,true'
-  - 'ENCHANTED_GOLDEN_APPLE,0.01,1,true'
-  - 'TOTEM_OF_UNDYING,0.1,1,true'
-  - 'HONEYCOMB,0.5,3,false'
+#ITEM REWARD: {Material .., int weight, int maxAmount, boolean unique}
+#POTION REWARD: {PotionEffetcType .., int weight, int minTickDuration, int maxTickDuration, int amplifier, DyeColor dyeColor}
+#EFFECT REWARD: {PotionEffetcType .., int weight, int minTickDuration, int maxTickDuration, int amplifier}
+
+# [Material LIST--->] https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+# [PotionEffectType LIST--->] https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
+# [DyeColor LIST--->] https://hub.spigotmc.org/javadocs/spigot/org/bukkit/DyeColor.html
+
+TOWER_REWARDS:
+  EFFECTS:
+    - 'REGENERATION,3,100,200,2'
+  ITEMS:
+    - 'SNOWBALL,3,8,false'
+    - 'LEATHER_LEGGINGS,3,1,true'
+    - 'LEATHER_BOOTS,3,1,true'
+    - 'LEATHER_HELMET,3,1,true'
+    - 'LEATHER_CHESTPLATE,2,1,true'
+    - 'GOLDEN_APPLE,1,1,false'
+    - 'ENDER_PEARL,1,1,false'
+    - 'MILK_BUCKET,1,1,false'
+    - 'TRIDENT,1,1,false'
+    - 'COOKED_PORKCHOP,5,16,false'
+    - 'FISHING_ROD,1,1,true'
+    - 'ENCHANTED_GOLDEN_APPLE,1,1,true'
+    - 'TOTEM_OF_UNDYING,1,1,true'
+    - 'HONEYCOMB,1,3,false'
+  POTIONS:
+    - 'REGENERATION,3,100,200,2,LIGHT_BLUE'
+
+TARGETBLOCK_REWARDS:
+  EFFECTS:
+    - 'REGENERATION,3,100,200,2'
+  ITEMS:
+    - 'SNOWBALL,3,8,false'
+    - 'LEATHER_BOOTS,3,1,true'
+    - 'LEATHER_HELMET,3,1,true'
+    - 'ENDER_PEARL,1,1,false'
+    - 'MILK_BUCKET,1,1,false'
+    - 'TRIDENT,1,1,false'
+    - 'COOKED_PORKCHOP,5,16,false'
+    - 'FISHING_ROD,1,1,true'
+    - 'HONEYCOMB,1,3,false'
+  POTIONS:
+    - 'REGENERATION,3,100,200,2,LIGHT_BLUE'
 
 SNOWBALL_KNOCKBACK_POWER: 1
 SNOWBALL_DAMAGE: 0.1
@@ -55,7 +83,6 @@ TRIDENT_KNOCKBACK_POWER: 1
 ENABLE_TARGET_BLOCK: true
 TRAGET_BLOCK_KNOCKBACK_POWER: 1.4
 TARGET_BLOCK_COOLDOWN: 30
-TARGETBLOCK_REWARD_LIST:    #da implementare
 
 
 

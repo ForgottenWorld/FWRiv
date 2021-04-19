@@ -1,8 +1,8 @@
 package me.architetto.fwriv.listener.event;
 
-import me.architetto.fwriv.FWRiv;
-import me.architetto.fwriv.event.PlayersManager;
+import me.architetto.fwriv.event.PartecipantsManager;
 import me.architetto.fwriv.event.service.EventService;
+import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -11,58 +11,44 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class DeathListener implements Listener{
 
     EventService eventService = EventService.getInstance();
-    PlayersManager playersManager = PlayersManager.getInstance();
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
 
-        if (!eventService.isRunning())
+        if (EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE))
             return;
 
-        if (playersManager.getActivePlayers().contains(event.getEntity().getUniqueId())) {
-
+        PartecipantsManager.getInstance().getPartecipant(event.getEntity()).ifPresent(partecipant -> {
             event.setCancelled(true);
+            eventService.partecipantDeath(event.getEntity());
+        });
 
-            eventService.activePlayerDeath(event.getEntity().getUniqueId());
-
-        }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerResurection(EntityResurrectEvent event) {
-
-        if (!eventService.isRunning())
-            return;
-
-        if (event.isCancelled())
-            return;
 
         if (!(event.getEntity() instanceof Player))
             return;
 
-        Player player = (Player) event.getEntity();
-
-        if (!playersManager.isPartecipants(player.getUniqueId()))
+        if (EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE))
             return;
 
-        new BukkitRunnable() {
+        //todo: combatdelux non blocca il totem vero ? ma di sicuro blocca il tp quindi deve essere disattivato nel mondo eventi
 
-            @Override
-            public void run(){
+        PartecipantsManager.getInstance().getPartecipant(event.getEntity().getUniqueId()).ifPresent(partecipant -> {
+            Player player = (Player) event.getEntity();
+            player.teleport(eventService.getArena().getTower());
+            player.getWorld().createExplosion(eventService.getArena().getTower(),1,false,false);
+            player.getWorld().spawnParticle(Particle.EXPLOSION_LARGE,player.getLocation(),1);
+            player.sendMessage(ChatFormatter.formatEventMessage("Il totem ti ha protetto da una morte certa!"));
 
-                player.getWorld().createExplosion(eventService.getSummonedArena().getTower(),1,false,false);
-                player.getWorld().spawnParticle(Particle.EXPLOSION_LARGE,player.getLocation(),1);
-                player.teleport(eventService.getSummonedArena().getTower());
-                event.getEntity().sendMessage(ChatFormatter.formatEventMessage("Il totem ti ha protetto da una morte certa!"));
 
-
-            }
-        }.runTaskLater(FWRiv.plugin,15);
+        });
 
     }
 

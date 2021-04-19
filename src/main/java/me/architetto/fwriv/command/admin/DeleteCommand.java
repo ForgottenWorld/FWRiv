@@ -4,13 +4,13 @@ import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.event.service.EventService;
+import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.CommandDescription;
-import me.architetto.fwriv.utils.CommandName;
+import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,21 +30,26 @@ public class DeleteCommand extends SubCommand{
         return "/fwriv delete <arena_name>";
     }
 
+    @Override
+    public String getPermission() {
+        return "rivevent.admin";
+    }
+
+    @Override
+    public int getArgsRequired() {
+        return 0;
+    }
+
 
     @Override
     public void perform(Player sender, String[] args) {
-
-        if (!sender.hasPermission("rivevent.admin")) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_PERMISSION));
-            return;
-        }
 
         if (args.length < 2) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ARENA_CMD_SYNTAX));
             return;
         }
 
-        if (EventService.getInstance().isRunning()) {
+        if (!EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
             return;
         }
@@ -68,11 +73,8 @@ public class DeleteCommand extends SubCommand{
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args){
 
-        if (args.length == 2) {
-
-            return new ArrayList<>(ArenaManager.getInstance().getArenaContainer().keySet());
-
-        }
+        if (args.length == 2)
+            return ArenaManager.getInstance().getArenaNameList();
 
         return null;
     }

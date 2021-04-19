@@ -1,4 +1,4 @@
-package me.architetto.fwriv.utils;
+package me.architetto.fwriv.command;
 
 public class CommandName {
 

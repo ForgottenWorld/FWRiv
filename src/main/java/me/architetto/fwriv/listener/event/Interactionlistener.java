@@ -1,6 +1,6 @@
 package me.architetto.fwriv.listener.event;
 
-import me.architetto.fwriv.event.PlayersManager;
+import me.architetto.fwriv.event.PartecipantsManager;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -10,37 +10,38 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Interactionlistener implements Listener {
-    PlayersManager playersManager = PlayersManager.getInstance();
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (playersManager.isPlayerActive(event.getPlayer().getUniqueId()))
-            event.setCancelled(true);
+        PartecipantsManager.getInstance().getPartecipant(event.getPlayer())
+                .ifPresent(partecipant -> event.setCancelled(true));
 
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        if (playersManager.isPlayerActive(event.getPlayer().getUniqueId()))
-            event.setCancelled(true);
+        PartecipantsManager.getInstance().getPartecipant(event.getPlayer())
+                .ifPresent(partecipant -> event.setCancelled(true));
 
     }
 
     @EventHandler
     public void onPlayerInteraction(PlayerInteractEvent event) {
 
-        if (!playersManager.isPlayerActive(event.getPlayer().getUniqueId()))
-            return;
+        PartecipantsManager.getInstance().getPartecipant(event.getPlayer())
+                .ifPresent(partecipant -> {
 
-        Block block = event.getClickedBlock();
+                    Block block = event.getClickedBlock();
 
-        if (block != null &&
-                (Tag.DOORS.getValues().contains(block.getType())
-                        || Tag.TRAPDOORS.getValues().contains(block.getType())
-                        || Tag.FENCE_GATES.getValues().contains(block.getType())))
-            event.setCancelled(true);
+                    if (block != null &&
+                            (Tag.DOORS.getValues().contains(block.getType())
+                                    || Tag.TRAPDOORS.getValues().contains(block.getType())
+                                    || Tag.FENCE_GATES.getValues().contains(block.getType())))
+                        event.setCancelled(true);
+                });
+
 
     }
 }

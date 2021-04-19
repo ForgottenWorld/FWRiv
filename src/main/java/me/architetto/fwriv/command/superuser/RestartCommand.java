@@ -1,11 +1,11 @@
 package me.architetto.fwriv.command.superuser;
 
 import me.architetto.fwriv.command.SubCommand;
-import me.architetto.fwriv.event.PlayersManager;
 import me.architetto.fwriv.event.service.EventService;
+import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.CommandDescription;
-import me.architetto.fwriv.utils.CommandName;
+import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -34,23 +34,27 @@ public class RestartCommand extends SubCommand{
     }
 
     @Override
-    public void perform(Player sender, String[] args){
+    public String getPermission() {
+        return "rivevent.eventmanager";
+    }
 
-        if (!sender.hasPermission("rivevent.eventmanager")) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_PERMISSION));
-            return;
-        }
+    @Override
+    public int getArgsRequired() {
+        return 0;
+    }
+
+    @Override
+    public void perform(Player sender, String[] args){
 
         EventService eventService = EventService.getInstance();
 
-        if (!eventService.isRunning()) {
+        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
             return;
         }
 
-        eventService.setDoorsStatus(false);
         eventService.restartEvent();
-        broadcastRestartedEvent(sender);
+        broadcastRestartedEvent();
 
         TextComponent startCMD = new TextComponent(ChatColor.YELLOW + "" + ChatColor.BOLD + "START");
         startCMD.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv start") );
@@ -66,16 +70,13 @@ public class RestartCommand extends SubCommand{
         return null;
     }
 
-    public void broadcastRestartedEvent(Player sender) {
+    public void broadcastRestartedEvent() {
 
         TextComponent joinClickMessage = new TextComponent(ChatColor.YELLOW + "JOIN");
         joinClickMessage.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv join") );
         joinClickMessage.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text("Click to join event")));
 
         for (Player p : Bukkit.getOnlinePlayers()) {
-
-            if (PlayersManager.getInstance().getActivePlayers().contains(p.getUniqueId()) || p == sender)
-                continue;
 
             p.sendMessage(new TextComponent(ChatFormatter.formatInitializationMessage("Click ")),joinClickMessage,
                     new TextComponent(" per partecipare all'evento 'RIV'"));

@@ -1,19 +1,15 @@
 package me.architetto.fwriv.arena;
 
+import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.utils.ChatFormatter;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class ArenaManager {
-
     private final int SPAWN1 = 1;
     private final int SPAWN2 = 2;
     private final int SPAWN3 = 3;
@@ -23,6 +19,7 @@ public class ArenaManager {
     private static ArenaManager arenaManager;
 
     private HashMap<String, Arena> arenaContainer;
+
     private HashMap<UUID, Integer> playerArenaCreation;
     private HashMap<UUID, String> playerArenaNameCreation;
     private HashMap<UUID, HashMap<Integer, Location>> playerArenaCoordinates;
@@ -33,6 +30,7 @@ public class ArenaManager {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
         this.arenaContainer = new HashMap<>();
+
         this.playerArenaCreation = new HashMap<>();
         this.playerArenaCoordinates = new HashMap<>();
         this.playerArenaNameCreation = new HashMap<>();
@@ -46,30 +44,43 @@ public class ArenaManager {
         return arenaManager;
     }
 
-    public boolean newArena(String presetName, Location firstSpawnLoc, Location secondSpawnLoc, Location thirdSpawnLoc,
-                            Location fourthSpawnLoc, Location towerTopLoc) {
+    public void loadArenas() {
 
-        if(arenaContainer.containsKey(presetName)) {
-            return false;
-        }
+        Bukkit.getConsoleSender().sendMessage("dentro il loader");
 
-        Arena arena = new Arena(presetName, firstSpawnLoc, secondSpawnLoc, thirdSpawnLoc, fourthSpawnLoc, towerTopLoc);
-
-        arenaContainer.put(presetName, arena);
 
         ConfigManager configManager = ConfigManager.getInstance();
+        FileConfiguration fc = configManager.getConfig("Arena.yml");
 
-        configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), firstSpawnLoc ,presetName + ".SPAWN1");
-        configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), secondSpawnLoc ,presetName + ".SPAWN2");
-        configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), thirdSpawnLoc ,presetName + ".SPAWN3");
-        configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), fourthSpawnLoc ,presetName + ".SPAWN4");
-        configManager.addLocation(ConfigManager.getInstance().getConfig("Preset.yml"), towerTopLoc ,presetName + ".TOWER");
-
-        return true;
+        for (String presetName : fc.getKeys(false)) {
+            Bukkit.getConsoleSender().sendMessage(presetName);
+            arenaContainer.put(presetName, new Arena(presetName,
+                    configManager.getLocation(fc,presetName + ".SPAWN1" ),
+                    configManager.getLocation(fc,presetName + ".SPAWN2"),
+                    configManager.getLocation(fc,presetName + ".SPAWN3"),
+                    configManager.getLocation(fc,presetName + ".SPAWN4"),
+                    configManager.getLocation(fc,presetName + ".TOWER")));
+        }
     }
 
-    public Optional<Arena> getArena(String name) {
-        return arenaContainer.containsKey(name) ? Optional.of(arenaContainer.get(name)) : Optional.empty();
+    public boolean saveArena(String arenaName, Location spawn1, Location spawn2, Location spawn3,
+                             Location spawn4, Location tower) {
+
+        Arena arena = new Arena(arenaName, spawn1, spawn2, spawn3, spawn4, tower);
+
+        if (arenaContainer.putIfAbsent(arenaName, arena) == null) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin,() -> {
+                ConfigManager configManager = ConfigManager.getInstance();
+                FileConfiguration fc = configManager.getConfig("Arena.yml");
+                configManager.addLocation(fc, spawn1 ,arenaName + ".SPAWN1");
+                configManager.addLocation(fc, spawn2 ,arenaName + ".SPAWN2");
+                configManager.addLocation(fc, spawn3 ,arenaName + ".SPAWN3");
+                configManager.addLocation(fc, spawn4 ,arenaName + ".SPAWN4");
+                configManager.addLocation(fc, tower ,arenaName + ".TOWER");
+            });
+            return true;
+        }
+        return false;
     }
 
     public void arenaCreationHandler(Player sender, Location location) {
@@ -106,18 +117,19 @@ public class ArenaManager {
                 break;
             case TOWER:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(TOWER, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Creazione arena completata"));
                 location.getWorld().playSound(location, Sound.ENTITY_PLAYER_LEVELUP,1,1);
                 spawnEffectAtBlock(location);
 
-                Location firstSpawnLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN1);
-                Location secondSpawnLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN2);
-                Location thirdSpawnLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN3);
-                Location fourthSpawnLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN4);
-                Location towerTopLoc = this.playerArenaCoordinates.get(sender.getUniqueId()).get(TOWER);
+                if (saveArena(playerArenaNameCreation.get(sender.getUniqueId()),
+                        playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN1),
+                        playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN2),
+                        playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN3),
+                        playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN4),
+                        playerArenaCoordinates.get(sender.getUniqueId()).get(TOWER)))
+                    sender.sendMessage(ChatFormatter.formatArenaCreation("Creazione arena completata"));
+                else
+                    sender.sendMessage(ChatFormatter.formatArenaCreation("Errore nella creazione dell'arena"));
 
-                newArena(this.playerArenaNameCreation.get(sender.getUniqueId()), firstSpawnLoc, secondSpawnLoc, thirdSpawnLoc,
-                        fourthSpawnLoc, towerTopLoc);
 
                 this.playerArenaNameCreation.remove(sender.getUniqueId());
                 this.playerArenaCoordinates.remove(sender.getUniqueId());
@@ -137,8 +149,16 @@ public class ArenaManager {
         return this.playerArenaCreation.containsKey(player.getUniqueId());
     }
 
-    public HashMap<String, Arena> getArenaContainer() {
-        return this.arenaContainer;
+    public Optional<Arena> getArena(String name) {
+        return arenaContainer.containsKey(name) ? Optional.of(arenaContainer.get(name)) : Optional.empty();
+    }
+
+    public boolean isArenaName(String arenaName) {
+        return arenaContainer.containsKey(arenaName);
+    }
+
+    public List<String> getArenaNameList() {
+        return new ArrayList<>(arenaContainer.keySet());
     }
 
     public void spawnEffectAtBlock(Location loc) {
@@ -149,14 +169,17 @@ public class ArenaManager {
 
     }
 
-    public void removeArena(String presetName) {
+    public void removeArena(String arenaName) {
 
-        arenaContainer.remove(presetName);
-        ConfigManager.getInstance().setData(ConfigManager.getInstance().getConfig("Preset.yml"), presetName, null );
+        if (arenaContainer.remove(arenaName) != null)
+            Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin,() -> {
+                ConfigManager configManager = ConfigManager.getInstance();
+                configManager.setData(configManager.getConfig("Arena.yml"), arenaName, null );
+            });
 
     }
-
 }
+
 
 
 

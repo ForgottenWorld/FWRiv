@@ -2,19 +2,17 @@ package me.architetto.fwriv.command.superuser;
 
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.command.SubCommand;
-import me.architetto.fwriv.event.PlayersManager;
 import me.architetto.fwriv.event.service.EventService;
+import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.CommandDescription;
-import me.architetto.fwriv.utils.CommandName;
+import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Sound;
+
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.UUID;
 
 public class StopCommand extends SubCommand{
     @Override
@@ -32,39 +30,27 @@ public class StopCommand extends SubCommand{
         return "/fwriv stop [force]";
     }
 
+    @Override
+    public String getPermission() {
+        return "rivevent.eventmanager";
+    }
+
+    @Override
+    public int getArgsRequired() {
+        return 0;
+    }
+
 
     @Override
     public void perform(Player sender, String[] args) {
 
-        if (!sender.hasPermission("rivevent.eventmanager")) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_PERMISSION));
-            return;
-        }
-
         EventService eventService = EventService.getInstance();
 
-        if (!eventService.isRunning()) {
+        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
             return;
         }
 
-        for (UUID u : PlayersManager.getInstance().getPartecipants()) {
-
-            Player p = Bukkit.getPlayer(u);
-
-            if (p == null) continue;
-
-            p.teleport(PlayersManager.getInstance().getReturnLocation(u));
-            p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-
-            p.setGameMode(GameMode.SURVIVAL);
-            p.getInventory().clear();
-
-            p.sendMessage(ChatFormatter.formatInitializationMessage(Messages.STOP_CMD_PLAYER_MESSAGE));
-
-        }
-
-        eventService.setDoorsStatus(false);
         eventService.stopEvent();
 
         sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.STOP_CMD_SENDER_MESSAGE));

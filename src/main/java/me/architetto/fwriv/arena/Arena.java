@@ -1,73 +1,75 @@
 package me.architetto.fwriv.arena;
 
+import me.architetto.fwriv.obj.LightLocation;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Arena {
 
-    private String arenaName;
+    private final String arenaName;
 
-    private Location spawn1;
-    private Location spawn2;
-    private Location spawn3;
-    private Location spawn4;
-    private Location tower;
+    private LightLocation spawn1;
+    private LightLocation spawn2;
+    private LightLocation spawn3;
+    private LightLocation spawn4;
+    private LightLocation tower;
 
-    public Arena(String arenaName, Location Spawn1, Location Spawn2, Location spawn3,
-                 Location spawn4, Location towerTopLoc) {
+    public Arena(String arenaName, Location spawn1, Location spawn2, Location spawn3,
+                 Location spawn4, Location tower) {
+
         this.arenaName = arenaName;
-        this.spawn1 = Spawn1;
-        this.spawn2 = Spawn2;
-        this.spawn3 = spawn3;
-        this.spawn4 = spawn4;
-        this.tower = towerTopLoc;
+        this.spawn1 = new LightLocation(spawn1);
+        this.spawn2 = new LightLocation(spawn2);
+        this.spawn3 = new LightLocation(spawn3);
+        this.spawn4 = new LightLocation(spawn4);
+        this.tower = new LightLocation(tower);
+
     }
 
     public String getName() {
         return this.arenaName;
     }
 
+    public String getFormattedName() {
+        return arenaName.replace("_", " ");
+    }
+
     public Location getSpawn1() {
-        return spawn1;
+        return spawn1.loc();
     }
 
     public Location getSpawn2() {
-        return spawn2;
+        return spawn2.loc();
     }
 
     public Location getSpawn3() {
-        return spawn3;
+        return spawn3.loc();
     }
 
     public Location getSpawn4() {
-        return spawn4;
+        return spawn4.loc();
     }
 
     public Location getTower() {
-        return tower;
-    }
-
-    public List<Location> getSpawnLocations() {
-
-        return new ArrayList<>(
-                Arrays.asList(spawn1,
-                        spawn2,
-                        spawn3,
-                        spawn4));
-
+        return tower.loc();
     }
 
     public List<Block> getSpawnDoors() {
 
         List<Block> doorsList = new ArrayList<>();
+        List<Location> spawnLoc = new ArrayList<>();
+        spawnLoc.add(spawn1.loc());
+        spawnLoc.add(spawn2.loc());
+        spawnLoc.add(spawn3.loc());
+        spawnLoc.add(spawn4.loc());
 
-        for (Location loc : getSpawnLocations()) {
+
+        for (Location loc : spawnLoc) {
             Block middle = loc.getBlock();
             for (int x = 10; x >= -10; x--) {
                 for (int y = 10; y >= -10; y--) {
@@ -86,15 +88,10 @@ public class Arena {
         return doorsList;
     }
 
-
     public int getLowestY() {
 
-        int y = Math.min(1000, spawn1.getBlockY());
-        y = Math.min(y, spawn2.getBlockY());
-        y = Math.min(y, spawn3.getBlockY());
-        y = Math.min(y, spawn4.getBlockY());
-
-        return y;
+        return Math.min(Math.min(spawn1.getVector().getBlockY(),spawn2.getVector().getBlockY()),
+                Math.min(spawn3.getVector().getBlockY(),spawn4.getVector().getBlockY()));
 
     }
 

@@ -5,21 +5,21 @@ import me.architetto.fwriv.command.CommandManager;
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
-import me.architetto.fwriv.event.PlayersManager;
+import me.architetto.fwriv.event.PartecipantsManager;
 import me.architetto.fwriv.event.service.EventService;
+import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.listener.arena.ArenaCreationListener;
 import me.architetto.fwriv.listener.event.*;
+import me.architetto.fwriv.localization.LocalizationManager;
+import me.architetto.fwriv.partecipant.PartecipantStatus;
+import me.architetto.fwriv.reward.RewardService;
 import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public final class FWRiv extends JavaPlugin {
 
@@ -29,11 +29,15 @@ public final class FWRiv extends JavaPlugin {
     public void onEnable() {
 
         plugin = this;
+        ConfigManager.getInstance().setPlugin(plugin);
 
         Bukkit.getConsoleSender().sendMessage("=====================[      RIVe      ]======================");
 
         Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading settings files...");
-        loadSettingsFile();
+        SettingsHandler.getSettingsHandler().load();
+
+        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading localization...");
+        LocalizationManager.getInstance().loadLanguageFile();
 
         Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading commands...");
         loadCommands();
@@ -41,8 +45,11 @@ public final class FWRiv extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading listeners...");
         loadListener();
 
-        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading presets ...");
-        loadPresetFile();
+        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading rewards...");
+        RewardService.getInstance().loadRewards();
+
+        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading arenas ...");
+        ArenaManager.getInstance().loadArenas();
 
         Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading FWEchelon support ...");
         loadEchelon();
@@ -54,48 +61,11 @@ public final class FWRiv extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        if (EventService.getInstance().isRunning()) {
+        if (!EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE)) {
             Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "Secure inventories clear...");
             secureInventoryClear();
         }
 
-    }
-
-    private void loadSettingsFile(){
-
-        ConfigManager.getInstance().setPlugin(plugin);
-        ConfigManager.getInstance().getConfig("Settings.yml");
-        SettingsHandler.getSettingsHandler().load();
-
-        if (SettingsHandler.getSettingsHandler().safeRespawnLocation == null)
-            Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + ChatColor.YELLOW + ChatColor.UNDERLINE + " Respawn point missing ...");
-
-    }
-
-    public void loadPresetFile() {
-
-        ConfigManager.getInstance().getConfig("Preset.yml");
-
-        ConfigurationSection configurationSection = ConfigManager.getInstance()
-                .getConfig("Preset.yml").getConfigurationSection("");
-
-        if (configurationSection == null)
-            return;
-
-        ArenaManager presetService = ArenaManager.getInstance();
-        ConfigManager configManager = ConfigManager.getInstance();
-
-        for (String presetName : configurationSection.getKeys(false)) {
-
-            presetService.newArena(
-                    presetName,
-                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN1" ),
-                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN2"),
-                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN3"),
-                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".SPAWN4"),
-                    configManager.getLocation(ConfigManager.getInstance().getConfig("Preset.yml"),presetName + ".TOWER"));
-
-        }
     }
 
     public void loadCommands() {
@@ -135,16 +105,13 @@ public final class FWRiv extends JavaPlugin {
     }
 
     public  void secureInventoryClear() {
-        for (UUID uuid : PlayersManager.getInstance().getPartecipants()) {
-            Player player = Bukkit.getPlayer(uuid);
-
-            if (player == null)
-                continue;
-
-            player.getInventory().clear();
-            player.setGameMode(GameMode.SURVIVAL);
-
-        }
+        PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.ALL).stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(p -> {
+                    p.getInventory().clear();
+                    p.setGameMode(GameMode.SURVIVAL);
+                });
     }
 
 

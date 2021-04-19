@@ -1,11 +1,11 @@
-package me.architetto.fwriv.event.utils;
+package me.architetto.fwriv.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.function.Consumer;
 
-public class Countdown implements Runnable {
+public class Repeater implements Runnable {
 
     // Main class for bukkit scheduling
     private JavaPlugin plugin;
@@ -14,27 +14,23 @@ public class Countdown implements Runnable {
     private Integer assignedTaskId;
 
     // Seconds and shiz
-    private int seconds;
-    private int secondsLeft;
+    private int totalSeconds;
 
     // Actions to perform while counting down, before and after
-    private Consumer<Countdown> everySecond;
+    private Consumer<Repeater> everySecond;
     private Runnable beforeTimer;
-    private Runnable afterTimer;
 
     // Construct a timer, you could create multiple so for example if
     // you do not want these "actions"
-    public Countdown(JavaPlugin plugin, int seconds,
-                     Runnable beforeTimer, Runnable afterTimer,
-                     Consumer<Countdown> everySecond) {
+    public Repeater(JavaPlugin plugin,
+                    Runnable beforeTimer,
+                    Consumer<Repeater> everySecond) {
         // Initializing fields
         this.plugin = plugin;
 
-        this.seconds = seconds;
-        this.secondsLeft = seconds;
+        this.totalSeconds = 0;
 
         this.beforeTimer = beforeTimer;
-        this.afterTimer = afterTimer;
         this.everySecond = everySecond;
     }
 
@@ -44,42 +40,24 @@ public class Countdown implements Runnable {
      */
     @Override
     public void run() {
-        // Is the timer up?
-        if (secondsLeft < 1) {
-            // Do what was supposed to happen after the timer
-            afterTimer.run();
-
-            // Cancel timer
-            if (assignedTaskId != null) Bukkit.getScheduler().cancelTask(assignedTaskId);
-            return;
-        }
 
         // Are we just starting?
-        if (secondsLeft == seconds) beforeTimer.run();
+        if (totalSeconds == 0) beforeTimer.run();
 
         // Do what's supposed to happen every second
         everySecond.accept(this);
 
         // Decrement the seconds left
-        secondsLeft--;
+        totalSeconds++;
     }
 
     /**
-     * Gets the total seconds this timer was set to run for
+     * Gets the total seconds this timer is running
      *
-     * @return Total seconds timer should run
+     * @return Total seconds timer is running
      */
     public int getTotalSeconds() {
-        return seconds;
-    }
-
-    /**
-     * Gets the seconds left this timer should run
-     *
-     * @return Seconds left timer should run
-     */
-    public int getSecondsLeft() {
-        return secondsLeft;
+        return totalSeconds;
     }
 
     /**
@@ -88,6 +66,10 @@ public class Countdown implements Runnable {
     public void scheduleTimer() {
         // Initialize our assigned task's id, for later use so we can cancel
         this.assignedTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 20L);
+    }
+
+    public void stopTimer() {
+        Bukkit.getScheduler().cancelTask(this.assignedTaskId);
     }
 
     public Integer getTaskId() {

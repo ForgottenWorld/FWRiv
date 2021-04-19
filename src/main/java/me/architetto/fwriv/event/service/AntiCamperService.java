@@ -2,16 +2,16 @@ package me.architetto.fwriv.event.service;
 
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.SettingsHandler;
-import me.architetto.fwriv.event.PlayersManager;
+import me.architetto.fwriv.event.PartecipantsManager;
+import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.*;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 
 public class AntiCamperService {
 
@@ -19,14 +19,14 @@ public class AntiCamperService {
 
     private List<Integer> taskID;
 
-    private int antiCamperStartDelay;
-    private int antiCamperDamage;
-    private int antiCamperFinalDamage;
+    private int acDelay;
+    private int acDamage;
+    private int acFinalDamage;
 
-    private int redLineValue;
-    private int redLineFinalValue;
-    private int redLineGrowValue;
-    private int redLineGrowPeriod;
+    private int acY;
+    private int acFinalY;
+    private int acGrowValue;
+    private int acGrowPerion;
     private List<Location> particleEffectPoint;
 
     private int redCircleRadius;
@@ -54,13 +54,13 @@ public class AntiCamperService {
         EventService eventService = EventService.getInstance();
 
 
-        this.antiCamperStartDelay = settingsHandler.antiCamperStartDelay;
-        this.antiCamperDamage = settingsHandler.antiCamperDamage;
-        this.antiCamperFinalDamage = settingsHandler.antiCamperFinalDamage;
-        this.redLineGrowPeriod = settingsHandler.antiCamperGrowPeriod;
-        this.redLineGrowValue = settingsHandler.antiCamperGrowValue;
-        this.redLineValue = eventService.getSummonedArena().getLowestY();
-        this.redLineFinalValue = eventService.getSummonedArena().getTower().getBlockY() - settingsHandler.antiCamperRedLineTopTowerDif;
+        this.acDelay = settingsHandler.antiCamperStartDelay;
+        this.acDamage = settingsHandler.antiCamperDamage;
+        this.acFinalDamage = settingsHandler.antiCamperFinalDamage;
+        this.acGrowPerion = settingsHandler.antiCamperGrowPeriod;
+        this.acGrowValue = settingsHandler.antiCamperGrowValue;
+        this.acY = eventService.getArena().getLowestY();
+        this.acFinalY = eventService.getArena().getTower().getBlockY() - settingsHandler.antiCamperRedLineTopTowerDif;
         this.redCircleRadius = settingsHandler.redLineAnimationRadius;
 
         redLineManager();
@@ -75,23 +75,19 @@ public class AntiCamperService {
             @Override
             public void run() {
 
-                redLineValue += redLineGrowValue;
+                acY += acGrowValue;
 
-                if (redLineValue >= redLineFinalValue) {
-                    eventService.getSummonedArena().getTower().getWorld().playSound(eventService.getSummonedArena().getTower(),Sound.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
+                if (acY >= acFinalY) {
+                    eventService.getArena().getTower().getWorld().playSound(eventService.getArena().getTower(),Sound.ENTITY_LIGHTNING_BOLT_THUNDER,1,1);
                     taskID.remove((Integer) this.getTaskId());
-                    antiCamperDamage = antiCamperFinalDamage;
-                    redLineValue = redLineFinalValue;
+                    acDamage = acFinalDamage;
+                    acY = acFinalY;
 
-
-                    for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
-
-                        Player player = Bukkit.getPlayer(u);
-                        if (player != null)
-                            player.sendMessage(ChatFormatter.formatEventAllert(ChatColor.RED + "!! WARNING !!"
-                                    + ChatColor.YELLOW + " Il danno dell'anticamper è aumentato "));
-
-                    }
+                    PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
+                            .map(Bukkit::getPlayer)
+                            .filter(Objects::nonNull)
+                            .forEach(p -> p.sendMessage(ChatFormatter.formatEventAllert(ChatColor.RED + "!! WARNING !!"
+                                    + ChatColor.YELLOW + " Il danno dell'anticamper è aumentato ")));
 
                     this.cancel();
 
@@ -99,16 +95,14 @@ public class AntiCamperService {
 
                 particleEffectPoint = getCircle(50);
 
-                for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
+                PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
+                        .map(Bukkit::getPlayer)
+                        .filter(Objects::nonNull)
+                        .forEach(p -> p.sendMessage(ChatFormatter.formatEventAllert("AntiCamper : altezza minima : "
+                                + ChatColor.GOLD + acY)));
 
-                    Player player = Bukkit.getPlayer(u);
-                    if (player != null)
-                        player.sendMessage(ChatFormatter.formatEventAllert("AntiCamper : altezza minima : "
-                                + ChatColor.GOLD + redLineValue));
-
-                }
             }
-        }.runTaskTimer(FWRiv.plugin,antiCamperStartDelay,redLineGrowPeriod);
+        }.runTaskTimer(FWRiv.plugin, acDelay, acGrowPerion);
         taskID.add(bukkitTask.getTaskId());
 
 
@@ -118,20 +112,16 @@ public class AntiCamperService {
 
         BukkitTask bukkitTask =  new BukkitRunnable() {
             @Override
-            public void run(){
+            public void run() {
 
-                for (UUID u : PlayersManager.getInstance().getActivePlayers()) {
-                    Player p = Bukkit.getPlayer(u);
-                    if (p == null)
-                        continue;
-
-                    if (p.getLocation().getBlockY() < redLineValue)
-                        p.damage(antiCamperDamage);
-
-                }
+                PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
+                        .map(Bukkit::getPlayer)
+                        .filter(Objects::nonNull)
+                        .filter(p -> p.getLocation().getBlockY() < acY)
+                        .forEach(p -> p.damage(acDamage));
 
             }
-        }.runTaskTimer(FWRiv.plugin,antiCamperStartDelay,20L);
+        }.runTaskTimer(FWRiv.plugin, acDelay,20L);
         taskID.add(bukkitTask.getTaskId());
 
     }
@@ -158,14 +148,14 @@ public class AntiCamperService {
 
                 }
             }
-        }.runTaskTimer(FWRiv.plugin,antiCamperStartDelay,10);
+        }.runTaskTimer(FWRiv.plugin, acDelay,10);
         taskID.add(bukkitTask.getTaskId());
 
     }
 
     public ArrayList<Location> getCircle(int amount) {
-        Location redCircleMidLocation = EventService.getInstance().getSummonedArena().getTower().clone();
-        redCircleMidLocation.setY(redLineValue);
+        Location redCircleMidLocation = EventService.getInstance().getArena().getTower().clone();
+        redCircleMidLocation.setY(acY);
 
         World world = redCircleMidLocation.getWorld();
 

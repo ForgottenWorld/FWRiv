@@ -23,12 +23,10 @@ public class CommandManager implements TabExecutor{
     public CommandManager(){
         subcommands.add(new CreateCommand());
         subcommands.add(new ReloadCommand());
-        subcommands.add(new ArenaCommand());
         subcommands.add(new DeleteCommand());
         subcommands.add(new InitCommand());
         subcommands.add(new RestartCommand());
         subcommands.add(new StopCommand());
-        subcommands.add(new SetRespawnCommand());
         subcommands.add(new JoinCommand());
         subcommands.add(new StartCommand());
         subcommands.add(new LeaveCommand());
