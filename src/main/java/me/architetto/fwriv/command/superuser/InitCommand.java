@@ -6,14 +6,15 @@ import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.event.service.EventStatus;
-import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.CommandDescription;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -28,36 +29,31 @@ public class InitCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return CommandDescription.INIT_COMMAND;
+        return Message.INIT_COMMAND.asString();
     }
 
     @Override
     public String getSyntax(){
-        return "/fwriv init <arena_name>";
+        return "/fwriv " + CommandName.INIT_COMMAND + " <arena_name>";
     }
 
     @Override
     public String getPermission() {
-        return "rivevent.eventmanager";
+        return "rivevent.init";
     }
 
     @Override
     public int getArgsRequired() {
-        return 0;
+        return 2;
     }
 
     @Override
     public void perform(Player sender, String[] args){
 
-        if (args.length < 2) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ARENA_CMD_SYNTAX));
-            return;
-        }
-
         EventService eventService = EventService.getInstance();
 
         if (!eventService.getEventStatus().equals(EventStatus.INACTIVE)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
+            Message.ERR_EVENT_IS_RUNNING.send(sender);
             return;
         }
 
@@ -66,18 +62,23 @@ public class InitCommand extends SubCommand{
         Optional<Arena> arena = ArenaManager.getInstance().getArena(presetName);
 
         if (!arena.isPresent()) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_ARENA_NAME));
+            Message.ERR_ARENA_NAME_NOT_EXIST.send(sender);
             return;
         }
 
         eventService.initRIV(arena.get());
 
-        TextComponent startCMD = new TextComponent(ChatColor.YELLOW + "" + ChatColor.BOLD + "START");
-        startCMD.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv start"));
-        sender.sendMessage(new TextComponent(ChatFormatter.formatSuccessMessage("Evento 'RIV' inizializzato. Click ")),startCMD,
-                new TextComponent(" per startare l'evento."));
+        ComponentBuilder componentBuilder = new ComponentBuilder(" [JOIN]")
+                .color(ChatColor.YELLOW)
+                .bold(true)
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv join"))
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text(Message.COMP_EVENT_JOIN_HOVER.asString())));
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin, this::broadcastNewEvent,10L);
+        Message.COMP_EVENT_JOIN.specialBroadcastComponent(new TextComponent(componentBuilder.create()));
+
+        //Message.COMP_EVENT_JOIN.broadcastComponent(new TextComponent(componentBuilder.create()));
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin,() -> suggestStartCommand(sender),20L);
 
     }
 
@@ -90,23 +91,18 @@ public class InitCommand extends SubCommand{
         return null;
     }
 
-    public void broadcastNewEvent() {
+    public void suggestStartCommand(Player sender) {
+        ComponentBuilder componentBuilder = new ComponentBuilder(" [START] ")
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv start"))
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text(Message.COMP_EVENT_START_HOVER.asString())))
+                .color(net.md_5.bungee.api.ChatColor.GREEN)
+                .bold(true)
+                .append("[STOP]")
+                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv stop"))
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text(Message.COMP_EVENT_STOP_HOVER.asString())))
+                .color(net.md_5.bungee.api.ChatColor.RED)
+                .bold(true);
 
-        TextComponent joinClickMessage = new TextComponent(ChatColor.YELLOW + "" + ChatColor.BOLD + "JOIN");
-        joinClickMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv join"));
-
-        for (Player p : Bukkit.getOnlinePlayers()) {
-
-            p.sendMessage(new TextComponent(ChatFormatter.formatInitializationMessage("Click ")),joinClickMessage,
-                    new TextComponent(" per partecipare all'evento 'RIV'"));
-
-            p.sendMessage(ChatFormatter.formatInitializationMessage(ChatColor.RED + ""
-                    + ChatColor.BOLD + "ATTENZIONE : " + ChatColor.RESET + ChatColor.ITALIC
-                    + "Partecipando all'evento il tuo inventario verra' cancellato !!"));
-
-            p.sendTitle("",  "Evento "+ ChatColor.YELLOW + " RESTA IN VETTA " + ChatColor.RESET + " | "
-                    +ChatColor.ITALIC + "Vieni a giocare con noi!",15,200,15);
-
-        }
+        Message.COMP_EVENT_STARTSTOP.sendComponent(sender, new TextComponent(componentBuilder.create()));
     }
 }

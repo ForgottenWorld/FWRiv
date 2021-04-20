@@ -5,8 +5,8 @@ import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.CommandDescription;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.entity.Player;
@@ -22,51 +22,42 @@ public class DeleteCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return CommandDescription.DELETE_COMMAND;
+        return Message.DELETE_COMMAND.asString();
     }
 
     @Override
     public String getSyntax(){
-        return "/fwriv delete <arena_name>";
+        return "/fwriv " + CommandName.DELETE_COMMAND + " <arena_name>";
     }
 
     @Override
     public String getPermission() {
-        return "rivevent.admin";
+        return "rivevent.delete";
     }
 
     @Override
     public int getArgsRequired() {
-        return 0;
+        return 2;
     }
 
 
     @Override
     public void perform(Player sender, String[] args) {
 
-        if (args.length < 2) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ARENA_CMD_SYNTAX));
-            return;
-        }
-
         if (!EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
+            Message.ERR_EVENT_IS_RUNNING.send(sender);
             return;
         }
 
-        String presetName = args[1];
+        ArenaManager arenaManager = ArenaManager.getInstance();
 
-        ArenaManager presetService = ArenaManager.getInstance();
-        Optional<Arena> arena = presetService.getArena(presetName);
+        if(arenaManager.getArena(args[1]).isPresent()) {
 
-        if(arena.isPresent()) {
-
-            presetService.removeArena(presetName);
-            sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.DELETE_CDM_SUCCESS));
+            arenaManager.removeArena(args[1]);
+            Message.SUCCESS_ARENA_DELETED.send(sender);
 
         } else
-
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_ARENA_NAME));
+            Message.ERR_ARENA_NAME_NOT_EXIST.send(sender);
 
     }
 

@@ -1,7 +1,6 @@
 package me.architetto.fwriv.reward;
 
 import me.architetto.fwriv.config.ConfigManager;
-import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -131,8 +130,6 @@ public class RewardService {
             this.targetBlockRewardsMap.put(pr, weight);
             this.targetBlockWeightSum += weight;
         });
-
-        Bukkit.getConsoleSender().sendMessage("TR : " + towerRewardsWeightSum + " || TBR : " + targetBlockWeightSum);
 
     }
 

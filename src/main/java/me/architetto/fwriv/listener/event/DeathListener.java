@@ -1,6 +1,6 @@
 package me.architetto.fwriv.listener.event;
 
-import me.architetto.fwriv.event.PartecipantsManager;
+import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;

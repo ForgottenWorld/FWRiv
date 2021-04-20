@@ -2,11 +2,10 @@ package me.architetto.fwriv.command.superuser;
 
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
-import me.architetto.fwriv.event.PartecipantsManager;
+import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.CommandDescription;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.Bukkit;
@@ -26,7 +25,7 @@ public class EventinfoCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return CommandDescription.EVENTINFO_COMMAND;
+        return "placeholder";
     }
 
     @Override

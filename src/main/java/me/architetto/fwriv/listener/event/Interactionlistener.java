@@ -1,6 +1,6 @@
 package me.architetto.fwriv.listener.event;
 
-import me.architetto.fwriv.event.PartecipantsManager;
+import me.architetto.fwriv.partecipant.PartecipantsManager;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;

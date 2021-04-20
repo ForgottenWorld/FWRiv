@@ -3,8 +3,8 @@ package me.architetto.fwriv.command.superuser;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.CommandDescription;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -25,17 +25,17 @@ public class RestartCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return CommandDescription.RESTART_COMMAND;
+        return Message.RESTART_COMMAND.asString();
     }
 
     @Override
     public String getSyntax(){
-        return "/fwriv restart";
+        return "/fwriv " + CommandName.RESTART_COMMAND;
     }
 
     @Override
     public String getPermission() {
-        return "rivevent.eventmanager";
+        return "rivevent.restart";
     }
 
     @Override
@@ -49,19 +49,14 @@ public class RestartCommand extends SubCommand{
         EventService eventService = EventService.getInstance();
 
         if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
+            Message.ERR_NO_EVENT_IS_RUNNING.send(sender);
             return;
         }
 
         eventService.restartEvent();
+
+        //todo: non mi convince
         broadcastRestartedEvent();
-
-        TextComponent startCMD = new TextComponent(ChatColor.YELLOW + "" + ChatColor.BOLD + "START");
-        startCMD.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv start") );
-        startCMD.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text("Click to start event")));
-        sender.sendMessage(new TextComponent(ChatFormatter.formatSuccessMessage("Evento 'RIV' re-inizializzato. Click ")),startCMD,
-                new TextComponent(" per startare."));
-
 
     }
 

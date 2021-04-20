@@ -1,8 +1,5 @@
-package me.architetto.fwriv.event;
+package me.architetto.fwriv.partecipant;
 
-import me.architetto.fwriv.partecipant.Partecipant;
-import me.architetto.fwriv.partecipant.PartecipantStats;
-import me.architetto.fwriv.partecipant.PartecipantStatus;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -23,6 +20,7 @@ public class PartecipantsManager {
         }
 
         this.uuidPartecipantMap = new HashMap<>();
+        this.partecipantStatsHashMap = new HashMap<>();
 
     }
 

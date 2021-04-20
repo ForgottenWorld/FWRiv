@@ -8,7 +8,7 @@ import me.architetto.fwriv.echelon.EchelonHolder;
 import me.architetto.fwriv.obj.ArenaDoors;
 import me.architetto.fwriv.obj.RoundSpawn;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
-import me.architetto.fwriv.event.PartecipantsManager;
+import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.utils.Countdown;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.Messages;

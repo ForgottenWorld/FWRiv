@@ -5,15 +5,17 @@ import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.localization.LocalizationManager;
+import me.architetto.fwriv.localization.Message;
+import me.architetto.fwriv.reward.RewardService;
 import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.CommandDescription;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class ReloadCommand extends SubCommand{
+public class ReloadCommand extends SubCommand {
     @Override
     public String getName(){
         return CommandName.RELOAD_COMMAND;
@@ -21,17 +23,17 @@ public class ReloadCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return CommandDescription.RELOAD_COMMAND;
+        return Message.RELOAD_COMMAND.asString();
     }
 
     @Override
     public String getSyntax(){
-        return "/fwriv reload";
+        return "/fwriv " + CommandName.RELOAD_COMMAND;
     }
 
     @Override
     public String getPermission() {
-        return "rivevent.admin";
+        return "rivevent.reload";
     }
 
     @Override
@@ -45,16 +47,16 @@ public class ReloadCommand extends SubCommand{
         EventService eventService = EventService.getInstance();
 
         if (!eventService.getEventStatus().equals(EventStatus.INACTIVE)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_EVENT_RUNNING));
+            Message.ERR_EVENT_IS_RUNNING.send(sender);
             return;
         }
 
-        ConfigManager configManager = ConfigManager.getInstance();
-        configManager.reloadConfigs();
-
+        ConfigManager.getInstance().reloadConfigs();
         SettingsHandler.getSettingsHandler().reload();
+        LocalizationManager.getInstance().reload();
+        RewardService.getInstance().reloadRewards();
 
-        sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.CONFIG_RELOADED));
+        Message.SUCCESS_CONFIG_RELOAD.send(sender);
 
     }
 

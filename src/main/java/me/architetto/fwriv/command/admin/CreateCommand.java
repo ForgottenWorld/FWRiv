@@ -3,15 +3,15 @@ package me.architetto.fwriv.command.admin;
 import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.SubCommand;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.CommandDescription;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class CreateCommand extends SubCommand{
 
@@ -22,51 +22,46 @@ public class CreateCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return CommandDescription.CREATE_COMMAND;
+        return Message.CREATE_COMMAND.asString();
     }
 
     @Override
     public String getSyntax(){
-        return "/fwriv create <arena_name>";
+        return "/fwriv " + CommandName.CREATE_COMMAND + " <arena_name>";
     }
 
     @Override
     public String getPermission() {
-        return "rivevent.admin";
+        return "rivevent.create";
     }
 
     @Override
     public int getArgsRequired() {
-        return 0;
+        return 2;
     }
 
     @Override
-    public void perform(Player sender, String[] args){
+    public void perform(Player sender, String[] args) {
 
-        if (args.length < 2) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ARENA_CMD_SYNTAX));
-            return;
-        }
-
-        String arenaName = args[1];
+        String arenaName = String.join("_", Arrays.copyOfRange(args, 1, args.length));;
 
         ArenaManager arenaManager = ArenaManager.getInstance();
-        Optional<Arena> arena = arenaManager.getArena(arenaName);
 
-        if (arena.isPresent()) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_ARENA_NAME));
+
+        if (arenaManager.getArena(arenaName).isPresent()) {
+            Message.ERR_ARENA_NAME_UNAVAIBLE.send(sender);
             return;
         }
 
         if (arenaManager.isPlayerInCreationMode(sender)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_CREATION1));
+            Message.ERR_CREATION_MODE.send(sender);
             return;
         }
 
-        sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 1 ... "
-                + ChatColor.AQUA + "" + ChatColor.ITALIC + "(CLICK DX con STICK equipaggiato)"));
+        Message.CREATION_MODE_INFO.send(sender);
+        Message.CREATION_MODE_STEP.send(sender,"SPAWN 1");
 
-        ArenaManager.getInstance().addPlayerToArenaCreation(sender, arenaName);
+        arenaManager.addPlayerToArenaCreation(sender, arenaName);
 
     }
 

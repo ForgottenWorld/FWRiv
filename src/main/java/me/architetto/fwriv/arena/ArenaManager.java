@@ -2,6 +2,7 @@ package me.architetto.fwriv.arena;
 
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.ConfigManager;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -53,7 +54,6 @@ public class ArenaManager {
         FileConfiguration fc = configManager.getConfig("Arena.yml");
 
         for (String presetName : fc.getKeys(false)) {
-            Bukkit.getConsoleSender().sendMessage(presetName);
             arenaContainer.put(presetName, new Arena(presetName,
                     configManager.getLocation(fc,presetName + ".SPAWN1" ),
                     configManager.getLocation(fc,presetName + ".SPAWN2"),
@@ -93,32 +93,40 @@ public class ArenaManager {
             case SPAWN1:
                 playerArenaCoordinates.put(sender.getUniqueId(), new HashMap<>());
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN1, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 2 ..."));
+
+                Message.CREATION_MODE_STEP.send(sender,"SPAWN 2");
+
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                spawnEffectAtBlock(location);
+                particleEffect(location);
                 break;
             case SPAWN2:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN2, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 3 ..."));
+
+                Message.CREATION_MODE_STEP.send(sender,"SPAWN 3");
+
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                spawnEffectAtBlock(location);
+                particleEffect(location);
                 break;
             case SPAWN3:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN3, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione SPAWN 4 ..."));
+
+                Message.CREATION_MODE_STEP.send(sender,"SPAWN 4");
+
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                spawnEffectAtBlock(location);
+                particleEffect(location);
                 break;
             case SPAWN4:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN4, location.add(0,1,0));
-                sender.sendMessage(ChatFormatter.formatArenaCreation("Indica posizione TORRE ..."));
+
+                Message.CREATION_MODE_STEP.send(sender,"TOWER");
+
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                spawnEffectAtBlock(location);
+                particleEffect(location);
                 break;
             case TOWER:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(TOWER, location.add(0,1,0));
                 location.getWorld().playSound(location, Sound.ENTITY_PLAYER_LEVELUP,1,1);
-                spawnEffectAtBlock(location);
+                particleEffect(location);
 
                 if (saveArena(playerArenaNameCreation.get(sender.getUniqueId()),
                         playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN1),
@@ -126,10 +134,9 @@ public class ArenaManager {
                         playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN3),
                         playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN4),
                         playerArenaCoordinates.get(sender.getUniqueId()).get(TOWER)))
-                    sender.sendMessage(ChatFormatter.formatArenaCreation("Creazione arena completata"));
+                    Message.SUCCESS_ARENA_CREATION.send(sender, playerArenaNameCreation.get(sender.getUniqueId()).replace("_"," "));
                 else
-                    sender.sendMessage(ChatFormatter.formatArenaCreation("Errore nella creazione dell'arena"));
-
+                    Message.ERR_ARENA_CREATION.send(sender);
 
                 this.playerArenaNameCreation.remove(sender.getUniqueId());
                 this.playerArenaCoordinates.remove(sender.getUniqueId());
@@ -161,9 +168,9 @@ public class ArenaManager {
         return new ArrayList<>(arenaContainer.keySet());
     }
 
-    public void spawnEffectAtBlock(Location loc) {
+    public void particleEffect(Location loc) {
 
-        loc.add(0.5,0.5,0.5);
+        loc.add(0.5,1,0.5);
         Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(255, 69, 0), 5);
         loc.getWorld().spawnParticle(Particle.REDSTONE,loc,10,dustOptions);
 

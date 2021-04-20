@@ -2,7 +2,6 @@ package me.architetto.fwriv.command.user;
 
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.CommandDescription;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.entity.Player;
@@ -17,7 +16,7 @@ public class InfoCommand extends SubCommand {
 
     @Override
     public String getDescription(){
-        return CommandDescription.INFO_COMMAND;
+        return "placeholder";
     }
 
     @Override

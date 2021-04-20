@@ -4,12 +4,12 @@ import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
-import me.architetto.fwriv.event.PartecipantsManager;
+import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.event.service.EventService;
 import me.architetto.fwriv.event.service.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
-import me.architetto.fwriv.utils.CommandDescription;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -31,17 +31,17 @@ public class JoinCommand extends SubCommand {
 
     @Override
     public String getDescription(){
-        return CommandDescription.JOIN_COMMAND;
+        return Message.JOIN_COMMAND.asString();
     }
 
     @Override
     public String getSyntax(){
-        return "/fwriv join";
+        return "/fwriv " + CommandName.JOIN_COMMAND;
     }
 
     @Override
     public String getPermission() {
-        return "rivevent.user";
+        return "rivevent.join";
     }
 
     @Override
@@ -56,7 +56,7 @@ public class JoinCommand extends SubCommand {
         EventStatus eventStatus = eventService.getEventStatus();
 
         if (eventStatus.equals(EventStatus.INACTIVE)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
+            Message.ERR_NO_EVENT_IS_RUNNING.send(sender);
             return;
         }
 
@@ -77,27 +77,24 @@ public class JoinCommand extends SubCommand {
         }
 
         if (!eventStatus.equals(EventStatus.READY)) {
-
             partecipantsManager.addPartecipant(sender, sender.getLocation(), PartecipantStatus.DEAD);
-
             sender.setGameMode(GameMode.SPECTATOR);
             sender.teleport(eventService.getArena().getTower());
-            sender.getWorld().playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-            sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.JOIN_STARTED_EVENT));
-            return;
+            Message.JOIN_STARTED_EVENT.send(sender);
 
+        } else {
+            partecipantsManager.addPartecipant(sender, sender.getLocation(), PartecipantStatus.PLAYING);
+            sender.getInventory().clear();
+            sender.setGameMode(GameMode.SURVIVAL);
+            eventService.getRoundSpawn().teleport(sender);
+            Message.JOIN_READY_EVENT.send(sender);
         }
 
-        partecipantsManager.addPartecipant(sender, sender.getLocation(), PartecipantStatus.PLAYING);
-        eventService.getRoundSpawn().teleport(sender);
-        sender.getInventory().clear();
-        sender.setGameMode(GameMode.SURVIVAL);
-        sender.getWorld().playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-        sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.JOIN_EVENT));
+        sender.playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin, () -> infoAboutEventMessage(sender), 20L);
 
-        echoMessage(sender.getDisplayName());
+        Message.BROADCAST_PLAYERJOINEVENT.broadcast("fwriv.echo",sender.getDisplayName());
 
     }
 
@@ -106,16 +103,8 @@ public class JoinCommand extends SubCommand {
         return null;
     }
 
-
-    public void echoMessage(String playername) {
-
-        Bukkit.getServer().broadcast(ChatFormatter.formatEventMessage(ChatColor.YELLOW + playername
-                + ChatColor.RESET + ChatColor.GRAY + "" + ChatColor.ITALIC + " ha " + ChatColor.GREEN + "joinato" + ChatColor.WHITE + " l'evento RIV. " + ChatColor.RESET
-                + ChatColor.GREEN + "#" + PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.ALL).size()),"riveven.echo");
-
-    }
-
     public void infoAboutEventMessage(Player sender) {
+        //todo: vorrei par apparire un libro con dentro tutte le meccaniche dell'evento
         TextComponent infoClickText = new TextComponent(ChatColor.AQUA + "" + ChatColor.BOLD + "INFO");
         infoClickText.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv " + CommandName.INFO_COMMAND));
 

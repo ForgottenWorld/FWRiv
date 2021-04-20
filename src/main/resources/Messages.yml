@@ -1,5 +1,50 @@
 strings:
-  test: "placeholder"
+  fwriv_prefix: "&8[&2&lFW&r&3Riv&8]&r"
+
+  #Misc
+  creation_mode_info: "&o&7Equipaggia uno &eSTICK &7e inserisci le posizioni richieste utilizzando il &eTASTRO DESTRO &7del mouse"
+  creation_mode_step: "Inserici la posizione '&o&e{0}&r' ..."
+
+  join_started_event: "L'evento e' gia' iniziato. Sei stato aggiunto alla lista dei partecipanti"
+  join_ready_event: "Sei stato aggiunto alla lista dei partecipanti. Tieniti pronto per l'inizio dell'evento"
+
+  #Success messages
+  success_arena_creation: "&bArena &e{0}&r &bcorrettamente creata"
+  success_arena_deleted: "&bArena &e{0}&r &bcorrettamente eliminata"
+  success_config_reloaded: "&bFiles di configurazione ricaricati"
+
+  #Error messages
+  err_permission: "&cNon possiedi i permessi necessari per eseguire questo comando"
+  err_syntax: "&cNon hai inserito correttamente il comando"
+
+  err_arena_creation: "&cErrore nella creazione dell'arena. Riprovare con un nome differente ..."
+
+  err_arena_name_unavailable: "&cE' gia' presente un'arena con questo nome"
+  err_arena_name_not_exist: "&cNon e' presente nessuna arena con questo nome"
+  err_creation_mode: "&cStai gia' creando un'arena"
+
+  err_event_is_running: "&cAzione non disponibile, un evento RIV e' in esecuzione"
+  err_no_event_is_running: "&cNessun evento RIV in corso ..."
+
+  #Broadcast
+  broadcast_playerjoinevent: "&o&b{0} &asta partecipando all'evento."
+
+  #Command description
+  create_command: "&7Comando per la creazione di una nuova arena RIV"
+  delete_command: "&7Comando per l'eliminazione di un'arena RIV"
+  reload_command: "&7Comando per ricaricare tutti i file di configurazione"
+
+  init_command: "&7Comando per inizializzare un evento RIV"
+  restart_command: "&7Comando per reinizializzare un evento RIV in corso"
+
+  join_command: "&7Comando per partecipare ad un evento RIV in corso"
+
+  #Component
+  comp_event_join: " Evento &e&oRESTA IN VETTA&r, vieni a giocare ! §*"
+  comp_event_join_hover: "Clicca per &e&bpartecipare&r all'evento"
+  comp_event_startstop: " Evento &e&oRESTA IN VETTA&r inizializzato correttamente. §*"
+  comp_event_start_hover: "Clicca per &e&bfar partire&r l'evento."
+  comp_event_stop_hover: "Clicca per &e&bterminare&r l'evento"
 
 special_item_lore:
   SNOWBALL:
