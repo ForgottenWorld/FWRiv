@@ -2,8 +2,9 @@ package me.architetto.fwriv.command.superuser;
 
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.command.SubCommand;
-import me.architetto.fwriv.event.service.EventService;
-import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.event.EventService;
+import me.architetto.fwriv.event.EventStatus;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
@@ -31,7 +32,7 @@ public class StopCommand extends SubCommand{
 
     @Override
     public String getPermission() {
-        return "rivevent.eventmanager";
+        return "rivevent.stop";
     }
 
     @Override
@@ -46,7 +47,7 @@ public class StopCommand extends SubCommand{
         EventService eventService = EventService.getInstance();
 
         if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
+            Message.ERR_NO_EVENT_IS_RUNNING.send(sender);
             return;
         }
 

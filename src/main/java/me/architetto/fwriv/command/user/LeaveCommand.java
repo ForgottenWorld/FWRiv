@@ -1,11 +1,12 @@
 package me.architetto.fwriv.command.user;
 
 import me.architetto.fwriv.command.SubCommand;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.partecipant.Partecipant;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
-import me.architetto.fwriv.event.service.EventService;
-import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.event.EventService;
+import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
@@ -30,12 +31,12 @@ public class LeaveCommand extends SubCommand{
 
     @Override
     public String getSyntax(){
-        return "/fwriv leave";
+        return "/fwriv " + CommandName.LEAVE_COMMAND;
     }
 
     @Override
     public String getPermission() {
-        return "rivevent.user";
+        return "rivevent.leave";
     }
 
     @Override
@@ -50,7 +51,7 @@ public class LeaveCommand extends SubCommand{
         EventService eventService = EventService.getInstance();
 
         if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.ERR_NO_EVENT_RUNNING));
+            Message.ERR_NO_EVENT_IS_RUNNING.send(sender);
             return;
         }
 

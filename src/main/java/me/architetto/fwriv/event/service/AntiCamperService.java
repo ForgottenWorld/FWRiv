@@ -2,6 +2,7 @@ package me.architetto.fwriv.event.service;
 
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.SettingsHandler;
+import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.utils.ChatFormatter;

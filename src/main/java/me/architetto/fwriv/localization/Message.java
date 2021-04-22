@@ -1,15 +1,13 @@
 package me.architetto.fwriv.localization;
 
-import com.sun.org.apache.bcel.internal.generic.FALOAD;
 import me.architetto.fwriv.utils.MessageUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Instrument;
-import org.bukkit.Note;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public enum Message {
 
@@ -35,6 +33,10 @@ public enum Message {
 
     ERR_EVENT_IS_RUNNING("err_event_is_running", true),
     ERR_NO_EVENT_IS_RUNNING("err_no_event_is_running", true),
+    ERR_EVENT_NOT_READY("err_event_not_ready", true),
+
+    ERR_INVENTORY_FULL("err_inventory_full",true),
+    ERR_UNIQUE_REWARD("err_unique_reward", true),
 
     //BROADCAST
     BROADCAST_PLAYERJOINEVENT("broadcast_playerjoinevent", true),
@@ -52,6 +54,7 @@ public enum Message {
     INIT_COMMAND("init_command", false),
     JOIN_COMMAND("join_command", false),
     RESTART_COMMAND("restart_command", false),
+    START_COMMAND("start_command", false),
     DELETE_COMMAND("delete_command", false),
     RELOAD_COMMAND("reload_command", false),
     CREATE_COMMAND("create_command", false);
@@ -142,7 +145,12 @@ public enum Message {
         BaseComponent baseComponent = asComponent(objects);
         Bukkit.getServer().getOnlinePlayers().forEach(player -> {
             player.sendMessage(baseComponent);
-            player.playNote(player.getLocation(), Instrument.BANJO, Note.flat(0, Note.Tone.A));
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1 ,1);
         });
+    }
+
+    public void sendSpecialComponent(Player sender, Object... objects) {
+        sender.sendMessage(asComponent(objects));
+        sender.playSound(sender.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1 ,1);
     }
 }

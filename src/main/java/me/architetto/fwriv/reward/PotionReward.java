@@ -24,6 +24,7 @@ public class PotionReward extends Reward {
         this.maxDuration = maxDuration;
         this.maxAmplifier = maxAmplifier;
         this.potionColor = color.getColor();
+
     }
 
 

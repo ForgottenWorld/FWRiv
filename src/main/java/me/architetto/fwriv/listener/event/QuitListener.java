@@ -2,8 +2,8 @@ package me.architetto.fwriv.listener.event;
 
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
-import me.architetto.fwriv.event.service.EventService;
-import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.event.EventService;
+import me.architetto.fwriv.event.EventStatus;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

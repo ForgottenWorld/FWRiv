@@ -1,18 +1,14 @@
 package me.architetto.fwriv.command.admin;
 
-import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.SubCommand;
-import me.architetto.fwriv.event.service.EventService;
-import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.event.EventService;
+import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.localization.Message;
-import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Optional;
 
 public class DeleteCommand extends SubCommand{
     @Override

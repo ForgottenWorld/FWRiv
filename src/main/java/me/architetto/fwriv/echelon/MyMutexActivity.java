@@ -1,7 +1,7 @@
 package me.architetto.fwriv.echelon;
 
 import it.forgottenworld.echelonapi.mutexactivity.MutexActivity;
-import me.architetto.fwriv.event.service.EventService;
+import me.architetto.fwriv.event.EventService;
 import org.bukkit.entity.Player;
 
 public class MyMutexActivity implements MutexActivity {

@@ -4,8 +4,8 @@ import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.SubCommand;
-import me.architetto.fwriv.event.service.EventService;
-import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.event.EventService;
+import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.command.CommandName;
 import net.md_5.bungee.api.ChatColor;
@@ -75,8 +75,6 @@ public class InitCommand extends SubCommand{
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text(Message.COMP_EVENT_JOIN_HOVER.asString())));
 
         Message.COMP_EVENT_JOIN.specialBroadcastComponent(new TextComponent(componentBuilder.create()));
-
-        //Message.COMP_EVENT_JOIN.broadcastComponent(new TextComponent(componentBuilder.create()));
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin,() -> suggestStartCommand(sender),20L);
 

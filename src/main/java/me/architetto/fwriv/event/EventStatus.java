@@ -1,4 +1,4 @@
-package me.architetto.fwriv.event.service;
+package me.architetto.fwriv.event;
 
 public enum EventStatus {
         INACTIVE,

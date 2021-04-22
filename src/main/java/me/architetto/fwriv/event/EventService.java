@@ -1,10 +1,12 @@
-package me.architetto.fwriv.event.service;
+package me.architetto.fwriv.event;
 
 import com.destroystokyo.paper.Title;
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
+import me.architetto.fwriv.event.service.AntiCamperService;
+import me.architetto.fwriv.event.service.OldRewardService;
 import me.architetto.fwriv.obj.ArenaDoors;
 import me.architetto.fwriv.obj.RoundSpawn;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
@@ -77,7 +79,6 @@ public class EventService {
         return true;
     }
 
-
     public void partecipantDeath(Player player) {
         PartecipantsManager.getInstance().getPartecipant(player).ifPresent(partecipant -> {
             player.getInventory().clear();
@@ -98,7 +99,9 @@ public class EventService {
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
             player.teleport(partecipant.getReturnLocation());
+            player.getInventory().setContents(partecipant.getInventory());
             mutexActivityLeaveSupport(player);
+
         });
 
         partecipantsManager.removePartecipant(player);
@@ -115,6 +118,7 @@ public class EventService {
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
             player.teleport(partecipant.getReturnLocation());
+            player.getInventory().setContents(partecipant.getInventory());
             mutexActivityLeaveSupport(player);
         });
 
@@ -264,11 +268,13 @@ public class EventService {
                 .forEach(p -> {
 
                     p.setGameMode(GameMode.SURVIVAL);
+                    p.getActivePotionEffects().forEach(pot -> p.removePotionEffect(pot.getType()));
                     p.getInventory().clear();
 
                     partecipantsManager.getPartecipant(p).ifPresent(partecipant -> {
                         p.teleport(partecipant.getReturnLocation());
                         p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
+                        p.getInventory().setContents(partecipant.getInventory());
                         p.sendMessage(ChatFormatter.formatInitializationMessage(Messages.STOP_CMD_PLAYER_MESSAGE));
                     });
 
@@ -286,7 +292,7 @@ public class EventService {
 
         new BukkitRunnable() {
             int cicle = 0;
-            Location loc = EventService.getInstance().summonedArena.getTower().clone().add(0,3,0);
+            Location loc = EventService.getInstance().summonedArena.getTower().add(0,3,0);
 
             @Override
             public void run() {

@@ -3,14 +3,12 @@ package me.architetto.fwriv.command.admin;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.config.SettingsHandler;
-import me.architetto.fwriv.event.service.EventService;
-import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.event.EventService;
+import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.localization.LocalizationManager;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.reward.RewardService;
-import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
 import org.bukkit.entity.Player;
 
 import java.util.List;

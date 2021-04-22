@@ -6,8 +6,8 @@ import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
-import me.architetto.fwriv.event.service.EventService;
-import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.event.EventService;
+import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.listener.arena.ArenaCreationListener;
 import me.architetto.fwriv.listener.event.*;
 import me.architetto.fwriv.localization.LocalizationManager;
@@ -91,7 +91,6 @@ public final class FWRiv extends JavaPlugin {
     public void loadEchelon() {
 
         if (Bukkit.getPluginManager().getPlugin("FWEchelon") != null) {
-
             if (EchelonHolder.getEchelonHolder().loadEchelonService()) {
                 Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "Support to FWEchelon enabled ! ");
                 SettingsHandler.getSettingsHandler().echelonSupport = true;

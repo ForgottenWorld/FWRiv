@@ -25,6 +25,10 @@ strings:
 
   err_event_is_running: "&cAzione non disponibile, un evento RIV e' in esecuzione"
   err_no_event_is_running: "&cNessun evento RIV in corso ..."
+  err_event_not_ready: "&cNessun evento RIV pronto per essere startato ..."
+
+  err_inventory_full: "&e&oInventario pieno, non hai ricevuto il reward!"
+  err_unique_reward: "&e&oSei stato sfortunato, non hai ricevuto nessun reward"
 
   #Broadcast
   broadcast_playerjoinevent: "&o&b{0} &asta partecipando all'evento."
@@ -36,23 +40,27 @@ strings:
 
   init_command: "&7Comando per inizializzare un evento RIV"
   restart_command: "&7Comando per reinizializzare un evento RIV in corso"
+  start_command: "&7Comando per far iniziare l'evento"
 
   join_command: "&7Comando per partecipare ad un evento RIV in corso"
 
   #Component
-  comp_event_join: " Evento &e&oRESTA IN VETTA&r, vieni a giocare ! §*"
+  comp_event_join: " Partecipa all'evento &e&oRESTA IN VETTA&r e dimostra a tutti chi è il RE della torre! §*§ Non lasciarti scappare il premio riservato al vincitore !"
   comp_event_join_hover: "Clicca per &e&bpartecipare&r all'evento"
-  comp_event_startstop: " Evento &e&oRESTA IN VETTA&r inizializzato correttamente. §*"
+  comp_event_startstop: " Evento inizializzato correttamente. §*"
   comp_event_start_hover: "Clicca per &e&bfar partire&r l'evento."
   comp_event_stop_hover: "Clicca per &e&bterminare&r l'evento"
 
 special_item_lore:
   SNOWBALL:
-    - "Applica un forte knockback"
-    - "&ese colpisce&r un player"
+    - "Applica un forte &eknockback&r al bersaglio"
+    - "&f&oSono molto piu' forti di quello che sembrano"
   FISHING_ROD:
-    - "Se un player &eabboca&r all'amo"
-    - "viene tirato verso di te"
+    - "&eTira verso di te&r il giocatore"
+    - "che 'abbocca' all'amo"
+    - "&f&oUtile per schiodare il maledetto che ti guarda"
+    - "&f&odalla cima della torre"
+    - "&cSi consuma dopo l'utilizzo"
 
 #Sono dell'idea di inibire al player di lanciare i tridenti... non saprei
 #Oppure inverire gli effetti ranged / melee con il knockback dipendente dalla distanza del lancio
@@ -64,6 +72,7 @@ special_item_lore:
   ENDER_PEARL:
     - "Permette di teletrasportarti"
     - "sulla cima della torre"
+    - "&f&oE' un cheat a tutti gli effetti !"
   FIREWORK_ROCKET:
     - "Sfrutta la propulsione dei razzi"
     - "per raggiungere agilmente"

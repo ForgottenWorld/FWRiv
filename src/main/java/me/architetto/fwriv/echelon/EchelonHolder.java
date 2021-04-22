@@ -28,6 +28,10 @@ public class EchelonHolder {
     public boolean loadEchelonService() {
 
         FWEchelonApi echelon = (FWEchelonApi) Bukkit.getPluginManager().getPlugin("FWEchelon");
+
+        if (echelon == null)
+            return false;
+
         this.mutexActivityService = echelon.getMutexActivityService();
 
         return this.mutexActivityService.registerMutexActivity(new MyMutexActivity());

@@ -1,13 +1,15 @@
 package me.architetto.fwriv.command.superuser;
 
 import me.architetto.fwriv.command.SubCommand;
-import me.architetto.fwriv.event.service.EventService;
-import me.architetto.fwriv.event.service.EventStatus;
+import me.architetto.fwriv.event.EventService;
+import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.localization.Message;
+import me.architetto.fwriv.partecipant.PartecipantStatus;
+import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -16,6 +18,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class RestartCommand extends SubCommand{
     @Override
@@ -55,7 +59,6 @@ public class RestartCommand extends SubCommand{
 
         eventService.restartEvent();
 
-        //todo: non mi convince
         broadcastRestartedEvent();
 
     }
@@ -67,17 +70,20 @@ public class RestartCommand extends SubCommand{
 
     public void broadcastRestartedEvent() {
 
-        TextComponent joinClickMessage = new TextComponent(ChatColor.YELLOW + "JOIN");
-        joinClickMessage.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv join") );
-        joinClickMessage.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text("Click to join event")));
+        ComponentBuilder componentBuilder = new ComponentBuilder("[")
+                .color(net.md_5.bungee.api.ChatColor.GRAY)
+                .append("JOIN")
+                .color(net.md_5.bungee.api.ChatColor.YELLOW)
+                .event(new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv join"))
+                .event(new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text(Message.COMP_EVENT_JOIN_HOVER.asString())))
+                .append("]")
+                .color(net.md_5.bungee.api.ChatColor.GRAY);
+
+        Set<UUID> uuid = PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
-
-            p.sendMessage(new TextComponent(ChatFormatter.formatInitializationMessage("Click ")),joinClickMessage,
-                    new TextComponent(" per partecipare all'evento 'RIV'"));
-            p.sendMessage(ChatFormatter.formatInitializationMessage(ChatColor.RED + "ATTENZIONE : " + ChatColor.RESET + "Partecipando il tuo inventario verra' cancellato !!"));
-            p.sendTitle("", ChatColor.AQUA + "EVENTO 'RIV'",15,200,15);
-
+            if (uuid.contains(p.getUniqueId())) continue;
+            Message.COMP_EVENT_JOIN.sendSpecialComponent(p,new TextComponent(componentBuilder.create()));
         }
 
     }
