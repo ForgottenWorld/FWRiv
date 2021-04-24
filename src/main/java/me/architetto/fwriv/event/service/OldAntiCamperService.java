@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AntiCamperService {
+public class OldAntiCamperService {
 
-    private static AntiCamperService antiCamperService;
+    private static OldAntiCamperService oldAntiCamperService;
 
     private List<Integer> taskID;
 
@@ -33,8 +33,8 @@ public class AntiCamperService {
     private int redCircleRadius;
 
 
-    private AntiCamperService(){
-        if(antiCamperService != null) {
+    private OldAntiCamperService(){
+        if(oldAntiCamperService != null) {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
 
@@ -43,23 +43,23 @@ public class AntiCamperService {
 
     }
 
-    public static AntiCamperService getInstance() {
-        if(antiCamperService == null) {
-            antiCamperService = new AntiCamperService();
+    public static OldAntiCamperService getInstance() {
+        if(oldAntiCamperService == null) {
+            oldAntiCamperService = new OldAntiCamperService();
         }
-        return antiCamperService;
+        return oldAntiCamperService;
     }
 
     public void startAntiCamperSystem() {
-        SettingsHandler settingsHandler = SettingsHandler.getSettingsHandler();
+        SettingsHandler settingsHandler = SettingsHandler.getInstance();
         EventService eventService = EventService.getInstance();
 
 
-        this.acDelay = settingsHandler.antiCamperStartDelay;
-        this.acDamage = settingsHandler.antiCamperDamage;
-        this.acFinalDamage = settingsHandler.antiCamperFinalDamage;
-        this.acGrowPerion = settingsHandler.antiCamperGrowPeriod;
-        this.acGrowValue = settingsHandler.antiCamperGrowValue;
+        this.acDelay = settingsHandler.acDelay;
+        this.acDamage = settingsHandler.acDamage;
+        this.acFinalDamage = settingsHandler.acFinalDamage;
+        this.acGrowPerion = settingsHandler.acGrowPeriod;
+        this.acGrowValue = settingsHandler.acGrowValue;
         this.acY = eventService.getArena().getLowestY();
         this.acFinalY = eventService.getArena().getTower().getBlockY() - settingsHandler.antiCamperRedLineTopTowerDif;
         this.redCircleRadius = settingsHandler.redLineAnimationRadius;

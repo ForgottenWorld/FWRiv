@@ -50,7 +50,7 @@ public class ReloadCommand extends SubCommand {
         }
 
         ConfigManager.getInstance().reloadConfigs();
-        SettingsHandler.getSettingsHandler().reload();
+        SettingsHandler.getInstance().reload();
         LocalizationManager.getInstance().reload();
         RewardService.getInstance().reloadRewards();
 

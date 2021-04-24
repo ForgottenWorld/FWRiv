@@ -1,5 +1,6 @@
 package me.architetto.fwriv.reward;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -38,11 +39,10 @@ public class EffectReward extends Reward {
 
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK,1,1);
 
-
     }
 
     @Override
     public String getName() {
-        return "EFFECT : " + potionEffectType.getName();
+        return ChatColor.GOLD + potionEffectType.getName();
     }
 }

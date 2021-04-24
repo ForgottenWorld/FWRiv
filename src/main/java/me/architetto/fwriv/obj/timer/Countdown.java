@@ -1,4 +1,4 @@
-package me.architetto.fwriv.utils;
+package me.architetto.fwriv.obj.timer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,6 +14,7 @@ public class Countdown implements Runnable {
     private Integer assignedTaskId;
 
     // Seconds and shiz
+    private int delay;
     private int seconds;
     private int secondsLeft;
 
@@ -24,12 +25,13 @@ public class Countdown implements Runnable {
 
     // Construct a timer, you could create multiple so for example if
     // you do not want these "actions"
-    public Countdown(JavaPlugin plugin, int seconds,
+    public Countdown(JavaPlugin plugin, int delay ,int seconds,
                      Runnable beforeTimer, Runnable afterTimer,
                      Consumer<Countdown> everySecond) {
         // Initializing fields
         this.plugin = plugin;
 
+        this.delay = delay;
         this.seconds = seconds;
         this.secondsLeft = seconds;
 
@@ -87,19 +89,11 @@ public class Countdown implements Runnable {
      */
     public void scheduleTimer() {
         // Initialize our assigned task's id, for later use so we can cancel
-        this.assignedTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 20L);
+        this.assignedTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, this.delay, 20L);
     }
 
     public void cancelTimer() {
-        Bukkit.getScheduler().cancelTask(this.getTaskId());
-    }
-
-    public Integer getTaskId() {
-
-        if (this.assignedTaskId != null)
-            return assignedTaskId;
-
-        return null;
+        Bukkit.getScheduler().cancelTask(this.assignedTaskId);
     }
 
 }

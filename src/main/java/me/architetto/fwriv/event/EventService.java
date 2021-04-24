@@ -5,14 +5,16 @@ import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
-import me.architetto.fwriv.event.service.AntiCamperService;
-import me.architetto.fwriv.event.service.OldRewardService;
+import me.architetto.fwriv.event.service.OldAntiCamperService;
+import me.architetto.fwriv.event.service.RewardSystemService;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.obj.ArenaDoors;
 import me.architetto.fwriv.obj.RoundSpawn;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
-import me.architetto.fwriv.utils.Countdown;
+import me.architetto.fwriv.obj.timer.Countdown;
 import me.architetto.fwriv.utils.ChatFormatter;
+import me.architetto.fwriv.utils.MessageUtil;
 import me.architetto.fwriv.utils.Messages;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -65,18 +67,36 @@ public class EventService {
         return this.roundSpawn;
     }
 
-    public boolean initRIV(Arena arena) {
-        if (!this.eventStatus.equals(EventStatus.INACTIVE))
-            return false;
+    public boolean initialization(Arena arena) {
+        if (!this.eventStatus.equals(EventStatus.INACTIVE)) return false;
 
         this.summonedArena = arena;
         this.roundSpawn = new RoundSpawn(arena);
         this.arenaDoors = new ArenaDoors(arena);
         this.eventStatus = EventStatus.READY;
-
         this.arenaDoors.close();
 
         return true;
+    }
+
+    public void partecipantJoin(Player player) {
+        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
+
+        if (!eventStatus.equals(EventStatus.READY)) {
+            partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.DEAD);
+            player.setGameMode(GameMode.SPECTATOR);
+            player.teleport(eventService.getArena().getTower());
+            Message.JOIN_STARTED_EVENT.send(player);
+
+        } else {
+            partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.PLAYING);
+            player.getInventory().clear();
+            player.setGameMode(GameMode.SURVIVAL);
+            eventService.getRoundSpawn().teleport(player);
+            Message.JOIN_READY_EVENT.send(player);
+        }
+
+        RewardSystemService.getInstance().addPlayerToRewardBar(player);
     }
 
     public void partecipantDeath(Player player) {
@@ -96,33 +116,24 @@ public class EventService {
         PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
         partecipantsManager.getPartecipant(player).ifPresent(partecipant -> {
+
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
             player.teleport(partecipant.getReturnLocation());
             player.getInventory().setContents(partecipant.getInventory());
             mutexActivityLeaveSupport(player);
 
+            if (partecipant.getPartecipantStatus().equals(PartecipantStatus.PLAYING)
+                    && eventStatus.equals(EventStatus.RUNNING)) {
+                partecipant.setPartecipantStatus(PartecipantStatus.DEAD);
+                checkVictoryCondition();
+            }
+
         });
 
         partecipantsManager.removePartecipant(player);
 
-        if (eventStatus.equals(EventStatus.RUNNING))
-            checkVictoryCondition();
-
-    }
-
-    public void spectatorPlayerLeave(Player player) {
-        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
-
-        partecipantsManager.getPartecipant(player).ifPresent(partecipant -> {
-            player.getInventory().clear();
-            player.setGameMode(GameMode.SURVIVAL);
-            player.teleport(partecipant.getReturnLocation());
-            player.getInventory().setContents(partecipant.getInventory());
-            mutexActivityLeaveSupport(player);
-        });
-
-        partecipantsManager.removePartecipant(player);
+        RewardSystemService.getInstance().removePlayerToRewardBar(player);
 
     }
 
@@ -144,8 +155,11 @@ public class EventService {
         if (uuidSet.size() == 0)
             eventStatus = EventStatus.ENDED;
 
-        if (eventStatus.equals(EventStatus.ENDED))
+        if (eventStatus.equals(EventStatus.ENDED)) {
             stopTasks();
+            Message.COMP_EVENT_ENDED_BROADCAST.broadcastComponent("fwriv.echo", MessageUtil.restartCmponent(),MessageUtil.stopCmponent());
+            Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.getPlugin(FWRiv.class), this::stopEvent,1800L);
+        }
     }
 
     private void victoryAnimation(String playerWinner) {
@@ -157,14 +171,15 @@ public class EventService {
 
     public void stopTasks() {
 
-        AntiCamperService.getInstance().stopAnticamperTasks();
-        OldRewardService.getInstance().stopRewardTask();
+        OldAntiCamperService.getInstance().stopAnticamperTasks();
+        RewardSystemService.getInstance().stopRewardService();
 
     }
 
     public void startEventTimer() {
 
         this.startCountdown = new Countdown(FWRiv.getPlugin(FWRiv.class),
+                0,
                 10,
                 () -> {
             //
@@ -187,14 +202,15 @@ public class EventService {
                             .map(Bukkit::getPlayer)
                             .filter(Objects::nonNull)
                             .forEach(p -> {
-                                p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,1200,2));
+                                p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,1200,6));
                                 p.sendTitle(new Title(ChatColor.DARK_RED + "GO !", "", 1, 18, 1));
+                                Message.START_MESSAGE.send(p);
                             });
 
                     this.arenaDoors.open();
 
-                    AntiCamperService.getInstance().startAntiCamperSystem();
-                    OldRewardService.getInstance().startRewardSystem();
+                    OldAntiCamperService.getInstance().startAntiCamperSystem();
+                    RewardSystemService.getInstance().initializeRewardSystem();
 
                 },
                 (t) -> {
@@ -220,7 +236,7 @@ public class EventService {
         for (PotionEffect potionEffect : player.getActivePotionEffects())
             player.removePotionEffect(potionEffect.getType());
 
-        SettingsHandler.getSettingsHandler().startEquipItems.forEach(is -> player.getInventory().addItem(is));
+        SettingsHandler.getInstance().startEquipItems.forEach(is -> player.getInventory().addItem(is));
 
     }
 
@@ -243,8 +259,8 @@ public class EventService {
                 });
 
 
-        AntiCamperService.getInstance().stopAnticamperTasks();
-        OldRewardService.getInstance().stopRewardTask();
+        OldAntiCamperService.getInstance().stopAnticamperTasks();
+        RewardSystemService.getInstance().stopRewardService();
 
     }
 
@@ -252,8 +268,8 @@ public class EventService {
 
         if (!eventStatus.equals(EventStatus.READY)) {
             this.startCountdown.cancelTimer();
-            AntiCamperService.getInstance().stopAnticamperTasks();
-            OldRewardService.getInstance().stopRewardTask();
+            OldAntiCamperService.getInstance().stopAnticamperTasks();
+            RewardSystemService.getInstance().stopRewardService();
         }
 
         this.eventStatus = EventStatus.INACTIVE;
@@ -285,6 +301,7 @@ public class EventService {
         this.arenaDoors.close();
 
         removeAllPlayerMutexActivitySupport();
+
 
     }
 
@@ -325,17 +342,13 @@ public class EventService {
     }
 
     public void mutexActivityLeaveSupport(Player player) {
-        if (!SettingsHandler.getSettingsHandler().echelonSupport)
-            return;
-
-        EchelonHolder.getEchelonHolder().removePlayerMutexActivity(player);
+        if (SettingsHandler.getInstance().isEchelonEnabled())
+            EchelonHolder.getEchelonHolder().removePlayerMutexActivity(player);
     }
 
     public void removeAllPlayerMutexActivitySupport() {
-        if (!SettingsHandler.getSettingsHandler().echelonSupport)
-            return;
-
-        EchelonHolder.getEchelonHolder().removeAllMutexActivityRIVPlayer();
+        if (SettingsHandler.getInstance().isEchelonEnabled())
+            EchelonHolder.getEchelonHolder().removeAllMutexActivityRIVPlayer();
     }
 
 }

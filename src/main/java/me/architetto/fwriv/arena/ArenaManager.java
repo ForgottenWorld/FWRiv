@@ -3,7 +3,6 @@ package me.architetto.fwriv.arena;
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.localization.Message;
-import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -47,9 +46,6 @@ public class ArenaManager {
 
     public void loadArenas() {
 
-        Bukkit.getConsoleSender().sendMessage("dentro il loader");
-
-
         ConfigManager configManager = ConfigManager.getInstance();
         FileConfiguration fc = configManager.getConfig("Arena.yml");
 
@@ -60,6 +56,7 @@ public class ArenaManager {
                     configManager.getLocation(fc,presetName + ".SPAWN3"),
                     configManager.getLocation(fc,presetName + ".SPAWN4"),
                     configManager.getLocation(fc,presetName + ".TOWER")));
+            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GREEN + "        -- " + presetName);
         }
     }
 

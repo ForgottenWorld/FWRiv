@@ -2,6 +2,7 @@ package me.architetto.fwriv.reward;
 
 import me.architetto.fwriv.localization.LocalizationManager;
 import me.architetto.fwriv.localization.Message;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -58,6 +59,6 @@ public class ItemReward extends Reward {
 
     @Override
     public String getName() {
-        return itemStack.getI18NDisplayName();
+        return ChatColor.GOLD + itemStack.getI18NDisplayName();
     }
 }

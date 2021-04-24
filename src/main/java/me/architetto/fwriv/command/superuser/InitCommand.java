@@ -8,12 +8,7 @@ import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.command.CommandName;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import me.architetto.fwriv.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -57,50 +52,29 @@ public class InitCommand extends SubCommand{
             return;
         }
 
-        String presetName = args[1];
-
-        Optional<Arena> arena = ArenaManager.getInstance().getArena(presetName);
+        Optional<Arena> arena = ArenaManager.getInstance().getArena(args[1]);
 
         if (!arena.isPresent()) {
             Message.ERR_ARENA_NAME_NOT_EXIST.send(sender);
             return;
         }
 
-        eventService.initRIV(arena.get());
+        eventService.initialization(arena.get());
 
-        ComponentBuilder componentBuilder = new ComponentBuilder(" [JOIN]")
-                .color(ChatColor.YELLOW)
-                .bold(true)
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv join"))
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text(Message.COMP_EVENT_JOIN_HOVER.asString())));
-
-        Message.COMP_EVENT_JOIN.specialBroadcastComponent(new TextComponent(componentBuilder.create()));
+        Message.COMP_EVENT_JOIN.specialBroadcastComponent(MessageUtil.joinCmponent(), MessageUtil.infoCmponent());
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin,() -> suggestStartCommand(sender),20L);
 
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] args){
-
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         if (args.length == 2)
             return ArenaManager.getInstance().getArenaNameList();
-
         return null;
     }
 
     public void suggestStartCommand(Player sender) {
-        ComponentBuilder componentBuilder = new ComponentBuilder(" [START] ")
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv start"))
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text(Message.COMP_EVENT_START_HOVER.asString())))
-                .color(net.md_5.bungee.api.ChatColor.GREEN)
-                .bold(true)
-                .append("[STOP]")
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fwriv stop"))
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new Text(Message.COMP_EVENT_STOP_HOVER.asString())))
-                .color(net.md_5.bungee.api.ChatColor.RED)
-                .bold(true);
-
-        Message.COMP_EVENT_STARTSTOP.sendComponent(sender, new TextComponent(componentBuilder.create()));
+        Message.COMP_EVENT_START.sendComponent(sender, MessageUtil.startCmponent());
     }
 }

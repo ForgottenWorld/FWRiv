@@ -19,6 +19,8 @@ public enum Message {
     JOIN_STARTED_EVENT("join_started_event", true),
     JOIN_READY_EVENT("join_ready_event", true),
 
+    START_MESSAGE("start_message", true),
+
     SUCCESS_ARENA_CREATION("success_arena_creation", true),
     SUCCESS_ARENA_DELETED("success_arena_deleted", true),
     SUCCESS_CONFIG_RELOAD("success_config_reloaded", true),
@@ -35,18 +37,24 @@ public enum Message {
     ERR_NO_EVENT_IS_RUNNING("err_no_event_is_running", true),
     ERR_EVENT_NOT_READY("err_event_not_ready", true),
 
+    ERR_NOT_ENOUGH_PLAYERS("err_not_enough_players", true),
+    ERR_ALREADY_JOINED("err_already_joined", true),
+    ERR_NO_EVENT_JOINED("err_no_event_joined", true),
+    ERR_ECHELON_MUTEXACTIVITY("err_echelon_mutexactivity", true),
+
     ERR_INVENTORY_FULL("err_inventory_full",true),
     ERR_UNIQUE_REWARD("err_unique_reward", true),
 
     //BROADCAST
     BROADCAST_PLAYERJOINEVENT("broadcast_playerjoinevent", true),
+    BROADCAST_PLAYERLEAVEEVENT("broadcast_playerleaveevent", true),
 
     //COMPONENT
     COMP_EVENT_JOIN("comp_event_join", true),
     COMP_EVENT_JOIN_HOVER("comp_event_join_hover", false),
-    COMP_EVENT_STARTSTOP("comp_event_startstop", true),
+    COMP_EVENT_START("comp_event_start", true),
     COMP_EVENT_START_HOVER("comp_event_start_hover", false),
-    COMP_EVENT_STOP_HOVER("comp_event_stop_hover", false),
+    COMP_EVENT_ENDED_BROADCAST("comp_event_ended_broadcast", true),
 
 
 
@@ -120,7 +128,7 @@ public enum Message {
 
         for (String part : parts) {
             if (part.matches("^\\*$")) {
-                if (objects.length <= j + 1) {
+                if (objects.length >= j + 1) {
                     if (objects[j] instanceof BaseComponent)
                         textComponent.addExtra((BaseComponent) objects[j]);
                     else
@@ -141,11 +149,19 @@ public enum Message {
         Bukkit.broadcast(asComponent(objects));
     }
 
+    public void broadcastComponent(String permission, Object... objects) {
+        TextComponent txt = new TextComponent(asComponent(objects));
+        Bukkit.getOnlinePlayers().stream()
+                .filter(p -> p.hasPermission(permission))
+                .forEach(p -> p.sendMessage(txt));
+    }
+
     public void specialBroadcastComponent(Object... objects) {
-        BaseComponent baseComponent = asComponent(objects);
         Bukkit.getServer().getOnlinePlayers().forEach(player -> {
-            player.sendMessage(baseComponent);
+            TextComponent txt = new TextComponent(asComponent(objects));
+            player.sendMessage(txt);
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1 ,1);
+
         });
     }
 

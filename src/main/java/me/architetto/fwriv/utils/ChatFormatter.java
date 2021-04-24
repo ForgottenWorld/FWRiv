@@ -55,22 +55,4 @@ public class ChatFormatter{
         return message;
     }
 
-    public static String formatArenaCreation(String message) {
-        message = ChatColor.YELLOW + "" + ChatColor.BOLD + "FWRiv >> " + ChatColor.RESET + message;
-        return message;
-    }
-
-    public static  String formatPresetName(String arenaName) {
-        return ChatColor.AQUA + "" + ChatColor.BOLD + "PRESET NAME" + " >> " + ChatColor.RESET + arenaName;
-    }
-
-    public static String formatLocation(String pointName, Location loc) {
-
-        return ChatColor.AQUA + "" + ChatColor.BOLD + pointName + " >> " + ChatColor.RESET +
-                ChatColor.YELLOW + "" + ChatColor.BOLD + "WORLD : " + ChatColor.RESET + loc.getWorld().getName() +
-                ChatColor.YELLOW + "" + ChatColor.BOLD + " X : " + ChatColor.RESET + loc.getBlockX() +
-                ChatColor.YELLOW + "" + ChatColor.BOLD + " Z : " + ChatColor.RESET + loc.getBlockZ() +
-                ChatColor.YELLOW + "" + ChatColor.BOLD + " Y : " + ChatColor.RESET + loc.getBlockY();
-    }
-
 }

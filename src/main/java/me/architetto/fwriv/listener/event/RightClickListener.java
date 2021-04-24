@@ -23,7 +23,7 @@ import java.util.*;
 public class RightClickListener implements Listener{
 
     EventService eventService = EventService.getInstance();
-    SettingsHandler settingsHandler = SettingsHandler.getSettingsHandler();
+    SettingsHandler settingsHandler = SettingsHandler.getInstance();
     PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
     public final List<UUID> playerCooldown = new ArrayList<>();

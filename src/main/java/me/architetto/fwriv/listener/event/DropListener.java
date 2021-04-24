@@ -9,13 +9,12 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 
 public class DropListener implements Listener{
 
-    EventService eventService = EventService.getInstance();
-
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
 
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE))
-            return;
+        EventService eventService = EventService.getInstance();
+
+        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) return;
 
         if (PartecipantsManager.getInstance().isPresent(event.getPlayer()))
             event.getItemDrop().remove();

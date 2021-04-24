@@ -12,8 +12,7 @@ public class FoodListener implements Listener {
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
 
-        if (EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE))
-            return;
+        if (EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE)) return;
 
         PartecipantsManager.getInstance().getPartecipant(event.getEntity().getUniqueId()).ifPresent(p -> {
             /*

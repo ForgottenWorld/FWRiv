@@ -24,7 +24,6 @@ public class PotionReward extends Reward {
         this.maxDuration = maxDuration;
         this.maxAmplifier = maxAmplifier;
         this.potionColor = color.getColor();
-
     }
 
 
@@ -57,6 +56,6 @@ public class PotionReward extends Reward {
 
     @Override
     public String getName() {
-        return "POTION : " + this.potionEffectType.getName();
+        return ChatColor.GOLD + this.potionEffectType.getName() + " POTION";
     }
 }

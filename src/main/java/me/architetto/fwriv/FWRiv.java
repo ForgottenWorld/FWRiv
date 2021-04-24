@@ -15,6 +15,7 @@ import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.reward.RewardService;
 import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,25 +34,20 @@ public final class FWRiv extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage("=====================[      RIVe      ]======================");
 
-        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading settings files...");
-        SettingsHandler.getSettingsHandler().load();
-
-        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading localization...");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Messages.yml...");
         LocalizationManager.getInstance().loadLanguageFile();
 
-        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading commands...");
-        loadCommands();
-
-        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading listeners...");
-        loadListener();
-
-        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading rewards...");
+        Bukkit.getConsoleSender().sendMessage( ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Settings.yml...");
+        SettingsHandler.getInstance().load();
         RewardService.getInstance().loadRewards();
 
-        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading arenas ...");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading commands & listeners...");
+        loadCommands();
+        loadListener();
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Arena.yml ...");
         ArenaManager.getInstance().loadArenas();
 
-        Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + " Loading FWEchelon support ...");
         loadEchelon();
 
         Bukkit.getConsoleSender().sendMessage("=============================================================");
@@ -89,27 +85,37 @@ public final class FWRiv extends JavaPlugin {
     }
 
     public void loadEchelon() {
+        SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
         if (Bukkit.getPluginManager().getPlugin("FWEchelon") != null) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>"
+                    + ChatColor.RESET + " FWEchelon found ...");
             if (EchelonHolder.getEchelonHolder().loadEchelonService()) {
-                Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "Support to FWEchelon enabled ! ");
-                SettingsHandler.getSettingsHandler().echelonSupport = true;
+                Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GREEN
+                        + "        -- FWEchelon enabled !");
+                settingsHandler.enableEchelon(true);
                 return;
             } else
-                Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "Error on register mutex activity !");
-        } else
-            Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "FWEchelon not found...");
-
-        SettingsHandler.getSettingsHandler().echelonSupport = false;
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED
+                        + "        -- Error on register mutex activity, FWEchelon not enabled!");
+        }
+        settingsHandler.enableEchelon(false);
     }
 
     public  void secureInventoryClear() {
-        PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.ALL).stream()
+        PartecipantsManager pm = PartecipantsManager.getInstance();
+        pm.getPartecipantsUUID(PartecipantStatus.ALL)
+                .stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .forEach(p -> {
                     p.getInventory().clear();
                     p.setGameMode(GameMode.SURVIVAL);
+
+                    pm.getPartecipant(p).ifPresent(partecipant -> {
+                        p.teleport(partecipant.getReturnLocation());
+                        p.getInventory().setContents(partecipant.getInventory());
+                    });
                 });
     }
 

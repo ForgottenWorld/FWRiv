@@ -2,10 +2,22 @@ package me.architetto.fwriv.partecipant;
 
 public class PartecipantStats {
 
-    private int rewards = 0,kills = 0;
+    private int rewards = 0,kills = 0, resurrection = 0;
     private double damageDealt = 0, damageTaken = 0;
 
     public PartecipantStats() {
+    }
+
+    public int getResurrection() {
+        return resurrection;
+    }
+
+    public void setResurrection(int resurrection) {
+        this.resurrection = resurrection;
+    }
+
+    public void addResurrection() {
+        this.resurrection += 1;
     }
 
     public double getDamageDealt() {

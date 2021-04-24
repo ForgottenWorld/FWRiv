@@ -51,7 +51,7 @@ public class StartCommand extends SubCommand{
         }
 
        if (PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).isEmpty()) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage(Messages.NOT_ENOUGH_PLAYERS));
+           Message.ERR_NOT_ENOUGH_PLAYERS.send(sender);
             return;
         }
 

@@ -12,18 +12,19 @@ public class SettingsHandler {
 
     private static SettingsHandler settingsHandler;
 
-    public boolean echelonSupport;
+    private boolean echelonSupport;
 
-    public int antiCamperStartDelay;
-    public int antiCamperDamage;
-    public int antiCamperFinalDamage;
-    public int antiCamperGrowPeriod;
-    public int antiCamperGrowValue;
+    private long rewarDelay;
+    private long rewardPeriod;
+
+    public int acDelay;
+    public int acDamage;
+    public int acFinalDamage;
+    public int acGrowPeriod;
+    public int acGrowValue;
     public int antiCamperRedLineTopTowerDif; //Questo non è indispensabile
-
     public int redLineAnimationRadius;
 
-    public int rewardPeriod;
 
     public List<ItemStack> startEquipItems = new ArrayList<>();
 
@@ -31,8 +32,6 @@ public class SettingsHandler {
     public double snowballHitDamage;
 
     public double fishingRodPower;
-
-    public double tridentKnockPower;
 
     public boolean enableTargetBlock;
     public double targetBlockExplosionPower;
@@ -45,7 +44,7 @@ public class SettingsHandler {
 
     }
 
-    public static SettingsHandler getSettingsHandler() {
+    public static SettingsHandler getInstance() {
         if(settingsHandler ==null)
             settingsHandler = new SettingsHandler();
 
@@ -54,31 +53,30 @@ public class SettingsHandler {
 
     public void load(){
 
-        FileConfiguration fileConfiguration = ConfigManager.getInstance().getConfig("Settings.yml");
+        FileConfiguration fc = ConfigManager.getInstance().getConfig("Settings.yml");
 
         loadStartEquip();
 
-        this.rewardPeriod = fileConfiguration.getInt("REWARD_PERIOD",20) * 20;
+        this.rewarDelay = fc.getLong("REWARD_SYSTEM.DELAY",30) * 20;
+        this.rewardPeriod = fc.getLong("REWARD_SYSTEM.PERIOD",20);
 
-        this.antiCamperStartDelay = fileConfiguration.getInt("ANTI_CAMPER_START_DELAY",60) * 20;
-        this.antiCamperDamage = fileConfiguration.getInt("ANTI_CAMPER_START_DAMAGE",2);
-        this.antiCamperFinalDamage = fileConfiguration.getInt("ANTI_CAMPER_FINAL_DAMAGE",6);
-        this.antiCamperGrowPeriod = fileConfiguration.getInt("ANTI_CAMPER_GROW_PERIOD",20) * 20;
-        this.antiCamperGrowValue = fileConfiguration.getInt("ANTI_CAMPER_GROW_VALUE",2);
-        this.antiCamperRedLineTopTowerDif = fileConfiguration.getInt("ANTI_CAMPER_RL_DIF",5);
+        this.acDelay = fc.getInt("ANTI_CAMPER_START_DELAY",60) * 20;
+        this.acDamage = fc.getInt("ANTI_CAMPER_START_DAMAGE",2);
+        this.acFinalDamage = fc.getInt("ANTI_CAMPER_FINAL_DAMAGE",6);
+        this.acGrowPeriod = fc.getInt("ANTI_CAMPER_GROW_PERIOD",20) * 20;
+        this.acGrowValue = fc.getInt("ANTI_CAMPER_GROW_VALUE",2);
+        this.antiCamperRedLineTopTowerDif = fc.getInt("ANTI_CAMPER_RL_DIF",5);
 
-        this.redLineAnimationRadius = fileConfiguration.getInt("RED_LINE_ANIMATION_RADIUS",10);
+        this.redLineAnimationRadius = fc.getInt("RED_LINE_ANIMATION_RADIUS",10);
 
-        this.snowballKnockbackPower = fileConfiguration.getDouble("SNOWBALL_KNOCKBACK_POWER",3);
-        this.snowballHitDamage = fileConfiguration.getDouble("SNOWBALL_DAMAGE",0.1);
+        this.snowballKnockbackPower = fc.getDouble("SNOWBALL_KNOCKBACK_POWER",3);
+        this.snowballHitDamage = fc.getDouble("SNOWBALL_DAMAGE",0.1);
 
-        this.fishingRodPower = fileConfiguration.getDouble("FISHINGROD_POWER",7);
+        this.fishingRodPower = fc.getDouble("FISHINGROD_POWER",7);
 
-        this.tridentKnockPower = fileConfiguration.getDouble("TRIDENT_KNOCKBACK_POWER",1);
-
-        this.enableTargetBlock = fileConfiguration.getBoolean("ENABLE_TARGET_BLOCK",true);
-        this.targetBlockExplosionPower = fileConfiguration.getDouble("TRAGET_BLOCK_KNOCKBACK_POWER",1.4);
-        this.targetBlockCooldown = fileConfiguration.getInt("TARGET_BLOCK_COOLDOWN",15) * 20;
+        this.enableTargetBlock = fc.getBoolean("ENABLE_TARGET_BLOCK",true); //non ha senso, da rimuovere
+        this.targetBlockExplosionPower = fc.getDouble("TRAGET_BLOCK_KNOCKBACK_POWER",1.4);
+        this.targetBlockCooldown = fc.getInt("TARGET_BLOCK_COOLDOWN",15) * 20;
 
     }
 
@@ -106,5 +104,19 @@ public class SettingsHandler {
         load();
     }
 
+    public void enableEchelon(boolean value) {
+        this.echelonSupport = value;
+    }
 
+    public boolean isEchelonEnabled() {
+        return echelonSupport;
+    }
+
+    public long getRewarDelay() {
+        return rewarDelay;
+    }
+
+    public long getRewardPeriod() {
+        return rewardPeriod;
+    }
 }

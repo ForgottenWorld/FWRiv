@@ -6,7 +6,6 @@ import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -21,33 +20,28 @@ import org.bukkit.util.Vector;
 
 public class ProjectileListener implements Listener {
 
-    EventService eventService = EventService.getInstance();
-    SettingsHandler settings = SettingsHandler.getSettingsHandler();
-    PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
+    SettingsHandler settings = SettingsHandler.getInstance();
     double ipsilon = 0.5;
 
     @EventHandler
-    public void disableDamage(ProjectileHitEvent event) {
+    public void onProjectileHit(ProjectileHitEvent event) {
 
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE))
-            return;
-
-        if (!(event.getHitEntity() instanceof Player))
-            return;
+        if (EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE)
+                || !(event.getHitEntity() instanceof Player)) return;
 
         Projectile pj = event.getEntity();
 
-        if(!(pj.getShooter() instanceof Player))
-            return;
+        if(!(pj.getShooter() instanceof Player)) return;
 
-        Player playerHitted = (Player) event.getHitEntity();
         Player playerShooter = (Player) pj.getShooter();
-        EntityType projectileType = pj.getType();
+        Player playerHitted = (Player) event.getHitEntity();
 
-        if (!PartecipantsManager.getInstance().isPresent(playerShooter))
-            return;
+        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
-        switch (projectileType) {
+        if (!partecipantsManager.isPresent(playerShooter)
+                || partecipantsManager.isPresent(playerHitted)) return;
+
+        switch (pj.getType()) {
             case SNOWBALL:
                 playerHitted.damage(settings.snowballHitDamage);
                 playerHitted.setVelocity(playerShooter.getLocation()
@@ -60,6 +54,8 @@ public class ProjectileListener implements Listener {
                     playerShooter.getInventory().setItemInOffHand(null);
                 else
                     return;
+
+                //todo: recode this pls
 
                 Vector vector = playerShooter.getLocation().getDirection().multiply(-1);
 
@@ -76,33 +72,25 @@ public class ProjectileListener implements Listener {
 
                 playerHitted.sendMessage(ChatFormatter.formatSuccessMessage("Hai abboccato all'amo!"));
                 playerShooter.sendMessage(ChatFormatter.formatSuccessMessage("WoW! Hai preso un pesce bello grosso ..."));
-                break;
-
-            case TRIDENT:
-                playerHitted.sendMessage(ChatFormatter.formatEventMessage("OUCH!"));
-                playerHitted.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 400, 4));
-                pj.remove();
 
         }
-
     }
 
 
     @EventHandler
-    public void enderPearlUse(ProjectileLaunchEvent event) {
+    public void onEnderpearlUse(ProjectileLaunchEvent event) {
 
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE))
-            return;
+        EventService eventService = EventService.getInstance();
+
+        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) return;
 
         Projectile pj = event.getEntity();
 
-        if(!(pj.getShooter() instanceof Player))
-            return;
+        if(!(pj.getShooter() instanceof Player)) return;
 
         Player shooter = (Player) pj.getShooter();
 
-        if (!partecipantsManager.isPresent(shooter))
-            return;
+        if (!PartecipantsManager.getInstance().isPresent(shooter)) return;
 
         if (pj.getType() == EntityType.ENDER_PEARL) {
 
@@ -110,20 +98,10 @@ public class ProjectileListener implements Listener {
 
             shooter.getInventory().getItemInMainHand().setAmount(shooter.getInventory().getItemInMainHand().getAmount() - 1);
 
-            shooter.setNoDamageTicks(25);
+            shooter.teleport(eventService.getArena().getTower().add(0,0.5,0));
 
-            shooter.teleport(eventService.getArena().getTower().clone().add(0,0.5,0));
             shooter.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,10,1));
-            shooter.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,40,1));
-
             shooter.getWorld().strikeLightningEffect(shooter.getLocation());
-
-            shooter.getWorld().createExplosion(eventService.getArena().getTower(),1,false,false);
-            shooter.getWorld().spawnParticle(Particle.EXPLOSION_LARGE,shooter.getLocation(),1);
-
-            shooter.getWorld().playSound(shooter.getLocation(),Sound.ENTITY_LIGHTNING_BOLT_IMPACT,3,1);
-            shooter.getWorld().playSound(shooter.getLocation(),Sound.ENTITY_LIGHTNING_BOLT_THUNDER,3,1);
-
 
         }
 
