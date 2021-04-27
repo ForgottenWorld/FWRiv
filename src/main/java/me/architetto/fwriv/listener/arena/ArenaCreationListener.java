@@ -14,21 +14,16 @@ public class ArenaCreationListener implements Listener{
 
     @EventHandler
     public void onRightClickSelection(PlayerInteractEvent event) {
-        if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            return;
-        }
+        if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
-        if(event.getItem() == null || event.getItem().getType() != Material.STICK) {
-            return;
-        }
+        if(event.getItem() == null || event.getItem().getType() != Material.STICK) return;
 
         Player player = event.getPlayer();
-        if(!ArenaManager.getInstance().isPlayerInCreationMode(player)) {
-            return;
-        }
+        ArenaManager arenaManager = ArenaManager.getInstance();
 
-        ArenaManager presetService = ArenaManager.getInstance();
-        presetService.arenaCreationHandler(player, Objects.requireNonNull(event.getClickedBlock()).getLocation());
+        if(!arenaManager.isPlayerInCreationMode(player)) return;
+
+        arenaManager.arenaCreationHandler(player, Objects.requireNonNull(event.getClickedBlock()).getLocation().toCenterLocation());
     }
 
 }

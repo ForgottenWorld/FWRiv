@@ -18,6 +18,8 @@ public class Countdown implements Runnable {
     private int seconds;
     private int secondsLeft;
 
+    private boolean isStarted = false;
+
     // Actions to perform while counting down, before and after
     private Consumer<Countdown> everySecond;
     private Runnable beforeTimer;
@@ -90,10 +92,16 @@ public class Countdown implements Runnable {
     public void scheduleTimer() {
         // Initialize our assigned task's id, for later use so we can cancel
         this.assignedTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, this.delay, 20L);
+        this.isStarted = true;
+    }
+
+    public boolean isStarted() {
+        return isStarted;
     }
 
     public void cancelTimer() {
         Bukkit.getScheduler().cancelTask(this.assignedTaskId);
+        this.isStarted = false;
     }
 
 }

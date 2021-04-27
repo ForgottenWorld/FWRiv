@@ -1,11 +1,8 @@
 package me.architetto.fwriv.utils;
 
-import me.architetto.fwriv.localization.Message;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.ChatColor;
 
 import java.util.Collections;
@@ -18,33 +15,31 @@ public class MessageUtil {
                 ChatColor.YELLOW + " ]----------------[*]";
     }
 
-    public static TextComponent joinCmponent() {
+    public static TextComponent joinComponent() {
         return new TextComponent( new ComponentBuilder("[")
                 .color(net.md_5.bungee.api.ChatColor.GRAY)
                 .append("JOIN")
                 .bold(true)
                 .color(net.md_5.bungee.api.ChatColor.DARK_GREEN)
                 .event(new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv join"))
-                .event(new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text(Message.COMP_EVENT_JOIN_HOVER.asString())))
                 .append("]")
                 .bold(false)
                 .color(net.md_5.bungee.api.ChatColor.GRAY).create());
     }
 
-    public static TextComponent startCmponent() {
+    public static TextComponent startComponent() {
         return new TextComponent( new ComponentBuilder("[")
                 .color(net.md_5.bungee.api.ChatColor.GRAY)
                 .append("START")
                 .bold(true)
                 .color(net.md_5.bungee.api.ChatColor.DARK_GREEN)
                 .event(new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv start"))
-                .event(new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text(Message.COMP_EVENT_START_HOVER.asString())))
                 .append("]")
                 .bold(false)
                 .color(net.md_5.bungee.api.ChatColor.GRAY).create());
     }
 
-    public static TextComponent infoCmponent() {
+    public static TextComponent infoComponent() {
         return new TextComponent( new ComponentBuilder("[")
                 .color(net.md_5.bungee.api.ChatColor.GRAY)
                 .append("INFO")
@@ -56,7 +51,7 @@ public class MessageUtil {
                 .color(net.md_5.bungee.api.ChatColor.GRAY).create());
     }
 
-    public static TextComponent restartCmponent() {
+    public static TextComponent restartComponent() {
         return new TextComponent( new ComponentBuilder("[")
                 .color(net.md_5.bungee.api.ChatColor.GRAY)
                 .append("RESTART")
@@ -68,7 +63,7 @@ public class MessageUtil {
                 .color(net.md_5.bungee.api.ChatColor.GRAY).create());
     }
 
-    public static TextComponent stopCmponent() {
+    public static TextComponent stopComponent() {
         return new TextComponent( new ComponentBuilder("[")
                 .color(net.md_5.bungee.api.ChatColor.GRAY)
                 .append("STOP")

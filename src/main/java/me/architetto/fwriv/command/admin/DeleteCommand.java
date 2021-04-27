@@ -47,10 +47,10 @@ public class DeleteCommand extends SubCommand{
 
         ArenaManager arenaManager = ArenaManager.getInstance();
 
-        if(arenaManager.getArena(args[1]).isPresent()) {
+        if(arenaManager.isArenaName(args[1])) {
 
             arenaManager.removeArena(args[1]);
-            Message.SUCCESS_ARENA_DELETED.send(sender);
+            Message.SUCCESS_ARENA_DELETED.send(sender,args[1]);
 
         } else
             Message.ERR_ARENA_NAME_NOT_EXIST.send(sender);

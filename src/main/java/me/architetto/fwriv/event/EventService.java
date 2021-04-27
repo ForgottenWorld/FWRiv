@@ -5,7 +5,7 @@ import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
-import me.architetto.fwriv.event.service.OldAntiCamperService;
+import me.architetto.fwriv.event.service.AntiCamperService;
 import me.architetto.fwriv.event.service.RewardSystemService;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.obj.ArenaDoors;
@@ -40,6 +40,8 @@ public class EventService {
     private ArenaDoors arenaDoors;
 
     private Countdown startCountdown;
+
+    private int stopCheckerRunnable = 0;
 
     private EventService() {
         if(eventService != null) {
@@ -156,9 +158,10 @@ public class EventService {
             eventStatus = EventStatus.ENDED;
 
         if (eventStatus.equals(EventStatus.ENDED)) {
-            stopTasks();
-            Message.COMP_EVENT_ENDED_BROADCAST.broadcastComponent("fwriv.echo", MessageUtil.restartCmponent(),MessageUtil.stopCmponent());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.getPlugin(FWRiv.class), this::stopEvent,1800L);
+            stopEventServices();
+            Message.COMP_EVENT_ENDED_BROADCAST.broadcastComponent("fwriv.echo", MessageUtil.restartComponent(),MessageUtil.stopComponent());
+            this.stopCheckerRunnable = Bukkit.getScheduler()
+                    .scheduleSyncDelayedTask(FWRiv.getPlugin(FWRiv.class), this::stopEvent,1800L);
         }
     }
 
@@ -169,14 +172,21 @@ public class EventService {
                 "E' IL VINCITORE DELL'EVENTO",20,100,20));
     }
 
-    public void stopTasks() {
+    private void stopEventServices() {
 
-        OldAntiCamperService.getInstance().stopAnticamperTasks();
+        AntiCamperService.getInstance().stopAntiCamperSystem();
         RewardSystemService.getInstance().stopRewardService();
+        if (this.stopCheckerRunnable != 0) {
+            Bukkit.getScheduler().cancelTask(stopCheckerRunnable);
+            this.stopCheckerRunnable = 0;
+        }
 
     }
 
     public void startEventTimer() {
+
+        AntiCamperService.getInstance().initializeAntiCamperSystem();
+        RewardSystemService.getInstance().initializeRewardSystem();
 
         this.startCountdown = new Countdown(FWRiv.getPlugin(FWRiv.class),
                 0,
@@ -189,7 +199,7 @@ public class EventService {
                             .map(Bukkit::getPlayer)
                             .filter(Objects::nonNull)
                             .forEach(p -> {
-                                p.sendMessage(ChatFormatter.formatInitializationMessage(Messages.START_CD_MSG));
+                                Message.COUNTDOWN_START.send(p);
                                 equipLoadout(p);
                             });
 
@@ -208,9 +218,6 @@ public class EventService {
                             });
 
                     this.arenaDoors.open();
-
-                    OldAntiCamperService.getInstance().startAntiCamperSystem();
-                    RewardSystemService.getInstance().initializeRewardSystem();
 
                 },
                 (t) -> {
@@ -258,19 +265,15 @@ public class EventService {
 
                 });
 
-
-        OldAntiCamperService.getInstance().stopAnticamperTasks();
-        RewardSystemService.getInstance().stopRewardService();
+        stopEventServices();
 
     }
 
     public void stopEvent() {
 
-        if (!eventStatus.equals(EventStatus.READY)) {
+        if (this.startCountdown != null && this.startCountdown.isStarted())
             this.startCountdown.cancelTimer();
-            OldAntiCamperService.getInstance().stopAnticamperTasks();
-            RewardSystemService.getInstance().stopRewardService();
-        }
+        stopEventServices();
 
         this.eventStatus = EventStatus.INACTIVE;
 
@@ -295,13 +298,11 @@ public class EventService {
                     });
 
                     partecipantsManager.removePartecipant(p);
+                    mutexActivityLeaveSupport(p);
 
                 });
 
         this.arenaDoors.close();
-
-        removeAllPlayerMutexActivitySupport();
-
 
     }
 
@@ -342,13 +343,10 @@ public class EventService {
     }
 
     public void mutexActivityLeaveSupport(Player player) {
-        if (SettingsHandler.getInstance().isEchelonEnabled())
-            EchelonHolder.getEchelonHolder().removePlayerMutexActivity(player);
-    }
-
-    public void removeAllPlayerMutexActivitySupport() {
-        if (SettingsHandler.getInstance().isEchelonEnabled())
-            EchelonHolder.getEchelonHolder().removeAllMutexActivityRIVPlayer();
+        if (SettingsHandler.getInstance().isEchelonEnabled()) {
+            if (EchelonHolder.getEchelonHolder().isPlayerInMutexActivity(player))
+                EchelonHolder.getEchelonHolder().removePlayerMutexActivity(player);
+        }
     }
 
 }

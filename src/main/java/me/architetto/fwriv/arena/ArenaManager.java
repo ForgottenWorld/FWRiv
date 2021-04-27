@@ -81,9 +81,7 @@ public class ArenaManager {
     }
 
     public void arenaCreationHandler(Player sender, Location location) {
-        if(!playerArenaCreation.containsKey(sender.getUniqueId())) {
-            return;
-        }
+        if(!playerArenaCreation.containsKey(sender.getUniqueId())) return;
 
         int senderStep = playerArenaCreation.get(sender.getUniqueId());
         switch(senderStep) {
@@ -166,11 +164,9 @@ public class ArenaManager {
     }
 
     public void particleEffect(Location loc) {
-
-        loc.add(0.5,1,0.5);
+        Location location = loc.toCenterLocation();
         Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(255, 69, 0), 5);
-        loc.getWorld().spawnParticle(Particle.REDSTONE,loc,10,dustOptions);
-
+        location.getWorld().spawnParticle(Particle.REDSTONE,location,5,dustOptions);
     }
 
     public void removeArena(String arenaName) {

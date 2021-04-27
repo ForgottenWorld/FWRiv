@@ -5,8 +5,10 @@ import me.architetto.fwriv.event.EventService;
 import org.bukkit.entity.Player;
 
 public class MyMutexActivity implements MutexActivity {
+
     @Override
     public void onAllPlayersForceRemoved(String s) {
+        EventService.getInstance().stopEvent();
     }
 
     @Override

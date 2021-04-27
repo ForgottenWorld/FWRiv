@@ -8,7 +8,12 @@ strings:
   join_started_event: "L'evento e' gia' iniziato. Sei stato aggiunto alla lista dei partecipanti"
   join_ready_event: "Sei stato aggiunto alla lista dei partecipanti. Tieniti pronto per l'inizio dell'evento"
 
+  countdown_start: "L'evento inizierà tra 10 secondi!"
   start_message: "&bPer i prossimi &e&l60&r &bsecondi tutti i partecipanti sono immuni a qualsiasi danno"
+
+  anticamper_start: "&7Anti-camper attivato. Altezza minima consentita : &e{0}"
+  anticamper_height_change: "&7Altezza minima consentita : &e{0}"
+  anticamper_max_height: "&cDanni anti-camper aumentati!&7 Altezza minima consentita &e{0}"
 
   #Success messages
   success_arena_creation: "&bArena &e{0}&r &bcorrettamente creata"
@@ -57,11 +62,8 @@ strings:
   comp_event_join: " &bPartecipa all'evento &eRESTA IN VETTA&r &be dimostra a tutti chi è il RE della torre! §*§
   &b\n Non lasciarti scappare il premio riservato al vincitore! \n Clicca §*§ &bse hai bisogno di informazioni sul gameplay
   dell'evento"
-  comp_event_join_hover: "Clicca per &e&bpartecipare&r all'evento"
   comp_event_start: " Evento inizializzato correttamente. §*"
-  comp_event_start_hover: "Clicca per &e&bfar partire&r l'evento."
-  comp_event_stop_hover: "Clicca per &e&bterminare&r l'evento"
-  comp_event_ended_broadcast: " Riavviare l'evento o terminarlo §*§*§ \n L'evento verrà automaticamente terminato tra 1 minuto e 30 secondi"
+  comp_event_ended_broadcast: " &eL'evento verrà automaticamente terminato tra 1 minuto e 30 secondi §*§*"
 
 special_item_lore:
   SNOWBALL:

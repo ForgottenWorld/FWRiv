@@ -32,7 +32,8 @@ public final class FWRiv extends JavaPlugin {
         plugin = this;
         ConfigManager.getInstance().setPlugin(plugin);
 
-        Bukkit.getConsoleSender().sendMessage("=====================[      RIVe      ]======================");
+        Bukkit.getConsoleSender().sendMessage("=====================[      " + ChatColor.DARK_AQUA + "FWRiv"
+                + ChatColor.RESET + "      ]=====================");
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Messages.yml...");
         LocalizationManager.getInstance().loadLanguageFile();

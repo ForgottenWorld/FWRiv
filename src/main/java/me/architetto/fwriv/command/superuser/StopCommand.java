@@ -1,6 +1,5 @@
 package me.architetto.fwriv.command.superuser;
 
-import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
@@ -8,7 +7,6 @@ import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.Messages;
-import org.bukkit.Bukkit;
 
 import org.bukkit.entity.Player;
 
@@ -27,7 +25,7 @@ public class StopCommand extends SubCommand{
 
     @Override
     public String getSyntax(){
-        return "/fwriv stop [force]";
+        return "/fwriv stop";
     }
 
     @Override
@@ -54,12 +52,6 @@ public class StopCommand extends SubCommand{
         eventService.stopEvent();
 
         sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.STOP_CMD_SENDER_MESSAGE));
-
-        if (args.length == 2) {
-            if (args[1].equalsIgnoreCase("force"))
-                Bukkit.getScheduler().cancelTasks(FWRiv.plugin);
-        }
-
 
     }
 

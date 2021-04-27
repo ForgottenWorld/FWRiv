@@ -50,7 +50,7 @@ public class RewardSystemService {
 
         this.rewardLine = eventService.getArena().getTower().getBlockY();
         this.rewardPeriod = 1f/settingsHandler.getRewardPeriod();
-        this.rewardBar.setTitle("REWARD :" + RewardService.getInstance().getNextTowerReward());
+        this.rewardBar.setTitle("REWARD : " + RewardService.getInstance().getNextTowerReward());
 
         startRewardSystem(settingsHandler.getRewarDelay());
 
@@ -94,7 +94,8 @@ public class RewardSystemService {
     }
 
     public void stopRewardService() {
-        this.rewardRunnable.cancelTimer();
+        if (this.rewardRunnable != null && this.rewardRunnable.isStarted())
+            this.rewardRunnable.cancelTimer();
         this.rewardBar.removeAll();
         this.rewardBar.setVisible(false);
     }

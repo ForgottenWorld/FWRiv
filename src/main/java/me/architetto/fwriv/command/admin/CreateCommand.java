@@ -47,8 +47,7 @@ public class CreateCommand extends SubCommand{
 
         ArenaManager arenaManager = ArenaManager.getInstance();
 
-
-        if (arenaManager.getArena(arenaName).isPresent()) {
+        if (arenaManager.isArenaName(arenaName)) {
             Message.ERR_ARENA_NAME_UNAVAIBLE.send(sender);
             return;
         }

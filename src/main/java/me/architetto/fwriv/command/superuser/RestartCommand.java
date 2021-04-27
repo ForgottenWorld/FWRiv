@@ -8,12 +8,6 @@ import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.command.CommandName;
 import me.architetto.fwriv.utils.MessageUtil;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -48,12 +42,18 @@ public class RestartCommand extends SubCommand{
     }
 
     @Override
-    public void perform(Player sender, String[] args){
+    public void perform(Player sender, String[] args) {
 
         EventService eventService = EventService.getInstance();
+        EventStatus eventStatus = eventService.getEventStatus();
 
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) {
+        if (eventStatus.equals(EventStatus.INACTIVE)) {
             Message.ERR_NO_EVENT_IS_RUNNING.send(sender);
+            return;
+        }
+
+        if (eventStatus.equals(EventStatus.READY)) {
+            //todo: messaggio. Non serve il restart se non è ancora iniziato
             return;
         }
 
@@ -74,7 +74,7 @@ public class RestartCommand extends SubCommand{
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (uuid.contains(p.getUniqueId())) continue;
-            Message.COMP_EVENT_JOIN.sendSpecialComponent(p, MessageUtil.joinCmponent(),MessageUtil.infoCmponent());
+            Message.COMP_EVENT_JOIN.sendSpecialComponent(p, MessageUtil.joinComponent(),MessageUtil.infoComponent());
         }
 
     }

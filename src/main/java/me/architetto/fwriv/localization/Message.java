@@ -20,6 +20,11 @@ public enum Message {
     JOIN_READY_EVENT("join_ready_event", true),
 
     START_MESSAGE("start_message", true),
+    COUNTDOWN_START("countdown_start", true),
+
+    ANTICAMPER_START("anticamper_start", true),
+    ANTICAMPER_HEIGHT_CHANGE("anticamper_height_change", true),
+    ANTICAMPER_MAX_HEIGHT("anticamper_max_height", true),
 
     SUCCESS_ARENA_CREATION("success_arena_creation", true),
     SUCCESS_ARENA_DELETED("success_arena_deleted", true),
@@ -51,9 +56,7 @@ public enum Message {
 
     //COMPONENT
     COMP_EVENT_JOIN("comp_event_join", true),
-    COMP_EVENT_JOIN_HOVER("comp_event_join_hover", false),
     COMP_EVENT_START("comp_event_start", true),
-    COMP_EVENT_START_HOVER("comp_event_start_hover", false),
     COMP_EVENT_ENDED_BROADCAST("comp_event_ended_broadcast", true),
 
 

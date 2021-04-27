@@ -31,9 +31,7 @@ public class RightClickListener implements Listener{
     @EventHandler
     public void targetBlockInteract(PlayerInteractEvent event) {
 
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)
-                || !settingsHandler.enableTargetBlock)
-            return;
+        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) return;
 
         Player player = event.getPlayer();
         Block clickedBlock = event.getClickedBlock();

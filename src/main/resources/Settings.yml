@@ -17,17 +17,6 @@ START_LOADOUT:
   - 'COOKED_PORKCHOP,15'
   - 'HONEYCOMB,10'
 
-ANTI_CAMPER_START_DELAY: 30
-ANTI_CAMPER_START_DAMAGE: 2
-ANTI_CAMPER_FINAL_DAMAGE: 6
-ANTI_CAMPER_GROW_PERIOD: 15
-ANTI_CAMPER_GROW_VALUE: 5
-ANTI_CAMPER_RL_DIF: 5
-
-RED_LINE_ANIMATION_RADIUS: 15
-
-#not implemented yet ->
-
 REWARD_SYSTEM:
   DELAY: 30
   PERIOD: 60
@@ -38,9 +27,7 @@ ANTI_CAMPER_SYSTEM:
   GROW_VALUE: 5
   START_DAMAGE: 2
   FINAL_DAMAGE: 5
-  NAX_HEIGHT_DIF: 5
-
-#<- not implemented yet
+  MAX_HEIGHT_DIF: 5
 
 #ITEM REWARD: {Material .., int weight, int maxAmount, boolean unique}
 #POTION REWARD: {PotionEffetcType .., int weight, int minTickDuration, int maxTickDuration, int amplifier, DyeColor dyeColor}

@@ -17,13 +17,13 @@ public class SettingsHandler {
     private long rewarDelay;
     private long rewardPeriod;
 
-    public int acDelay;
-    public int acDamage;
-    public int acFinalDamage;
-    public int acGrowPeriod;
-    public int acGrowValue;
-    public int antiCamperRedLineTopTowerDif; //Questo non è indispensabile
-    public int redLineAnimationRadius;
+    private int acMaxYDiff;
+    private long acDelay;
+    private int acGrowPeriod;
+
+    private int acDamage;
+    private int acFinalDamage;
+    private int acGrowValue;
 
 
     public List<ItemStack> startEquipItems = new ArrayList<>();
@@ -33,7 +33,6 @@ public class SettingsHandler {
 
     public double fishingRodPower;
 
-    public boolean enableTargetBlock;
     public double targetBlockExplosionPower;
     public int targetBlockCooldown;
 
@@ -60,21 +59,21 @@ public class SettingsHandler {
         this.rewarDelay = fc.getLong("REWARD_SYSTEM.DELAY",30) * 20;
         this.rewardPeriod = fc.getLong("REWARD_SYSTEM.PERIOD",20);
 
-        this.acDelay = fc.getInt("ANTI_CAMPER_START_DELAY",60) * 20;
-        this.acDamage = fc.getInt("ANTI_CAMPER_START_DAMAGE",2);
-        this.acFinalDamage = fc.getInt("ANTI_CAMPER_FINAL_DAMAGE",6);
-        this.acGrowPeriod = fc.getInt("ANTI_CAMPER_GROW_PERIOD",20) * 20;
-        this.acGrowValue = fc.getInt("ANTI_CAMPER_GROW_VALUE",2);
-        this.antiCamperRedLineTopTowerDif = fc.getInt("ANTI_CAMPER_RL_DIF",5);
+        this.acMaxYDiff = fc.getInt("ANTI_CAMPER_SYSTEM.NAX_HEIGHT_DIF",5);
+        this.acDelay = fc.getLong("ANTI_CAMPER_SYSTEM.DELAY",60) * 20;
+        this.acGrowPeriod = fc.getInt("ANTI_CAMPER_SYSTEM.GROW_PERIOD",20);
 
-        this.redLineAnimationRadius = fc.getInt("RED_LINE_ANIMATION_RADIUS",10);
+        this.acDamage = fc.getInt("ANTI_CAMPER_SYSTEM.START_DAMAGE",2);
+        this.acFinalDamage = fc.getInt("ANTI_CAMPER_SYSTEM.FINAL_DAMAGE",6);
+        this.acGrowValue = fc.getInt("ANTI_CAMPER_SYSTEM.GROW_VALUE",2);
+
+
 
         this.snowballKnockbackPower = fc.getDouble("SNOWBALL_KNOCKBACK_POWER",3);
         this.snowballHitDamage = fc.getDouble("SNOWBALL_DAMAGE",0.1);
 
         this.fishingRodPower = fc.getDouble("FISHINGROD_POWER",7);
 
-        this.enableTargetBlock = fc.getBoolean("ENABLE_TARGET_BLOCK",true); //non ha senso, da rimuovere
         this.targetBlockExplosionPower = fc.getDouble("TRAGET_BLOCK_KNOCKBACK_POWER",1.4);
         this.targetBlockCooldown = fc.getInt("TARGET_BLOCK_COOLDOWN",15) * 20;
 
@@ -119,4 +118,29 @@ public class SettingsHandler {
     public long getRewardPeriod() {
         return rewardPeriod;
     }
+
+    public int getAcMaxYDiff() {
+        return acMaxYDiff;
+    }
+
+    public long getAcDelay() {
+        return acDelay;
+    }
+
+    public int getAcGrowPeriod() {
+        return acGrowPeriod;
+    }
+
+    public int getAcDamage() {
+        return acDamage;
+    }
+
+    public int getAcFinalDamage() {
+        return acFinalDamage;
+    }
+
+    public int getAcGrowValue() {
+        return acGrowValue;
+    }
+
 }

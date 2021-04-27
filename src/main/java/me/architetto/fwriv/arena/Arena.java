@@ -6,6 +6,7 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -88,11 +89,11 @@ public class Arena {
         return doorsList;
     }
 
-    public int getLowestY() {
-
-        return Math.min(Math.min(spawn1.getVector().getBlockY(),spawn2.getVector().getBlockY()),
-                Math.min(spawn3.getVector().getBlockY(),spawn4.getVector().getBlockY()));
-
+    public Location getCenteredLowestLocation() {
+        Location loc = this.tower.loc();
+        loc.setY(Math.min(Math.min(spawn1.getVector().getBlockY(),spawn2.getVector().getBlockY()),
+                Math.min(spawn3.getVector().getBlockY(),spawn4.getVector().getBlockY())));
+        return loc;
     }
 
     @Override

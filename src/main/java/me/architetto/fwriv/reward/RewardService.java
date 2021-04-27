@@ -169,12 +169,16 @@ public class RewardService {
         long weightSum = ThreadLocalRandom.current()
                 .nextLong(this.targetBlockWeightSum, this.targetBlockWeightSum * 2);
 
+        if (weightSum % 23 == 0) {
+            //todo: esplosione
+            return;
+        }
+
         while (weightSum > 0) {
             for (Map.Entry<Reward, Integer> entry : targetBlockRewardsMap.entrySet()) {
                 weightSum -= entry.getValue();
-                if (weightSum <= 0) {
+                if (weightSum < 0)
                     entry.getKey().give(player);
-                }
             }
         }
     }

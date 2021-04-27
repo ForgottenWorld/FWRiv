@@ -61,7 +61,7 @@ public class InitCommand extends SubCommand{
 
         eventService.initialization(arena.get());
 
-        Message.COMP_EVENT_JOIN.specialBroadcastComponent(MessageUtil.joinCmponent(), MessageUtil.infoCmponent());
+        Message.COMP_EVENT_JOIN.specialBroadcastComponent(MessageUtil.joinComponent(), MessageUtil.infoComponent());
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin,() -> suggestStartCommand(sender),20L);
 
@@ -75,6 +75,6 @@ public class InitCommand extends SubCommand{
     }
 
     public void suggestStartCommand(Player sender) {
-        Message.COMP_EVENT_START.sendComponent(sender, MessageUtil.startCmponent());
+        Message.COMP_EVENT_START.sendComponent(sender, MessageUtil.startComponent());
     }
 }

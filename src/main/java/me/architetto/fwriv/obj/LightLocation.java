@@ -37,6 +37,33 @@ public class LightLocation {
         return chunkKey;
     }
 
+    public int getBlockY() {
+        return vector.getBlockY();
+    }
+
+    public int getBlockX() {
+        return vector.getBlockX();
+    }
+
+    public int getBlockZ() {
+        return vector.getBlockZ();
+    }
+
+    public Location setBlockX(double x) {
+        this.vector.setX(x);
+        return this.vector.toLocation(Objects.requireNonNull(Bukkit.getWorld(worldUUID)));
+    }
+
+    public Location setBlockY(double y) {
+        this.vector.setY(y);
+        return this.vector.toLocation(Objects.requireNonNull(Bukkit.getWorld(worldUUID)));
+    }
+
+    public Location setBlockZ(double z) {
+        this.vector.setZ(z);
+        return this.vector.toLocation(Objects.requireNonNull(Bukkit.getWorld(worldUUID)));
+    }
+
     public Location loc() {
         return vector.toLocation(Objects.requireNonNull(Bukkit.getWorld(worldUUID)));
     }
