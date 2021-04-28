@@ -8,12 +8,18 @@ strings:
   join_started_event: "L'evento e' gia' iniziato. Sei stato aggiunto alla lista dei partecipanti"
   join_ready_event: "Sei stato aggiunto alla lista dei partecipanti. Tieniti pronto per l'inizio dell'evento"
 
+
   countdown_start: "L'evento inizierà tra 10 secondi!"
   start_message: "&bPer i prossimi &e&l60&r &bsecondi tutti i partecipanti sono immuni a qualsiasi danno"
 
   anticamper_start: "&7Anti-camper attivato. Altezza minima consentita : &e{0}"
   anticamper_height_change: "&7Altezza minima consentita : &e{0}"
   anticamper_max_height: "&cDanni anti-camper aumentati!&7 Altezza minima consentita &e{0}"
+
+  reward_obtained: "Hai ottenuto una ricompensa : &e{0}"
+
+  partecipant_restart_message: "Evento restartato. Sei stato automaticamente aggiunto alla lista dei partecipanti"
+  partecipant_leave: "Hai abbandonato l'evento"
 
   #Success messages
   success_arena_creation: "&bArena &e{0}&r &bcorrettamente creata"
@@ -43,9 +49,13 @@ strings:
   err_inventory_full: "&e&oInventario pieno, non hai ricevuto il reward!"
   err_unique_reward: "&e&oSei stato sfortunato, non hai ricevuto nessun reward"
 
+  err_restart_done: "&cL'evento e' gia' pronto per essere startato ..."
+
   #Broadcast
   broadcast_playerjoinevent: "&o&b{0} &asta partecipando all'evento."
   broadcast_playerleaveevent: "&o&b{0} &aha abbandonato l'evento l'evento."
+  broadcast_event_ended: "Evento 'RIV' terminato"
+
 
   #Command description
   create_command: "&7Comando per la creazione di una nuova arena RIV"
@@ -63,7 +73,7 @@ strings:
   &b\n Non lasciarti scappare il premio riservato al vincitore! \n Clicca §*§ &bse hai bisogno di informazioni sul gameplay
   dell'evento"
   comp_event_start: " Evento inizializzato correttamente. §*"
-  comp_event_ended_broadcast: " &eL'evento verrà automaticamente terminato tra 1 minuto e 30 secondi §*§*"
+  comp_event_ended_broadcast: " &eL'evento si e' concluso. \n  - Per riavviare l'evento §*§ \n  - Per terminare levento §*"
 
 special_item_lore:
   SNOWBALL:

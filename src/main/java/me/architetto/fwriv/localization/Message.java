@@ -22,9 +22,14 @@ public enum Message {
     START_MESSAGE("start_message", true),
     COUNTDOWN_START("countdown_start", true),
 
+    REWARD_OBTAINED("reward_obtained", true),
+
     ANTICAMPER_START("anticamper_start", true),
     ANTICAMPER_HEIGHT_CHANGE("anticamper_height_change", true),
     ANTICAMPER_MAX_HEIGHT("anticamper_max_height", true),
+
+    PARTECIPANT_RESTART_MESSAGE("partecipant_restart_message",true),
+    PARTECIPANT_LEAVE("partecipant_leave",true),
 
     SUCCESS_ARENA_CREATION("success_arena_creation", true),
     SUCCESS_ARENA_DELETED("success_arena_deleted", true),
@@ -50,16 +55,17 @@ public enum Message {
     ERR_INVENTORY_FULL("err_inventory_full",true),
     ERR_UNIQUE_REWARD("err_unique_reward", true),
 
+    ERR_RESTART_DONE("err_restart_done", true),
+
     //BROADCAST
     BROADCAST_PLAYERJOINEVENT("broadcast_playerjoinevent", true),
     BROADCAST_PLAYERLEAVEEVENT("broadcast_playerleaveevent", true),
+    BROADCAST_EVENT_ENDED("broadcast_event_ended",true),
 
     //COMPONENT
     COMP_EVENT_JOIN("comp_event_join", true),
     COMP_EVENT_START("comp_event_start", true),
     COMP_EVENT_ENDED_BROADCAST("comp_event_ended_broadcast", true),
-
-
 
     //COMMAND DESCRIPTION
     INIT_COMMAND("init_command", false),

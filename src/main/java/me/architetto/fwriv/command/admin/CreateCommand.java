@@ -1,13 +1,9 @@
 package me.architetto.fwriv.command.admin;
 
-import me.architetto.fwriv.arena.Arena;
 import me.architetto.fwriv.arena.ArenaManager;
 import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.localization.Message;
-import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -32,7 +28,7 @@ public class CreateCommand extends SubCommand{
 
     @Override
     public String getPermission() {
-        return "rivevent.create";
+        return "fwriv.create";
     }
 
     @Override
@@ -43,7 +39,7 @@ public class CreateCommand extends SubCommand{
     @Override
     public void perform(Player sender, String[] args) {
 
-        String arenaName = String.join("_", Arrays.copyOfRange(args, 1, args.length));;
+        String arenaName = String.join("_", Arrays.copyOfRange(args, 1, args.length));
 
         ArenaManager arenaManager = ArenaManager.getInstance();
 

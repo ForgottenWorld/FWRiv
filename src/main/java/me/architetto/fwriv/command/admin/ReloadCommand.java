@@ -31,7 +31,7 @@ public class ReloadCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "rivevent.reload";
+        return "fwriv.reload";
     }
 
     @Override

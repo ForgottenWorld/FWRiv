@@ -1,5 +1,7 @@
 package me.architetto.fwriv.reward;
 
+import me.architetto.fwriv.localization.Message;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -36,6 +38,7 @@ public class EffectReward extends Reward {
             duration = ThreadLocalRandom.current().nextInt(minDuration, maxDuration);
 
         new PotionEffect(potionEffectType, duration, amplifier).apply(player);
+        Message.REWARD_OBTAINED.send(player, getName());
 
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK,1,1);
 
@@ -43,6 +46,6 @@ public class EffectReward extends Reward {
 
     @Override
     public String getName() {
-        return ChatColor.GOLD + potionEffectType.getName();
+        return StringUtils.capitalize(this.potionEffectType.getName().toLowerCase()) + " effect";
     }
 }

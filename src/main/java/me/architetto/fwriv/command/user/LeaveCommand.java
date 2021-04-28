@@ -6,9 +6,7 @@ import me.architetto.fwriv.partecipant.Partecipant;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
-import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -33,7 +31,7 @@ public class LeaveCommand extends SubCommand{
 
     @Override
     public String getPermission() {
-        return "rivevent.leave";
+        return "fwriv.leave";
     }
 
     @Override
@@ -62,8 +60,7 @@ public class LeaveCommand extends SubCommand{
         eventService.partecipantLeave(sender);
 
         sender.playSound(sender.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-        sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.LEAVE_OK));
-
+        Message.PARTECIPANT_LEAVE.send(sender);
         Message.BROADCAST_PLAYERLEAVEEVENT.broadcast("riveven.echo",sender.getDisplayName());
 
     }

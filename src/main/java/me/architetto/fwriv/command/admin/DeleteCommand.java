@@ -28,7 +28,7 @@ public class DeleteCommand extends SubCommand{
 
     @Override
     public String getPermission() {
-        return "rivevent.delete";
+        return "fwriv.delete";
     }
 
     @Override

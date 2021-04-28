@@ -4,9 +4,7 @@ import me.architetto.fwriv.command.SubCommand;
 import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.localization.Message;
-import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
 
 import org.bukkit.entity.Player;
 
@@ -30,7 +28,7 @@ public class StopCommand extends SubCommand{
 
     @Override
     public String getPermission() {
-        return "rivevent.stop";
+        return "fwriv.stop";
     }
 
     @Override
@@ -50,8 +48,6 @@ public class StopCommand extends SubCommand{
         }
 
         eventService.stopEvent();
-
-        sender.sendMessage(ChatFormatter.formatSuccessMessage(Messages.STOP_CMD_SENDER_MESSAGE));
 
     }
 

@@ -1,9 +1,6 @@
 package me.architetto.fwriv.config;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ConfigManager{
 
     private static ConfigManager single_inst = null;
@@ -26,7 +24,7 @@ public class ConfigManager{
         this.plugin = plugin;
     }
 
-    public FileConfiguration getConfig(String name){
+    public FileConfiguration getConfig(String name) {
         if (customConfigs.size() > 0) {
             for (FileConfiguration conf : customConfigs) {
                 if (conf.getName().equalsIgnoreCase(name)) {
@@ -38,7 +36,7 @@ public class ConfigManager{
         return createNewCustomConfig(name);
     }
 
-    public void reloadConfigs(){
+    public void reloadConfigs() {
         customConfigs.clear();
         configNames.clear();
     }
@@ -47,6 +45,7 @@ public class ConfigManager{
         FileConfiguration fileConfiguration;
         File configFile = new File(plugin.getDataFolder(), name);
         if (!configFile.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             configFile.getParentFile().mkdirs();
             plugin.saveResource(name, false);
         }
@@ -64,12 +63,12 @@ public class ConfigManager{
     }
 
     //Returns true if saved successfully, returns false in case of error and prints error to console
-    public boolean setData(FileConfiguration conf, String path, Object data){
+    public boolean setData(FileConfiguration conf, String path, Object data) {
         conf.set(path, data);
         return saveData(conf);
     }
 
-    public boolean saveData(FileConfiguration conf){
+    public boolean saveData(FileConfiguration conf) {
         try {
             conf.save(new File(plugin.getDataFolder(), configNames.get(customConfigs.indexOf(conf))));
         } catch (IOException e){
@@ -79,48 +78,38 @@ public class ConfigManager{
         return true;
     }
 
-    public String getStringRaw(FileConfiguration conf, String path){
-        //Create dummy if not available
-        if (!conf.contains(path)) {
+    public String getStringRaw(FileConfiguration conf, String path) {
+        if (!conf.contains(path))
             return null;
-           // setData(conf, path, "null"); //todo
-        }
+
         return conf.getString(path);
     }
 
-    public int getInt(FileConfiguration conf, String path){
-        //Create dummy if not available
-        if (!conf.contains(path)) {
-            setData(conf, path, 1);
-        }
+    public int getInt(FileConfiguration conf, String path) {
+        if (!conf.contains(path))
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Setting not found : [PATH] " + path);
         return conf.getInt(path);
     }
 
-    public double getDouble(FileConfiguration conf, String path){
-        //Create dummy if not available
-        if (!conf.contains(path)) {
-            setData(conf, path, 1.0);
-        }
+    public double getDouble(FileConfiguration conf, String path) {
+        if (!conf.contains(path))
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Setting not found : [PATH] " + path);
         return conf.getDouble(path);
     }
 
-    public boolean getBoolean(FileConfiguration conf, String path){
-        //Create dummy if not available
-        if (!conf.contains(path)) {
-            setData(conf, path, false);
-        }
+    public boolean getBoolean(FileConfiguration conf, String path) {
+        if (!conf.contains(path))
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Setting not found : [PATH] " + path);
         return conf.getBoolean(path);
     }
 
-    public List<?> getList(FileConfiguration conf, String path){
-        //Create dummy list if not available
-        if (!conf.contains(path)) {
-            setData(conf, path, new ArrayList<Location>().add(new Location(Bukkit.getWorld("world"), 10, 10, 10)));
-        }
+    public List<?> getList(FileConfiguration conf, String path) {
+        if (!conf.contains(path))
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Setting not found : [PATH] " + path);
         return conf.getList(path);
     }
 
-    public boolean addLocation(FileConfiguration conf, Location location, String path){
+    public boolean addLocation(FileConfiguration conf, Location location, String path) {
         conf.set(String.format("%s.world", path), location.getWorld().getName());
         conf.set(String.format("%s.x", path), location.getX());
         conf.set(String.format("%s.y", path), location.getY());
@@ -147,12 +136,12 @@ public class ConfigManager{
     }
 
     private ConfigManager() {
+        //
     }
 
     public static ConfigManager getInstance() {
-        if (single_inst == null) {
+        if (single_inst == null)
             single_inst = new ConfigManager();
-        }
         return single_inst;
     }
 }

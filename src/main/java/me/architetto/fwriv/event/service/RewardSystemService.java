@@ -9,6 +9,7 @@ import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.reward.RewardService;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -19,6 +20,8 @@ import java.util.Objects;
 public class RewardSystemService {
 
     private static RewardSystemService instance;
+
+    private boolean allrandom;
 
     private Repeater rewardRunnable;
     private BossBar rewardBar;
@@ -50,7 +53,12 @@ public class RewardSystemService {
 
         this.rewardLine = eventService.getArena().getTower().getBlockY();
         this.rewardPeriod = 1f/settingsHandler.getRewardPeriod();
-        this.rewardBar.setTitle("REWARD : " + RewardService.getInstance().getNextTowerReward());
+        this.allrandom = settingsHandler.isAllrandom();
+        if (!this.allrandom)
+            this.rewardBar.setTitle("NEXT REWARD : " + ChatColor.GOLD + RewardService.getInstance().getNextTowerReward());
+        else
+            this.rewardBar.setTitle(ChatColor.YELLOW + "NEXT REWARD");
+
 
         startRewardSystem(settingsHandler.getRewarDelay());
 
@@ -82,12 +90,19 @@ public class RewardSystemService {
                                 .filter(Objects::nonNull)
                                 .filter(p -> p.getLocation().getBlockY() >= rewardLine)
                                 .forEach(p -> {
-                                    RewardService.getInstance().giveTowerReward(p);
+                                    if (!allrandom)
+                                        RewardService.getInstance().giveTowerReward(p);
+                                    else
+                                        RewardService.getInstance().giveRandomTowerReward(p);
+
                                     PartecipantsManager.getInstance().getPartecipantStats(p).ifPresent(PartecipantStats::addReward);
                                 });
-                        RewardService.getInstance().pickNextTowerReward();
                         this.rewardBar.setProgress(1);
-                        this.rewardBar.setTitle("REWARD : " + RewardService.getInstance().getNextTowerReward());
+
+                        if (!this.allrandom) {
+                            RewardService.getInstance().pickNextTowerReward();
+                            this.rewardBar.setTitle("NEXT REWARD : " + ChatColor.GOLD + RewardService.getInstance().getNextTowerReward());
+                        }
                     }
                 });
         this.rewardRunnable.scheduleTimer();

@@ -3,6 +3,7 @@ package me.architetto.fwriv.reward;
 import me.architetto.fwriv.config.ConfigManager;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -165,12 +166,29 @@ public class RewardService {
         nextTowerReward.give(players);
     }
 
+    public void giveRandomTowerReward(Player player) {
+        long weightSum = ThreadLocalRandom.current()
+                .nextLong(this.towerRewardsWeightSum, this.towerRewardsWeightSum * 2);
+        while (weightSum > 0) {
+            for (Map.Entry<Reward, Integer> entry : towerRewardsWeightMap.entrySet()) {
+                weightSum -= entry.getValue();
+                if (weightSum <= 0) {
+                    entry.getKey().give(player);
+                    return;
+                }
+            }
+        }
+    }
+
+
+
     public void giveTargetBlockReward(Player player) {
         long weightSum = ThreadLocalRandom.current()
                 .nextLong(this.targetBlockWeightSum, this.targetBlockWeightSum * 2);
 
         if (weightSum % 23 == 0) {
-            //todo: esplosione
+            player.setVelocity(player.getLocation().getDirection().multiply(-5));
+            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
             return;
         }
 

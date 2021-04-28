@@ -51,7 +51,7 @@ public class ItemReward extends Reward {
             itemStack.setAmount(Math.min(itemStack.getMaxStackSize(), ThreadLocalRandom.current().nextInt(1,maxAmount)));
 
         player.getInventory().addItem(itemStack);
-
+        Message.REWARD_OBTAINED.send(player, getName());
         player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC,1,1);
 
 
@@ -59,6 +59,6 @@ public class ItemReward extends Reward {
 
     @Override
     public String getName() {
-        return ChatColor.GOLD + itemStack.getI18NDisplayName();
+        return itemStack.getI18NDisplayName();
     }
 }

@@ -34,7 +34,7 @@ public class InitCommand extends SubCommand{
 
     @Override
     public String getPermission() {
-        return "rivevent.init";
+        return "fwriv.init";
     }
 
     @Override

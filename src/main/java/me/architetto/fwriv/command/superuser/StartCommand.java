@@ -6,9 +6,7 @@ import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
-import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public class StartCommand extends SubCommand{
 
     @Override
     public String getPermission() {
-        return "rivevent.start";
+        return "fwriv.start";
     }
 
     @Override

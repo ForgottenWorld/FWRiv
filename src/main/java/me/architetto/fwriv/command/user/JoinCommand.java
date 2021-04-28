@@ -33,7 +33,7 @@ public class JoinCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "rivevent.join";
+        return "fwriv.join";
     }
 
     @Override
@@ -59,7 +59,9 @@ public class JoinCommand extends SubCommand {
             return;
         }
 
-        if (SettingsHandler.getInstance().isEchelonEnabled()) {
+        SettingsHandler settingsHandler = SettingsHandler.getInstance();
+
+        if (settingsHandler.isEchelonEnabled()) {
             if (EchelonHolder.getEchelonHolder().isPlayerInMutexActivity(sender)) {
                 Message.ERR_ECHELON_MUTEXACTIVITY
                         .send(sender,EchelonHolder.getEchelonHolder().getPlayerMutexActivityName(sender));

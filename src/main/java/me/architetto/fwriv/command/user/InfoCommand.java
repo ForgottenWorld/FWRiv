@@ -1,9 +1,7 @@
 package me.architetto.fwriv.command.user;
 
 import me.architetto.fwriv.command.SubCommand;
-import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.command.CommandName;
-import me.architetto.fwriv.utils.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,7 +29,7 @@ public class InfoCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "rivevent.info";
+        return "fwriv.info";
     }
 
     @Override
@@ -49,33 +47,41 @@ public class InfoCommand extends SubCommand {
         bookMeta.setTitle("GUIDA EVENTO RIV");
         bookMeta.setAuthor("Architetto");
         List<String> pages = new ArrayList<>();
-        pages.add(ChatColor.BLUE + "Guida 'Resta in vetta'\n" + ChatColor.RESET +
+        pages.add(ChatColor.BLUE + "" + ChatColor.BOLD + "Guida 'Resta in vetta'\n" + ChatColor.RESET +
                 "\n" +
-                "L'evento 'Resta In Vetta' (RIV) decreta come vincitore l'ultimo giocatore che rimane in vita." +
-                " A cosa serve scalare la torre ? E' molto semplice , raggiungendo la cima della torre ricevi " +
-                "dei premi (Rewards) estremamente utili per sopravvivere come");
-        pages.add("cibo, pezzi di armatura e  oggetti con abilita' particolari.\n" +
-                "La barra della fame non schende mai a zero ma per recuperare la vita che potresti perdere" +
-                " e' indispensabile tenerla sempre al massimo.\n" +
-                ChatColor.BLUE + "     ANTI CAMPER\n" + ChatColor.RESET +
-                "Per evitare atteggiamenti furbi, ad");
-        pages.add("un certo momento si attiva " +
-                ChatColor.GREEN + "l'anti camper" + ChatColor.RESET +
-                ", che consiste in un altezza minima da dover raggiungere " +
-                "sotto la quale si riceve continuamente danno. L'altezza minima e' indicata tramite un effetto " +
-                "particellare impossibile da non notare oltre ad essere indicata in chat.");
+                "Lo scopo del riv e' scalare la torre e sconfiggere tutti gli avversari.\n" +
+                "\n" +
+                "Raggiungendo la cima e' possibile ottenere dei premi estremamente utili.");
+        pages.add("Alcuni items hanno abilita' particolari:\n" +
+                "\n" +
+                "Le " + ChatColor.BLUE + "" + ChatColor.BOLD + "snowballs" + ChatColor.RESET
+                + " applicano un lieve knockback quando colpiscono un giocatore.\n" +
+                "\n" +
+                "Le " + ChatColor.BLUE + "" + ChatColor.BOLD + "ender pearls" + ChatColor.RESET
+                + " permettono di teletrasportarsi sulla cima della torre.");
+        pages.add("Mangiando il " + ChatColor.BLUE + "" + ChatColor.BOLD + "miele" + ChatColor.RESET
+                + " si recupera un po di punti salute.\n" +
+                "\n" +
+                "La " + ChatColor.BLUE + "" + ChatColor.BOLD + "canna da pesca" + ChatColor.RESET
+                + " puo' tirare i players.\n" +
+                "\n" +
+                "I " + ChatColor.BLUE + "" + ChatColor.BOLD + "fuochi d'artificio" + ChatColor.RESET
+                + " permettono di volare per qualche metro in altezza.");
+
+        pages.add("All'attivazione, il " + ChatColor.BLUE + "" + ChatColor.BOLD + "totem" + ChatColor.RESET
+                + " oltre a salvarti la vita ti teletrasporta sulla cima della torre.");
+
+        pages.add("Ci sono altre meccaniche utili da sfruttare durante l'evento:\n" +
+                "\n" +
+                "Colpire i " + ChatColor.BLUE + "" + ChatColor.BOLD + "targhet block" + ChatColor.RESET
+                + " ti fa guadagnare dei premi utili durante l'evento.\n" +
+                "\n" +
+                "I " + ChatColor.BLUE + "" + ChatColor.BOLD + "punti fame" + ChatColor.RESET
+                + " non scendono mai a zero.");
+
         bookMeta.setPages(pages);
         writtenBook.setItemMeta(bookMeta);
-
         sender.openBook(writtenBook);
-
-        /*
-
-        sender.sendMessage(ChatFormatter.chatHeaderGameplayInfo());
-        sender.sendMessage(Messages.RIV_GAMEPLAY_INFO);
-        sender.sendMessage(ChatFormatter.chatFooter());
-
-         */
 
     }
 

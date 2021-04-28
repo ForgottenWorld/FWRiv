@@ -13,9 +13,7 @@ import me.architetto.fwriv.obj.RoundSpawn;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.obj.timer.Countdown;
-import me.architetto.fwriv.utils.ChatFormatter;
 import me.architetto.fwriv.utils.MessageUtil;
-import me.architetto.fwriv.utils.Messages;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -40,8 +38,6 @@ public class EventService {
     private ArenaDoors arenaDoors;
 
     private Countdown startCountdown;
-
-    private int stopCheckerRunnable = 0;
 
     private EventService() {
         if(eventService != null) {
@@ -160,8 +156,6 @@ public class EventService {
         if (eventStatus.equals(EventStatus.ENDED)) {
             stopEventServices();
             Message.COMP_EVENT_ENDED_BROADCAST.broadcastComponent("fwriv.echo", MessageUtil.restartComponent(),MessageUtil.stopComponent());
-            this.stopCheckerRunnable = Bukkit.getScheduler()
-                    .scheduleSyncDelayedTask(FWRiv.getPlugin(FWRiv.class), this::stopEvent,1800L);
         }
     }
 
@@ -176,10 +170,6 @@ public class EventService {
 
         AntiCamperService.getInstance().stopAntiCamperSystem();
         RewardSystemService.getInstance().stopRewardService();
-        if (this.stopCheckerRunnable != 0) {
-            Bukkit.getScheduler().cancelTask(stopCheckerRunnable);
-            this.stopCheckerRunnable = 0;
-        }
 
     }
 
@@ -261,8 +251,7 @@ public class EventService {
                     p.setGameMode(GameMode.SURVIVAL);
                     this.roundSpawn.teleport(p);
                     p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
-                    p.sendMessage(ChatFormatter.formatSuccessMessage(Messages.RESTART_CMD_PLAYER_MESSAGE));
-
+                    Message.PARTECIPANT_RESTART_MESSAGE.send(p);
                 });
 
         stopEventServices();
@@ -276,7 +265,6 @@ public class EventService {
         stopEventServices();
 
         this.eventStatus = EventStatus.INACTIVE;
-
 
         PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
@@ -294,7 +282,6 @@ public class EventService {
                         p.teleport(partecipant.getReturnLocation());
                         p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
                         p.getInventory().setContents(partecipant.getInventory());
-                        p.sendMessage(ChatFormatter.formatInitializationMessage(Messages.STOP_CMD_PLAYER_MESSAGE));
                     });
 
                     partecipantsManager.removePartecipant(p);
@@ -303,6 +290,8 @@ public class EventService {
                 });
 
         this.arenaDoors.close();
+        this.roundSpawn = null;
+        Message.BROADCAST_EVENT_ENDED.broadcast();
 
     }
 

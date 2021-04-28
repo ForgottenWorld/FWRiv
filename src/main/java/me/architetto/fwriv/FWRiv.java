@@ -5,18 +5,15 @@ import me.architetto.fwriv.command.CommandManager;
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
-import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.listener.arena.ArenaCreationListener;
 import me.architetto.fwriv.listener.event.*;
 import me.architetto.fwriv.localization.LocalizationManager;
-import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.reward.RewardService;
 import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -104,20 +101,9 @@ public final class FWRiv extends JavaPlugin {
     }
 
     public  void secureInventoryClear() {
-        PartecipantsManager pm = PartecipantsManager.getInstance();
-        pm.getPartecipantsUUID(PartecipantStatus.ALL)
-                .stream()
-                .map(Bukkit::getPlayer)
-                .filter(Objects::nonNull)
-                .forEach(p -> {
-                    p.getInventory().clear();
-                    p.setGameMode(GameMode.SURVIVAL);
-
-                    pm.getPartecipant(p).ifPresent(partecipant -> {
-                        p.teleport(partecipant.getReturnLocation());
-                        p.getInventory().setContents(partecipant.getInventory());
-                    });
-                });
+        EventService eventService = EventService.getInstance();
+        if (!eventService.getEventStatus().equals(EventStatus.INACTIVE))
+            eventService.stopEvent();
     }
 
 

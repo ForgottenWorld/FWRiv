@@ -16,6 +16,7 @@ public class SettingsHandler {
 
     private long rewarDelay;
     private long rewardPeriod;
+    private boolean allrandom;
 
     private int acMaxYDiff;
     private long acDelay;
@@ -56,6 +57,7 @@ public class SettingsHandler {
 
         loadStartEquip();
 
+        this.allrandom = fc.getBoolean("REWARD_SYSTEM.ALLRANDOM", false);
         this.rewarDelay = fc.getLong("REWARD_SYSTEM.DELAY",30) * 20;
         this.rewardPeriod = fc.getLong("REWARD_SYSTEM.PERIOD",20);
 
@@ -141,6 +143,10 @@ public class SettingsHandler {
 
     public int getAcGrowValue() {
         return acGrowValue;
+    }
+
+    public boolean isAllrandom() {
+        return allrandom;
     }
 
 }

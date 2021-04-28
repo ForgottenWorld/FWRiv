@@ -1,5 +1,7 @@
 package me.architetto.fwriv.reward;
 
+import me.architetto.fwriv.localization.Message;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -49,13 +51,13 @@ public class PotionReward extends Reward {
         this.itemStack.setItemMeta(potionMeta);
 
         player.getInventory().addItem(itemStack);
-
+        Message.REWARD_OBTAINED.send(player, getName());
         player.playSound(player.getLocation(), Sound.BLOCK_BREWING_STAND_BREW,1,1);
 
     }
 
     @Override
     public String getName() {
-        return ChatColor.GOLD + this.potionEffectType.getName() + " POTION";
+        return StringUtils.capitalize(this.potionEffectType.getName().toLowerCase()) + " potion";
     }
 }

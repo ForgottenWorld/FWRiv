@@ -3,29 +3,47 @@ version: ${project.version}
 main: me.architetto.fwriv.FWRiv
 api-version: 1.16
 authors: [Architetto]
-description: Automatizza l'evento 'Resta In Vetta'
+description: Plugin that introduces and automates the 'RIV' (Resta In Vetta) minigame (simil to King of the hill)
 softdepend:
   - FWEchelon
 prefix: FWRiv
 commands:
   fwriv:
-    description: Automatizza l'evento 'Resta in Vetta'.
+    description: FWRiv command
     aliases:
       - riv
 
 permissions:
-  rivevent.admin:
+  fwriv.create:
     description: description
     default: op
-    children:
-      rivevent.eventmanager: true
-      rivevent.user: true
-      rivevent.echo: true
-
-  rivevent.eventmanager:
+  fwriv.delete:
     description: description
-    default: false
-
-  rivevent.user:
+    default: op
+  fwriv.reload:
     description: description
-    default: true
+    default: op
+  fwriv.init:
+    description: description
+    default: op
+  fwriv.restart:
+    description: description
+    default: op
+  fwriv.start:
+    description: description
+    default: op
+  fwriv.stop:
+    description: description
+    default: op
+  fwriv.join:
+    description: description
+    default: op
+  fwriv.leave:
+    description: description
+    default: op
+  fwriv.info:
+    description: description
+    default: op
+  fwriv.echo:
+    description: description
+    default: op

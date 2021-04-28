@@ -33,7 +33,7 @@ public class RestartCommand extends SubCommand{
 
     @Override
     public String getPermission() {
-        return "rivevent.restart";
+        return "fwriv.restart";
     }
 
     @Override
@@ -53,7 +53,7 @@ public class RestartCommand extends SubCommand{
         }
 
         if (eventStatus.equals(EventStatus.READY)) {
-            //todo: messaggio. Non serve il restart se non è ancora iniziato
+            Message.ERR_RESTART_DONE.send(sender);
             return;
         }
 
