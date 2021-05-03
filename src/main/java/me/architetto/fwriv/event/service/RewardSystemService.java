@@ -95,7 +95,7 @@ public class RewardSystemService {
                                     else
                                         RewardService.getInstance().giveRandomTowerReward(p);
 
-                                    PartecipantsManager.getInstance().getPartecipantStats(p).ifPresent(PartecipantStats::addReward);
+                                    PartecipantsManager.getInstance().getPartecipantStats(p).ifPresent(PartecipantStats::addTowerReward);
                                 });
                         this.rewardBar.setProgress(1);
 

@@ -1,6 +1,7 @@
 package me.architetto.fwriv.reward;
 
 import me.architetto.fwriv.config.ConfigManager;
+import me.architetto.fwriv.config.SettingsHandler;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,13 +18,13 @@ public class RewardService {
 
     private static RewardService instance;
 
-    private HashMap<Reward, Integer> towerRewardsWeightMap;
-    private long towerRewardsWeightSum;
+    private HashMap<Reward, Double> towerRewardsWeightMap;
+    private double towerRewardsWeightSum;
 
     private Reward nextTowerReward;
 
-    private HashMap<Reward, Integer> targetBlockRewardsMap;
-    private long targetBlockWeightSum;
+    private HashMap<Reward,Double> targetBlockRewardsMap;
+    private double targetBlockWeightSum;
 
 
     private RewardService(){
@@ -51,7 +52,7 @@ public class RewardService {
         itemsTowerRewards.forEach(s -> {
             String[] parts = s.split(",");
             if (parts.length != 4) return;
-            int weight = Integer.parseInt(parts[1]);
+            double weight = Double.parseDouble(parts[1]);
             ItemReward ir = new ItemReward(Material.valueOf(parts[0]),
                     Integer.parseInt(parts[2]),
                     Boolean.parseBoolean(parts[3]));
@@ -64,7 +65,7 @@ public class RewardService {
         effectsTowerRewards.forEach(s -> {
             String[] parts = s.split(",");
             if (parts.length != 5) return;
-            int weight = Integer.parseInt(parts[1]);
+            double weight = Double.parseDouble(parts[1]);
             EffectReward er = new EffectReward(PotionEffectType.getByName(parts[0]),
                     Integer.parseInt(parts[2]),
                     Integer.parseInt(parts[3]),
@@ -78,7 +79,7 @@ public class RewardService {
         potionsTowerRewards.forEach(s -> {
             String[] parts = s.split(",");
             if (parts.length != 6) return;
-            int weight = Integer.parseInt(parts[1]);
+            double weight = Double.parseDouble(parts[1]);
             PotionReward pr = new PotionReward(PotionEffectType.getByName(parts[0]),
                     Integer.parseInt(parts[2]),
                     Integer.parseInt(parts[3]),
@@ -95,7 +96,7 @@ public class RewardService {
         itemsTargetblockRewards.forEach(s -> {
             String[] parts = s.split(",");
             if (parts.length != 4) return;
-            int weight = Integer.parseInt(parts[1]);
+            double weight = Double.parseDouble(parts[1]);
             ItemReward ir = new ItemReward(Material.valueOf(parts[0]),
                     Integer.parseInt(parts[2]),
                     Boolean.parseBoolean(parts[3]));
@@ -108,7 +109,7 @@ public class RewardService {
         effectsTargetblockRewards.forEach(s -> {
             String[] parts = s.split(",");
             if (parts.length != 5) return;
-            int weight = Integer.parseInt(parts[1]);
+            double weight = Double.parseDouble(parts[1]);
             EffectReward er = new EffectReward(PotionEffectType.getByName(parts[0]),
                     Integer.parseInt(parts[2]),
                     Integer.parseInt(parts[3]),
@@ -122,7 +123,7 @@ public class RewardService {
         potionsTargetblockRewards.forEach(s -> {
             String[] parts = s.split(",");
             if (parts.length != 6) return;
-            int weight = Integer.parseInt(parts[1]);
+            double weight = Double.parseDouble(parts[1]);
             PotionReward pr = new PotionReward(PotionEffectType.getByName(parts[0]),
                     Integer.parseInt(parts[2]),
                     Integer.parseInt(parts[3]),
@@ -144,11 +145,11 @@ public class RewardService {
 
     public void pickNextTowerReward() {
 
-        long weightSum = ThreadLocalRandom.current()
-                .nextLong(this.towerRewardsWeightSum, this.towerRewardsWeightSum * 2);
+        double weightSum = ThreadLocalRandom.current()
+                .nextDouble(this.towerRewardsWeightSum, this.towerRewardsWeightSum * 2);
 
         while (weightSum > 0) {
-            for (Map.Entry<Reward, Integer> entry : towerRewardsWeightMap.entrySet()) {
+            for (Map.Entry<Reward, Double> entry : towerRewardsWeightMap.entrySet()) {
                 weightSum -= entry.getValue();
                 if (weightSum <= 0) {
                     this.nextTowerReward = entry.getKey();
@@ -167,10 +168,10 @@ public class RewardService {
     }
 
     public void giveRandomTowerReward(Player player) {
-        long weightSum = ThreadLocalRandom.current()
-                .nextLong(this.towerRewardsWeightSum, this.towerRewardsWeightSum * 2);
+        double weightSum = ThreadLocalRandom.current()
+                .nextDouble(this.towerRewardsWeightSum, this.towerRewardsWeightSum * 2.3);
         while (weightSum > 0) {
-            for (Map.Entry<Reward, Integer> entry : towerRewardsWeightMap.entrySet()) {
+            for (Map.Entry<Reward, Double> entry : towerRewardsWeightMap.entrySet()) {
                 weightSum -= entry.getValue();
                 if (weightSum <= 0) {
                     entry.getKey().give(player);
@@ -180,23 +181,24 @@ public class RewardService {
         }
     }
 
-
-
     public void giveTargetBlockReward(Player player) {
-        long weightSum = ThreadLocalRandom.current()
-                .nextLong(this.targetBlockWeightSum, this.targetBlockWeightSum * 2);
+        double weightSum = ThreadLocalRandom.current()
+                .nextDouble(this.targetBlockWeightSum, this.targetBlockWeightSum * 2);
 
         if (weightSum % 23 == 0) {
-            player.setVelocity(player.getLocation().getDirection().multiply(-5));
-            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+            double value = SettingsHandler.getInstance().getTargetBlockExplosionPower();
+        player.setVelocity(player.getLocation().getDirection().multiply(-value));
+        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 3, 1);
             return;
         }
 
         while (weightSum > 0) {
-            for (Map.Entry<Reward, Integer> entry : targetBlockRewardsMap.entrySet()) {
+            for (Map.Entry<Reward, Double> entry : targetBlockRewardsMap.entrySet()) {
                 weightSum -= entry.getValue();
-                if (weightSum < 0)
+                if (weightSum < 0) {
                     entry.getKey().give(player);
+                    return;
+                }
             }
         }
     }

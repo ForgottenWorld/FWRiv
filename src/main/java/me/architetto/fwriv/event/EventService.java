@@ -9,7 +9,6 @@ import me.architetto.fwriv.event.service.AntiCamperService;
 import me.architetto.fwriv.event.service.RewardSystemService;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.obj.ArenaDoors;
-import me.architetto.fwriv.obj.RoundSpawn;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.obj.timer.Countdown;
@@ -31,18 +30,20 @@ public class EventService {
 
     private Arena summonedArena;
 
-    private EventStatus eventStatus = EventStatus.INACTIVE;
-
-    private RoundSpawn roundSpawn;
+    private EventStatus eventStatus;
 
     private ArenaDoors arenaDoors;
 
     private Countdown startCountdown;
 
+    private int spawnPointer = 0;
+
     private EventService() {
         if(eventService != null) {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
+
+        this.eventStatus = EventStatus.INACTIVE;
 
     }
 
@@ -61,20 +62,36 @@ public class EventService {
         return eventStatus;
     }
 
-    public RoundSpawn getRoundSpawn() {
-        return this.roundSpawn;
-    }
-
     public boolean initialization(Arena arena) {
+
         if (!this.eventStatus.equals(EventStatus.INACTIVE)) return false;
 
         this.summonedArena = arena;
-        this.roundSpawn = new RoundSpawn(arena);
         this.arenaDoors = new ArenaDoors(arena);
         this.eventStatus = EventStatus.READY;
         this.arenaDoors.close();
-
         return true;
+    }
+
+    private void arenaRoundTeleport(Player player) {
+        switch (this.spawnPointer) {
+            case 0:
+                player.teleport(this.summonedArena.getSpawn1());
+                this.spawnPointer++;
+                break;
+            case 1:
+                player.teleport(this.summonedArena.getSpawn2());
+                this.spawnPointer++;
+                break;
+            case 2:
+                player.teleport(this.summonedArena.getSpawn3());
+
+                this.spawnPointer++;
+                break;
+            case 3:
+                player.teleport(this.summonedArena.getSpawn4());
+                this.spawnPointer = 0;
+        }
     }
 
     public void partecipantJoin(Player player) {
@@ -82,15 +99,16 @@ public class EventService {
 
         if (!eventStatus.equals(EventStatus.READY)) {
             partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.DEAD);
+            player.getInventory().clear();
             player.setGameMode(GameMode.SPECTATOR);
-            player.teleport(eventService.getArena().getTower());
+            player.teleport(summonedArena.getTower().add(0,5,0));
             Message.JOIN_STARTED_EVENT.send(player);
 
         } else {
             partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.PLAYING);
             player.getInventory().clear();
             player.setGameMode(GameMode.SURVIVAL);
-            eventService.getRoundSpawn().teleport(player);
+            arenaRoundTeleport(player);
             Message.JOIN_READY_EVENT.send(player);
         }
 
@@ -145,7 +163,12 @@ public class EventService {
             eventStatus = EventStatus.ENDED;
 
             partecipantsManager
-                    .getPartecipant(uuidSet.get(0)).ifPresent(partecipant -> victoryAnimation(partecipant.getName()));
+                    .getPartecipant(uuidSet.get(0)).ifPresent(partecipant -> {
+                victoryAnimation(partecipant.getName());
+                Message.VICOTRY_SERVER_BROADCAST.broadcast(partecipant.getName());
+            });
+
+            PartecipantsManager.getInstance().printStats();
 
             victoryFireworksEffect(2);
         }
@@ -160,17 +183,11 @@ public class EventService {
     }
 
     private void victoryAnimation(String playerWinner) {
+        String subtitle = Message.VICTORY_SUBTITLE.asString();
         PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.ALL).stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull).forEach(p -> p.sendTitle(ChatColor.GOLD + playerWinner,
-                "E' IL VINCITORE DELL'EVENTO",20,100,20));
-    }
-
-    private void stopEventServices() {
-
-        AntiCamperService.getInstance().stopAntiCamperSystem();
-        RewardSystemService.getInstance().stopRewardService();
-
+                subtitle,20,100,20));
     }
 
     public void startEventTimer() {
@@ -249,7 +266,7 @@ public class EventService {
                 .filter(Objects::nonNull)
                 .forEach(p -> {
                     p.setGameMode(GameMode.SURVIVAL);
-                    this.roundSpawn.teleport(p);
+                    arenaRoundTeleport(p);
                     p.playSound(p.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
                     Message.PARTECIPANT_RESTART_MESSAGE.send(p);
                 });
@@ -260,7 +277,8 @@ public class EventService {
 
     public void stopEvent() {
 
-        if (this.startCountdown != null && this.startCountdown.isStarted())
+        if (this.startCountdown != null
+                && this.startCountdown.isStarted())
             this.startCountdown.cancelTimer();
         stopEventServices();
 
@@ -290,8 +308,16 @@ public class EventService {
                 });
 
         this.arenaDoors.close();
-        this.roundSpawn = null;
+        partecipantsManager.clearPartecipantsStats();
         Message.BROADCAST_EVENT_ENDED.broadcast();
+        this.arenaDoors = null;
+
+    }
+
+    private void stopEventServices() {
+
+        AntiCamperService.getInstance().stopAntiCamperSystem();
+        RewardSystemService.getInstance().stopRewardService();
 
     }
 

@@ -1,31 +1,36 @@
 package me.architetto.fwriv.partecipant;
 
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
+
 public class PartecipantStats {
 
-    private int rewards = 0,kills = 0, resurrection = 0;
+    private final String playerName;
+    private final UUID uuid;
+
+    private int towerRewards = 0,kills = 0, targetBlockReward = 0;
     private double damageDealt = 0, damageTaken = 0;
 
-    public PartecipantStats() {
+    public PartecipantStats(Player player) {
+        this.playerName = player.getDisplayName();
+        this.uuid = player.getUniqueId();
     }
 
-    public int getResurrection() {
-        return resurrection;
+    public String getPlayerName() {
+        return playerName;
     }
 
-    public void setResurrection(int resurrection) {
-        this.resurrection = resurrection;
+    public int getTargetBlockReward() {
+        return targetBlockReward;
     }
 
-    public void addResurrection() {
-        this.resurrection += 1;
+    public void addTargetBlockReward() {
+        this.targetBlockReward += 1;
     }
 
     public double getDamageDealt() {
         return damageDealt;
-    }
-
-    public void setDamageDealt(double damageDealt) {
-        this.damageDealt = damageDealt;
     }
 
     public void addDamageDealt(double damageDealt) {
@@ -36,24 +41,16 @@ public class PartecipantStats {
         return damageTaken;
     }
 
-    public void setDamageTaken(double damageTaken) {
-        this.damageTaken = damageTaken;
-    }
-
     public void addDamageTaken(double damageTaken) {
         this.damageTaken += damageTaken;
     }
 
-    public int getRewards() {
-        return rewards;
+    public int getTowerRewards() {
+        return towerRewards;
     }
 
-    public void setRewards(int rewards) {
-        this.rewards = rewards;
-    }
-
-    public void addReward() {
-        this.rewards += 1;
+    public void addTowerReward() {
+        this.towerRewards += 1;
     }
 
     public int getKills() {
@@ -64,8 +61,13 @@ public class PartecipantStats {
         kills += 1;
     }
 
-    public void setKills(int kills) {
-        this.kills = kills;
+    public void reset() {
+        this.kills = 0;
+        this.towerRewards = 0;
+        this.targetBlockReward = 0;
+        this.damageDealt = 0;
+        this.damageTaken = 0;
     }
+
 
 }

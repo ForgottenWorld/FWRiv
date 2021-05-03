@@ -15,6 +15,7 @@ public enum Message {
 
     CREATION_MODE_INFO("creation_mode_info", true),
     CREATION_MODE_STEP("creation_mode_step", true),
+    CREATION_MODE_LOCATION("creation_mode_location", true),
 
     JOIN_STARTED_EVENT("join_started_event", true),
     JOIN_READY_EVENT("join_ready_event", true),
@@ -22,7 +23,18 @@ public enum Message {
     START_MESSAGE("start_message", true),
     COUNTDOWN_START("countdown_start", true),
 
+    PARTECIPANT_INFO("partecipants_info", true),
+
     REWARD_OBTAINED("reward_obtained", true),
+
+    VICTORY_SUBTITLE("victory_subtitle",false),
+    VICOTRY_SERVER_BROADCAST("victory_server_broadcast",true),
+
+    TARGETBLOCK_READY("targetblock_ready", true),
+    TARGETBLOCK_COOLDOWN("targetblock_cooldown", true),
+
+    FISHINGROD_1("fishingrod_1", true),
+    FISHINGROD_2("fishingrod_2", true),
 
     ANTICAMPER_START("anticamper_start", true),
     ANTICAMPER_HEIGHT_CHANGE("anticamper_height_change", true),
@@ -56,6 +68,13 @@ public enum Message {
     ERR_UNIQUE_REWARD("err_unique_reward", true),
 
     ERR_RESTART_DONE("err_restart_done", true),
+
+    //STATS
+    STATS_KILLS("stats_kills",true),
+    STATS_DAMAGEDONE("stats_damagedone", true),
+    STATS_DAMAGETAKEN("stats_damagetaken", true),
+    STATS_TOWERREWARDS("stats_towerrewards", true),
+    STATS_TARGETREWARDS("statas_targetrewards", true),
 
     //BROADCAST
     BROADCAST_PLAYERJOINEVENT("broadcast_playerjoinevent", true),

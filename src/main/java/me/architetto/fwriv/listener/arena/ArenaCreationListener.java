@@ -1,6 +1,7 @@
 package me.architetto.fwriv.listener.arena;
 
 import me.architetto.fwriv.arena.ArenaManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,7 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.Objects;
 
-public class ArenaCreationListener implements Listener{
+public class ArenaCreationListener implements Listener {
 
     @EventHandler
     public void onRightClickSelection(PlayerInteractEvent event) {

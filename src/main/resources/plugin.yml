@@ -37,13 +37,13 @@ permissions:
     default: op
   fwriv.join:
     description: description
-    default: op
+    default: true
   fwriv.leave:
     description: description
-    default: op
-  fwriv.info:
+    default: true
+  fwriv.game:
     description: description
-    default: op
+    default: true
   fwriv.echo:
     description: description
     default: op

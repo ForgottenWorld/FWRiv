@@ -26,16 +26,17 @@ public class SettingsHandler {
     private int acFinalDamage;
     private int acGrowValue;
 
+    private double targetBlockExplosionPower;
+    private int targetBlockCooldown;
+
+    private double snowballKnockbackPower;
+    private double snowballHitDamage;
 
     public List<ItemStack> startEquipItems = new ArrayList<>();
 
-    public double snowballKnockbackPower;
-    public double snowballHitDamage;
-
     public double fishingRodPower;
 
-    public double targetBlockExplosionPower;
-    public int targetBlockCooldown;
+
 
     private SettingsHandler() {
         if(settingsHandler != null) {
@@ -69,15 +70,14 @@ public class SettingsHandler {
         this.acFinalDamage = fc.getInt("ANTI_CAMPER_SYSTEM.FINAL_DAMAGE",6);
         this.acGrowValue = fc.getInt("ANTI_CAMPER_SYSTEM.GROW_VALUE",2);
 
+        this.targetBlockExplosionPower = fc.getDouble("TRAGET_BLOCK.EXPLOSION_POWER",1);
+        this.targetBlockCooldown = fc.getInt("TARGET_BLOCK.COOLDOWN",15) * 20;
 
-
-        this.snowballKnockbackPower = fc.getDouble("SNOWBALL_KNOCKBACK_POWER",3);
-        this.snowballHitDamage = fc.getDouble("SNOWBALL_DAMAGE",0.1);
+        this.snowballKnockbackPower = fc.getDouble("SNOWBALL.KNOCKBACK",1);
+        this.snowballHitDamage = fc.getDouble("SNOWBALL.DAMAGE",0.1);
 
         this.fishingRodPower = fc.getDouble("FISHINGROD_POWER",7);
 
-        this.targetBlockExplosionPower = fc.getDouble("TRAGET_BLOCK_KNOCKBACK_POWER",1.4);
-        this.targetBlockCooldown = fc.getInt("TARGET_BLOCK_COOLDOWN",15) * 20;
 
     }
 
@@ -149,4 +149,19 @@ public class SettingsHandler {
         return allrandom;
     }
 
+    public double getTargetBlockExplosionPower() {
+        return targetBlockExplosionPower;
+    }
+
+    public int getTargetBlockCooldown() {
+        return targetBlockCooldown;
+    }
+
+    public double getSnowballKnockbackPower() {
+        return snowballKnockbackPower;
+    }
+
+    public double getSnowballHitDamage() {
+        return snowballHitDamage;
+    }
 }

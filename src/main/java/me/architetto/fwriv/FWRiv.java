@@ -10,8 +10,8 @@ import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.listener.arena.ArenaCreationListener;
 import me.architetto.fwriv.listener.event.*;
 import me.architetto.fwriv.localization.LocalizationManager;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.reward.RewardService;
-import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -32,7 +32,7 @@ public final class FWRiv extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("=====================[      " + ChatColor.DARK_AQUA + "FWRiv"
                 + ChatColor.RESET + "      ]=====================");
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Messages.yml...");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Strings.yml...");
         LocalizationManager.getInstance().loadLanguageFile();
 
         Bukkit.getConsoleSender().sendMessage( ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Settings.yml...");
@@ -56,7 +56,7 @@ public final class FWRiv extends JavaPlugin {
     public void onDisable() {
 
         if (!EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE)) {
-            Bukkit.getConsoleSender().sendMessage(ChatFormatter.pluginPrefix() + "Secure inventories clear...");
+            Bukkit.getConsoleSender().sendMessage(Message.PREFIX.asString() + "Secure inventories clear...");
             secureInventoryClear();
         }
 

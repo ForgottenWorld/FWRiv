@@ -1,10 +1,10 @@
 package me.architetto.fwriv.listener.event;
 
 import me.architetto.fwriv.config.SettingsHandler;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
-import me.architetto.fwriv.utils.ChatFormatter;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -39,13 +39,13 @@ public class ProjectileListener implements Listener {
         PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
         if (!partecipantsManager.isPresent(playerShooter)
-                || partecipantsManager.isPresent(playerHitted)) return;
+                || !partecipantsManager.isPresent(playerHitted)) return;
 
         switch (pj.getType()) {
             case SNOWBALL:
-                playerHitted.damage(settings.snowballHitDamage);
+                playerHitted.damage(settings.getSnowballHitDamage());
                 playerHitted.setVelocity(playerShooter.getLocation()
-                        .getDirection().normalize().multiply(settings.snowballKnockbackPower));
+                        .getDirection().normalize().multiply(settings.getSnowballKnockbackPower()));
                 break;
             case FISHING_HOOK:
                 if (playerShooter.getInventory().getItemInMainHand().getType() == Material.FISHING_ROD)
@@ -70,8 +70,8 @@ public class ProjectileListener implements Listener {
 
                 playerHitted.getWorld().playSound(playerHitted.getLocation(),Sound.ENTITY_DOLPHIN_SPLASH,2,1);
 
-                playerHitted.sendMessage(ChatFormatter.formatSuccessMessage("Hai abboccato all'amo!"));
-                playerShooter.sendMessage(ChatFormatter.formatSuccessMessage("WoW! Hai preso un pesce bello grosso ..."));
+                Message.FISHINGROD_1.send(playerShooter);
+                Message.FISHINGROD_2.send(playerHitted);
 
         }
     }
@@ -90,7 +90,9 @@ public class ProjectileListener implements Listener {
 
         Player shooter = (Player) pj.getShooter();
 
-        if (!PartecipantsManager.getInstance().isPresent(shooter)) return;
+        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
+
+        if (!partecipantsManager.isPresent(shooter)) return;
 
         if (pj.getType() == EntityType.ENDER_PEARL) {
 
@@ -101,6 +103,7 @@ public class ProjectileListener implements Listener {
             shooter.teleport(eventService.getArena().getTower().add(0,0.5,0));
 
             shooter.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,10,1));
+
             shooter.getWorld().strikeLightningEffect(shooter.getLocation());
 
         }

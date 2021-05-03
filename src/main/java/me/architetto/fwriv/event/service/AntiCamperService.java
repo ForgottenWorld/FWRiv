@@ -37,6 +37,17 @@ public class AntiCamperService {
 
         this.effectManager = new EffectManager(FWRiv.getPlugin(FWRiv.class));
 
+        circleEffect = new CircleEffect(this.effectManager);
+        circleEffect.particle = Particle.REDSTONE;
+        circleEffect.color = Color.RED;
+        circleEffect.particleSize = 15;
+        circleEffect.particleCount = 4;
+        circleEffect.period = 1;
+        circleEffect.iterations = -1;
+        circleEffect.particles = 50;
+        circleEffect.radius = 20;
+        circleEffect.visibleRange = 100;
+        circleEffect.enableRotation = false;
 
     }
 
@@ -72,18 +83,8 @@ public class AntiCamperService {
                 SettingsHandler.getInstance().getAcDelay(),
                 () -> {
             //
-                    this.circleEffect = new CircleEffect(this.effectManager);
-                    circleEffect.particle = Particle.REDSTONE;
-                    circleEffect.color = Color.RED;
-                    circleEffect.particleSize = 15;
-                    circleEffect.particleCount = 4;
-                    circleEffect.iterations = -1;
-                    circleEffect.particles = 50;
-                    circleEffect.radius = 18;
-                    circleEffect.visibleRange = 100;
-                    circleEffect.enableRotation = false;
-                    circleEffect.setLocation(this.centeredLocation);
-                    circleEffect.start();
+                    this.circleEffect.setLocation(this.centeredLocation);
+                    this.circleEffect.start();
 
                     PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
                             .map(Bukkit::getPlayer)
@@ -125,14 +126,11 @@ public class AntiCamperService {
     }
 
     public void stopAntiCamperSystem() {
-        if (this.repeater != null) {
-            if (this.repeater.getTotalSeconds() != 0)
+        if (this.repeater != null && this.repeater.isStarted()) {
+            if(this.repeater.getTotalSeconds() != 0)
                 this.circleEffect.cancel();
-            if (this.repeater.isStarted())
-                this.repeater.cancelTimer();
+            this.repeater.cancelTimer();
         }
-
         this.centeredLocation = null;
-        this.circleEffect = null;
     }
 }

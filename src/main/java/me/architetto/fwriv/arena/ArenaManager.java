@@ -4,6 +4,7 @@ import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.localization.Message;
 import org.bukkit.*;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -89,6 +90,7 @@ public class ArenaManager {
                 playerArenaCoordinates.put(sender.getUniqueId(), new HashMap<>());
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN1, location.add(0,1,0));
 
+                Message.CREATION_MODE_LOCATION.send(sender,location.getX(),location.getY(),location.getZ(),location.getWorld().getName());
                 Message.CREATION_MODE_STEP.send(sender,"SPAWN 2");
 
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
@@ -97,6 +99,7 @@ public class ArenaManager {
             case SPAWN2:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN2, location.add(0,1,0));
 
+                Message.CREATION_MODE_LOCATION.send(sender,location.getX(),location.getY(),location.getZ(),location.getWorld().getName());
                 Message.CREATION_MODE_STEP.send(sender,"SPAWN 3");
 
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
@@ -105,6 +108,7 @@ public class ArenaManager {
             case SPAWN3:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN3, location.add(0,1,0));
 
+                Message.CREATION_MODE_LOCATION.send(sender,location.getX(),location.getY(),location.getZ(),location.getWorld().getName());
                 Message.CREATION_MODE_STEP.send(sender,"SPAWN 4");
 
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
@@ -113,13 +117,27 @@ public class ArenaManager {
             case SPAWN4:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN4, location.add(0,1,0));
 
+                Message.CREATION_MODE_LOCATION.send(sender,location.getX(),location.getY(),location.getZ(),location.getWorld().getName());
                 Message.CREATION_MODE_STEP.send(sender,"TOWER");
 
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
                 particleEffect(location);
                 break;
             case TOWER:
-                playerArenaCoordinates.get(sender.getUniqueId()).put(TOWER, location.add(0,1,0));
+                Material material = location.getBlock().getType();
+
+                if (Tag.CARPETS.isTagged(material))
+                    playerArenaCoordinates.get(sender.getUniqueId()).put(TOWER, location);
+                else if ((Tag.SLABS.isTagged(material))) {
+                    Slab slab = (Slab) location.getBlock().getBlockData();
+                    if (slab.getType() == Slab.Type.BOTTOM)
+                        playerArenaCoordinates.get(sender.getUniqueId()).put(TOWER, location.add(0,0.5,0));
+                    else
+                        playerArenaCoordinates.get(sender.getUniqueId()).put(TOWER, location.add(0,1,0));
+                } else
+                    playerArenaCoordinates.get(sender.getUniqueId()).put(TOWER, location.add(0,1,0));
+
+                Message.CREATION_MODE_LOCATION.send(sender,location.getX(),location.getY(),location.getZ());
                 location.getWorld().playSound(location, Sound.ENTITY_PLAYER_LEVELUP,1,1);
                 particleEffect(location);
 

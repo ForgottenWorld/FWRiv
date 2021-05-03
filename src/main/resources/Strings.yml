@@ -4,10 +4,14 @@ strings:
   #Misc
   creation_mode_info: "&o&7Equipaggia uno &eSTICK &7e inserisci le posizioni richieste utilizzando il &eTASTRO DESTRO &7del mouse"
   creation_mode_step: "Inserici la posizione '&o&e{0}&r' ..."
+  creation_mode_location: "&7 ... posizione inserita &bX (&e{0}&b) Y (&e{1}&b) Z (&e{2}&b)"
 
   join_started_event: "L'evento e' gia' iniziato. Sei stato aggiunto alla lista dei partecipanti"
   join_ready_event: "Sei stato aggiunto alla lista dei partecipanti. Tieniti pronto per l'inizio dell'evento"
 
+  partecipants_info: "Ci sono &e{0}&r partecipanti all'evento di cui :
+  \n            - &2{1}&r partecipanti in gioco
+  \n            - &c{2}&r partecipanti eliminati "
 
   countdown_start: "L'evento inizierà tra 10 secondi!"
   start_message: "&bPer i prossimi &e&l60&r &bsecondi tutti i partecipanti sono immuni a qualsiasi danno"
@@ -20,6 +24,15 @@ strings:
 
   partecipant_restart_message: "Evento restartato. Sei stato automaticamente aggiunto alla lista dei partecipanti"
   partecipant_leave: "Hai abbandonato l'evento"
+
+  victory_subtitle: "Congratulazioni sei il vincitore!"
+  victory_server_broadcast: "Congratulazioni a &e&l{0}&r che ha vinto l'evento RIV"
+
+  targetblock_ready: "Target block disponibile !"
+  targetblock_cooldown: "Target block non disponibile !"
+
+  fishingrod_1: "WoW! Hai preso un pesce bello grosso ..."
+  fishingrod_2: "WoW! Hai abboccato all'amo come un pesce ..."
 
   #Success messages
   success_arena_creation: "&bArena &e{0}&r &bcorrettamente creata"
@@ -51,11 +64,19 @@ strings:
 
   err_restart_done: "&cL'evento e' gia' pronto per essere startato ..."
 
+  err_gamecommand_stats: "&cLe statistiche sono disponibili solo al termine della competizione"
+
+  #Stats
+  stats_kills: "{0} e' stato il giocatore con il maggior numero di uccisioni ({1})"
+  stats_damagedone: "{0} e' stato il giocatore che ha inflitto piu' danno ({1})"
+  stats_damagetaken: "{0} e' stato il giocatore che ha subito piu' danni ({1})"
+  stats_towerrewards: "{0} e' stato il giocatore che ha ricevuto piu' rewards ({1})"
+  stats_targetrewards: "{0} e' stato il giocatore che ha utilizzato piu' target block ({1})"
+
   #Broadcast
   broadcast_playerjoinevent: "&o&b{0} &asta partecipando all'evento."
   broadcast_playerleaveevent: "&o&b{0} &aha abbandonato l'evento l'evento."
   broadcast_event_ended: "Evento 'RIV' terminato"
-
 
   #Command description
   create_command: "&7Comando per la creazione di una nuova arena RIV"
@@ -68,12 +89,32 @@ strings:
 
   join_command: "&7Comando per partecipare ad un evento RIV in corso"
 
-  #Component
-  comp_event_join: " &bPartecipa all'evento &eRESTA IN VETTA&r &be dimostra a tutti chi è il RE della torre! §*§
-  &b\n Non lasciarti scappare il premio riservato al vincitore! \n Clicca §*§ &bse hai bisogno di informazioni sul gameplay
-  dell'evento"
+  #Component messages
+  comp_event_join: " Partecipa all'evento &eRESTA IN VETTA&r &be dimostra a tutti chi è il RE della torre!
+   \n       - Per partecipare all'evento: §*§
+   \n       - Per informazioni sul riv: §*§
+   \n       Non lasciarti scappare il premio che spetta al vincitore!"
   comp_event_start: " Evento inizializzato correttamente. §*"
-  comp_event_ended_broadcast: " &eL'evento si e' concluso. \n  - Per riavviare l'evento §*§ \n  - Per terminare levento §*"
+  comp_event_ended_broadcast: " L'evento si e' concluso.
+  \n      - Per riavviare l'evento §*§
+  \n      - Per terminare levento §*"
+
+gameplay_info_strings:
+  - "&1&lGuida 'Resta in vetta'&r\n\nLo scopo del riv e' scalare la torre e sconfiggere tutti gli avversari.\n\nRaggiungendo
+   e sostando sulla cima della torre e' possibile ottenere dei premi estremamente utili."
+  - "Alcuni items hanno abilita' particolari:\n\nLe &1&lsnowballs&r applicano un lieve knockback quando
+  colpiscono un giocatore.\n\nLe &1&lender pearls&r permettono di teletrasportarsi sulla cima della torre."
+  - "Mangiando il &1&lmiele&r si recuperano punti salute.\n\nLa &1&lcanna da pesca&r puo' tirare i players verso di te.\n\nI
+&1&lfuochi d'artificio&r permettono di volare per qualche metro in altezza."
+  - "All'attivazione, il &1&ltotem&r oltre a salvarti la vita ti teletrasporta sulla cima della torre."
+  - "Ci sono altre meccaniche utili da sfruttare durante l'evento:\n\nColpire i &1&ltarghet block&r ti fa guadagnare dei
+premi utili durante l'evento.\n\nI &1&lpunti fame&r non scendono mai a zero."
+  - "Ad un certo punto della partita si attiverà il &1&lsistema anti-camper&r. Restare sotto l'altezza minima
+  indicata ti fara' &c&lricevere danno&r. Quando l'anti-camper raggiunge l'altezza massima il danno inflitto aumenta."
+  - "Se il tuo inventario e' pieno non potrai ricevere alcun premio.\n\nDroppare oggetti li fara' sparire
+   completamente.\n\nAll'inizio della sfida tutti i player ricevono un effetto &1&lresistenza&r per 1 minuto che
+   li rende immuni al danno."
+
 
 special_item_lore:
   SNOWBALL:

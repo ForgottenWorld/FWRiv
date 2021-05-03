@@ -29,9 +29,9 @@ ANTI_CAMPER_SYSTEM:
   FINAL_DAMAGE: 5
   MAX_HEIGHT_DIF: 5
 
-#ITEM REWARD: {Material .., int weight, int maxAmount, boolean unique}
-#POTION REWARD: {PotionEffetcType .., int weight, int minTickDuration, int maxTickDuration, int amplifier, DyeColor dyeColor}
-#EFFECT REWARD: {PotionEffetcType .., int weight, int minTickDuration, int maxTickDuration, int amplifier}
+#ITEM REWARD: {Material .., double weight, int maxAmount, boolean unique}
+#POTION REWARD: {PotionEffetcType .., double weight, int minTickDuration, int maxTickDuration, int amplifier, DyeColor dyeColor}
+#EFFECT REWARD: {PotionEffetcType .., double weight, int minTickDuration, int maxTickDuration, int amplifier}
 
 # [Material LIST--->] https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
 # [PotionEffectType LIST--->] https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
@@ -39,49 +39,75 @@ ANTI_CAMPER_SYSTEM:
 
 TOWER_REWARDS:
   EFFECTS:
-    - 'REGENERATION,3,100,200,2'
+    - 'REGENERATION,3.5,100,300,2'
+    - 'WEAKNESS,2.5,200,400,2'
+    - 'INCREASE_DAMAGE,2,200,300,1'
+    - 'ABSORPTION,2,200,300,1'
+    - 'DAMAGE_RESISTANCE,8.5,400,600,3'
   ITEMS:
-    - 'SNOWBALL,3,8,false,true'
-    - 'LEATHER_LEGGINGS,3,1,true'
-    - 'LEATHER_BOOTS,3,1,true'
-    - 'LEATHER_HELMET,3,1,true'
-    - 'LEATHER_CHESTPLATE,2,1,true'
-    - 'GOLDEN_APPLE,1,1,false'
-    - 'ENDER_PEARL,1,1,false'
-    - 'MILK_BUCKET,1,1,false'
-    - 'COOKED_PORKCHOP,5,16,false'
-    - 'FISHING_ROD,1,1,true'
-    - 'ENCHANTED_GOLDEN_APPLE,1,1,true'
+    - 'SNOWBALL,20.5,10,false'
+    - 'LEATHER_LEGGINGS,5.5,1,true'
+    - 'LEATHER_BOOTS,5.5,1,true'
+    - 'LEATHER_HELMET,5.5,1,true'
+    - 'LEATHER_CHESTPLATE,10,1,true'
+    - 'GOLDEN_APPLE,3.5,3,false'
+    - 'ENDER_PEARL,3,3,false'
+    - 'MILK_BUCKET,3,1,true'
+    - 'COOKED_PORKCHOP,15.5,16,false'
+    - 'FISHING_ROD,7.5,1,true'
+    - 'ENCHANTED_GOLDEN_APPLE,0.5,1,true'
     - 'TOTEM_OF_UNDYING,1,1,true'
-    - 'HONEYCOMB,1,3,false'
+    - 'HONEYCOMB,8,10,false'
+    - 'FIREWORK_ROCKET,5,7,false'
   POTIONS:
-    - 'REGENERATION,3,100,200,2,LIGHT_BLUE'
+    - 'REGENERATION,2,100,300,2,LIGHT_BLUE'
+    - 'SLOW,5,200,400,2,LIGHT_GRAY'
+    - 'BLINDNESS,7,100,400,1,GRAY'
+    - 'SLOW_FALLING,3.5,600,1,PINK'
+
 
 TARGETBLOCK_REWARDS:
   EFFECTS:
-    - 'REGENERATION,3,100,200,2'
+    - 'REGENERATION,3,100,500,2'
+    - 'POISON,3,200,500,2'
+    - 'HEALTH_BOOST,3,500,1000,2'
+    - 'HUNGER,3,300,700,2'
   ITEMS:
-    - 'SNOWBALL,3,8,false'
+    - 'SNOWBALL,10,10,false'
+    - 'LEATHER_LEGGINGS,3.5,1,true'
     - 'LEATHER_BOOTS,3,1,true'
     - 'LEATHER_HELMET,3,1,true'
-    - 'ENDER_PEARL,1,1,false'
+    - 'ENDER_PEARL,1.5,1,false'
     - 'MILK_BUCKET,1,1,false'
-    - 'COOKED_PORKCHOP,5,16,false'
-    - 'FISHING_ROD,1,1,true'
-    - 'HONEYCOMB,1,3,false'
+    - 'COOKED_PORKCHOP,9.5,16,false'
+    - 'FISHING_ROD,5,1,true'
+    - 'HONEYCOMB,8.5,10,false'
+    - 'FIREWORK_ROCKET,5,5,false'
   POTIONS:
-    - 'REGENERATION,3,100,200,2,LIGHT_BLUE'
+    - 'WITHER,2.5,100,500,1,BLACK'
+    - 'CONFUSION,3,200,600,2,BROWN'
+    - 'BLINDNESS,3,400,600,1,GRAY'
 
-SNOWBALL_KNOCKBACK_POWER: 1
-SNOWBALL_DAMAGE: 0.1
+TARGET_BLOCK:
+  COOLDOWN: 30
+  EXPLOSION_POWER: 1.4
+
+SNOWBALL:
+  DAMAGE: 0.3
+  KNOCKBACK: 1.2
+
+#DA IMPLEMENTARE ->
+FISHING_ROD:
+  PULL_POWER: 3
+  Y_MODIFIER: 2
+
+HONEY_COMB:
+  HEALTH: 2
+
+# <- DA IMPLEMENTARE
 
 FISHINGROD_POWER: 3
 
-TRIDENT_KNOCKBACK_POWER: 1
-
-ENABLE_TARGET_BLOCK: true
-TRAGET_BLOCK_KNOCKBACK_POWER: 1.4
-TARGET_BLOCK_COOLDOWN: 30
 
 
 

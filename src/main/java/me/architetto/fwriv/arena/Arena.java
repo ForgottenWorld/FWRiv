@@ -6,7 +6,6 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,11 +13,11 @@ public class Arena {
 
     private final String arenaName;
 
-    private LightLocation spawn1;
-    private LightLocation spawn2;
-    private LightLocation spawn3;
-    private LightLocation spawn4;
-    private LightLocation tower;
+    private final LightLocation spawn1;
+    private final LightLocation spawn2;
+    private final LightLocation spawn3;
+    private final LightLocation spawn4;
+    private final LightLocation tower;
 
     public Arena(String arenaName, Location spawn1, Location spawn2, Location spawn3,
                  Location spawn4, Location tower) {
@@ -34,10 +33,6 @@ public class Arena {
 
     public String getName() {
         return this.arenaName;
-    }
-
-    public String getFormattedName() {
-        return arenaName.replace("_", " ");
     }
 
     public Location getSpawn1() {

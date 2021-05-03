@@ -4,7 +4,7 @@ import me.architetto.fwriv.command.admin.CreateCommand;
 import me.architetto.fwriv.command.admin.DeleteCommand;
 import me.architetto.fwriv.command.admin.ReloadCommand;
 import me.architetto.fwriv.command.superuser.*;
-import me.architetto.fwriv.command.user.InfoCommand;
+import me.architetto.fwriv.command.user.GameCommand;
 import me.architetto.fwriv.command.user.JoinCommand;
 import me.architetto.fwriv.command.user.LeaveCommand;
 import me.architetto.fwriv.localization.Message;
@@ -32,7 +32,7 @@ public class CommandManager implements TabExecutor{
         subcommands.add(new JoinCommand());
         subcommands.add(new StartCommand());
         subcommands.add(new LeaveCommand());
-        subcommands.add(new InfoCommand());
+        subcommands.add(new GameCommand());
     }
 
     @SuppressWarnings("NullableProblems")
