@@ -12,12 +12,8 @@ public class QuitListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
 
-        EventService eventService = EventService.getInstance();
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE))
-            return;
+        PartecipantsManager.getInstance().getPartecipant(event.getPlayer())
+                .ifPresent(partecipant -> EventService.getInstance().partecipantLeave(event.getPlayer()));
 
-        if (PartecipantsManager.getInstance().isPresent(event.getPlayer())) {
-            eventService.partecipantLeave(event.getPlayer());
-        }
     }
 }

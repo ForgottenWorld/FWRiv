@@ -47,3 +47,6 @@ permissions:
   fwriv.echo:
     description: description
     default: op
+  fwriv.arena:
+    description: description
+    default: op

@@ -74,7 +74,7 @@ public enum Message {
     STATS_DAMAGEDONE("stats_damagedone", true),
     STATS_DAMAGETAKEN("stats_damagetaken", true),
     STATS_TOWERREWARDS("stats_towerrewards", true),
-    STATS_TARGETREWARDS("statas_targetrewards", true),
+    STATS_TARGETREWARDS("stats_targetrewards", true),
 
     //BROADCAST
     BROADCAST_PLAYERJOINEVENT("broadcast_playerjoinevent", true),
@@ -85,6 +85,7 @@ public enum Message {
     COMP_EVENT_JOIN("comp_event_join", true),
     COMP_EVENT_START("comp_event_start", true),
     COMP_EVENT_ENDED_BROADCAST("comp_event_ended_broadcast", true),
+    COMP_ARENA_POINTS("comp_arenacmd_points", true),
 
     //COMMAND DESCRIPTION
     INIT_COMMAND("init_command", false),
@@ -93,6 +94,10 @@ public enum Message {
     START_COMMAND("start_command", false),
     DELETE_COMMAND("delete_command", false),
     RELOAD_COMMAND("reload_command", false),
+    STOP_COMMAND("stop_command",false),
+    ARENA_COMMAND("arena_command", false),
+    LEAVE_COMMAND("leave_command",false),
+    GAME_COMMAND("game_command",false),
     CREATE_COMMAND("create_command", false);
 
     private final String message;
@@ -171,10 +176,6 @@ public enum Message {
 
         return textComponent;
 
-    }
-
-    public void broadcastComponent(Object... objects) {
-        Bukkit.broadcast(asComponent(objects));
     }
 
     public void broadcastComponent(String permission, Object... objects) {

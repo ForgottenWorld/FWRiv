@@ -18,12 +18,12 @@ public class StopCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return "placeholder";
+        return Message.STOP_COMMAND.asString();
     }
 
     @Override
     public String getSyntax(){
-        return "/fwriv stop";
+        return "/fwriv " + CommandName.STOP_COMMAND;
     }
 
     @Override

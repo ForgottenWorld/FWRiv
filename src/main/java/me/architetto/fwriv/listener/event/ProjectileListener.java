@@ -20,93 +20,84 @@ import org.bukkit.util.Vector;
 
 public class ProjectileListener implements Listener {
 
-    SettingsHandler settings = SettingsHandler.getInstance();
-    double ipsilon = 0.5;
+    final double ipsilon = 0.7;
 
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
 
-        if (EventService.getInstance().getEventStatus().equals(EventStatus.INACTIVE)
-                || !(event.getHitEntity() instanceof Player)) return;
-
         Projectile pj = event.getEntity();
 
-        if(!(pj.getShooter() instanceof Player)) return;
+        if(!(pj.getShooter() instanceof Player) ||
+                !(event.getHitEntity() instanceof Player)) return;
 
         Player playerShooter = (Player) pj.getShooter();
         Player playerHitted = (Player) event.getHitEntity();
 
         PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
-        if (!partecipantsManager.isPresent(playerShooter)
-                || !partecipantsManager.isPresent(playerHitted)) return;
+        partecipantsManager.getPartecipant(playerShooter).ifPresent(partecipant -> {
+            if (!partecipantsManager.isPresent(playerHitted)
+                    || !EventService.getInstance().getEventStatus().equals(EventStatus.RUNNING))
+                return;
 
-        switch (pj.getType()) {
-            case SNOWBALL:
-                playerHitted.damage(settings.getSnowballHitDamage());
-                playerHitted.setVelocity(playerShooter.getLocation()
-                        .getDirection().normalize().multiply(settings.getSnowballKnockbackPower()));
-                break;
-            case FISHING_HOOK:
-                if (playerShooter.getInventory().getItemInMainHand().getType() == Material.FISHING_ROD)
-                    playerShooter.getInventory().setItemInMainHand(null);
-                else if (playerShooter.getInventory().getItemInOffHand().getType() == Material.FISHING_ROD)
-                    playerShooter.getInventory().setItemInOffHand(null);
-                else
-                    return;
+            SettingsHandler settings = SettingsHandler.getInstance();
 
-                //todo: recode this pls
+            switch (pj.getType()) {
+                case SNOWBALL:
+                    playerHitted.damage(settings.getSnowballHitDamage());
+                    playerHitted.setVelocity(playerShooter.getLocation()
+                            .getDirection().multiply(settings.getSnowballKnockbackPower()));
+                    break;
+                case FISHING_HOOK:
+                    if (playerShooter.getInventory().getItemInMainHand().getType() == Material.FISHING_ROD)
+                        playerShooter.getInventory().setItemInMainHand(null);
+                    else if (playerShooter.getInventory().getItemInOffHand().getType() == Material.FISHING_ROD)
+                        playerShooter.getInventory().setItemInOffHand(null);
+                    else
+                        return;
 
-                Vector vector = playerShooter.getLocation().getDirection().multiply(-1);
+                    Vector direction = playerHitted.getLocation().toVector()
+                            .subtract(playerShooter.getLocation().toVector()).normalize();
+                    if (direction.getY() < 0)
+                        direction.setY(ipsilon);
+                    direction.multiply(settings.getFishingRodPullPower());
+                    playerHitted.setVelocity(direction);
 
-                if (playerHitted.getLocation().getY() >= playerShooter.getLocation().getY())
-                    vector.setY(0);
+                    playerHitted.getWorld().playSound(playerHitted.getLocation(),Sound.ENTITY_DOLPHIN_SPLASH,2,1);
 
-                vector.multiply(settings.fishingRodPower);
-                vector.add(new Vector(0, ipsilon,0));
+                    Message.FISHINGROD_1.send(playerShooter);
+                    Message.FISHINGROD_2.send(playerHitted);
 
+            }
 
-                playerHitted.setVelocity(vector);
+        });
 
-                playerHitted.getWorld().playSound(playerHitted.getLocation(),Sound.ENTITY_DOLPHIN_SPLASH,2,1);
-
-                Message.FISHINGROD_1.send(playerShooter);
-                Message.FISHINGROD_2.send(playerHitted);
-
-        }
     }
 
 
     @EventHandler
     public void onEnderpearlUse(ProjectileLaunchEvent event) {
-
-        EventService eventService = EventService.getInstance();
-
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) return;
-
         Projectile pj = event.getEntity();
 
         if(!(pj.getShooter() instanceof Player)) return;
 
         Player shooter = (Player) pj.getShooter();
 
-        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
+        PartecipantsManager pm = PartecipantsManager.getInstance();
 
-        if (!partecipantsManager.isPresent(shooter)) return;
+        pm.getPartecipant(shooter).ifPresent(partecipant -> {
+            if (pj.getType() == EntityType.ENDER_PEARL) {
+                event.setCancelled(true);
 
-        if (pj.getType() == EntityType.ENDER_PEARL) {
-
-            event.setCancelled(true);
-
-            shooter.getInventory().getItemInMainHand().setAmount(shooter.getInventory().getItemInMainHand().getAmount() - 1);
-
-            shooter.teleport(eventService.getArena().getTower().add(0,0.5,0));
-
-            shooter.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,10,1));
-
-            shooter.getWorld().strikeLightningEffect(shooter.getLocation());
-
-        }
+                EventService es = EventService.getInstance();
+                if (es.getEventStatus().equals(EventStatus.RUNNING)) {
+                    shooter.getInventory().getItemInMainHand().setAmount(shooter.getInventory().getItemInMainHand().getAmount() - 1);
+                    shooter.teleport(es.getArena().getTower().add(0, 0.5, 0));
+                    shooter.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 10, 1));
+                    shooter.getWorld().strikeLightningEffect(shooter.getLocation());
+                }
+            }
+        });
 
     }
 

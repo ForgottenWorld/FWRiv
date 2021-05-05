@@ -1,30 +1,36 @@
 package me.architetto.fwriv.listener.arena;
 
 import me.architetto.fwriv.arena.ArenaManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.Objects;
 
 public class ArenaCreationListener implements Listener {
 
     @EventHandler
     public void onRightClickSelection(PlayerInteractEvent event) {
+
+        Player player = event.getPlayer();
+
+        ArenaManager am = ArenaManager.getInstance();
+
+        if(!am.isPlayerInCreationMode(player)) return;
+
         if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
         if(event.getItem() == null || event.getItem().getType() != Material.STICK) return;
 
-        Player player = event.getPlayer();
-        ArenaManager arenaManager = ArenaManager.getInstance();
+        Block clickedBlock = event.getClickedBlock();
 
-        if(!arenaManager.isPlayerInCreationMode(player)) return;
+        if (clickedBlock == null) return;
 
-        arenaManager.arenaCreationHandler(player, Objects.requireNonNull(event.getClickedBlock()).getLocation().toCenterLocation());
+        am.arenaCreationHandler(player, clickedBlock.getLocation().toCenterLocation());
+
     }
 
 }

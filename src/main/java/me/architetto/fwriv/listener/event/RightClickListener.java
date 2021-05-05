@@ -6,8 +6,6 @@ import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.partecipant.PartecipantStats;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
-import me.architetto.fwriv.event.EventService;
-import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.reward.RewardService;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -23,74 +21,77 @@ import java.util.*;
 
 public class RightClickListener implements Listener{
 
-    EventService eventService = EventService.getInstance();
-    SettingsHandler settingsHandler = SettingsHandler.getInstance();
-    PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
-    public final List<UUID> playerCooldown = new ArrayList<>();
+    private final Set<UUID> cooldown = new HashSet<>();
 
     @EventHandler
-    public void targetBlockInteract(PlayerInteractEvent event) {
-
-        if (!eventService.getEventStatus().equals(EventStatus.RUNNING)) return;
+    public void interactEvent(PlayerInteractEvent event) {
 
         if (!Objects.equals(event.getHand(), EquipmentSlot.HAND)) return;
 
+        PartecipantsManager pm = PartecipantsManager.getInstance();
+
         Player player = event.getPlayer();
-        Block clickedBlock = event.getClickedBlock();
-        Material material = player.getInventory().getItemInMainHand().getType();
+        pm.getPartecipant(player).ifPresent(partecipant -> {
+            if (!partecipant.getPartecipantStatus().equals(PartecipantStatus.PLAYING)) return;
 
-        if (!PartecipantsManager.getInstance().isPresent(player)) return;
+            Block clickedBlock = event.getClickedBlock();
+            Action action = event.getAction();
+            if (clickedBlock != null
+                    && clickedBlock.getType().equals(Material.TARGET)
+                    && action.equals(Action.RIGHT_CLICK_BLOCK)) {
 
-        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
-                && clickedBlock != null
-                && clickedBlock.getType() == Material.TARGET) {
+                event.setCancelled(true);
+                player.playSound(player.getLocation(),Sound.BLOCK_STONE_BUTTON_CLICK_ON,2,1);
 
-            player.playSound(player.getLocation(),Sound.BLOCK_STONE_BUTTON_CLICK_ON,2,1);
+                if (cooldown.contains(player.getUniqueId())) {
+                    Message.TARGETBLOCK_COOLDOWN.send(player);
+                    return;
+                }
 
-            if (playerCooldown.contains(player.getUniqueId())) {
-                Message.TARGETBLOCK_COOLDOWN.send(player);
+                RewardService.getInstance().giveTargetBlockReward(player);
+                pm.getPartecipantStats(player).ifPresent(PartecipantStats::addTargetBlockReward);
+                this.cooldown.add(player.getUniqueId());
+                scheduleCooldown(player);
                 return;
+
             }
 
-            RewardService.getInstance().giveTargetBlockReward(player);
+            if (action.equals(Action.RIGHT_CLICK_BLOCK)
+                    || action.equals(Action.RIGHT_CLICK_AIR)) {
 
-            partecipantsManager.getPartecipantStats(player).ifPresent(PartecipantStats::addTargetBlockReward);
+                switch (player.getInventory().getItemInMainHand().getType()) {
+                    case FIREWORK_ROCKET:
+                        event.setCancelled(true);
+                        player.getInventory().getItemInMainHand()
+                                .setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+                        player.setVelocity(new Vector(0,1.3,0));
+                        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 3, 1);
+                        return;
+                    case HONEYCOMB:
+                        if (player.getHealth() >= 20) return;
+                        player.getInventory().getItemInMainHand()
+                                .setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+                        player.setHealth(Math.min(player.getHealth() + SettingsHandler.getInstance().getHoneyHealth(), 20));
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, 2, 1);
+                        break;
+                    case LEAD:
+                        event.setCancelled(true);
+                }
+            }
 
-            playerCooldown.add(player.getUniqueId());
-
-            scheduleCooldown(player);
-
-            return;
-
-        }
-
-        switch (material) {
-            case FIREWORK_ROCKET:
-                event.setCancelled(true);
-                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-                player.setVelocity(new Vector(0,1.3,0));
-                player.getWorld().playSound(player.getLocation(),Sound.ENTITY_FIREWORK_ROCKET_LAUNCH,3,1);
-                return;
-            case HONEYCOMB:
-                if (player.getHealth() >= 20) return;
-
-                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-                player.setHealth(Math.min(player.getHealth() + 1,20));
-                player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_BURP,2,1);
-        }
-
+        });
     }
 
     private void scheduleCooldown(Player player) {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.plugin, () -> {
-            playerCooldown.remove(player.getUniqueId());
-            partecipantsManager.getPartecipant(player).ifPresent(partecipant -> {
+            cooldown.remove(player.getUniqueId());
+            PartecipantsManager.getInstance().getPartecipant(player).ifPresent(partecipant -> {
                 if (partecipant.getPartecipantStatus().equals(PartecipantStatus.PLAYING))
                     Message.TARGETBLOCK_READY.send(player);
             });
 
-        }, settingsHandler.getTargetBlockCooldown());
+        }, SettingsHandler.getInstance().getTargetBlockCooldown());
 
     }
 

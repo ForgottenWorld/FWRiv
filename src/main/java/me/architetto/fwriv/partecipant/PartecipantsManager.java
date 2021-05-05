@@ -3,6 +3,7 @@ package me.architetto.fwriv.partecipant;
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.localization.Message;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -99,7 +100,11 @@ public class PartecipantsManager {
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
                                 .ifPresent(entry -> partecipants.stream()
                                         .filter(Player::isOnline)
-                                        .forEach(p -> p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()))));
+                                        .forEach(p -> {
+                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
+                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                                    Message.STATS_KILLS.asString(entry.getValue()),5,60,5);
+                                        }));
                         i++;
                         break;
                     case 1:
@@ -109,7 +114,11 @@ public class PartecipantsManager {
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
                                 .ifPresent(entry -> partecipants.stream()
                                         .filter(Player::isOnline)
-                                        .forEach(p -> p.sendMessage(Message.STATS_DAMAGEDONE.asString(entry.getKey(),entry.getValue()))));
+                                        .forEach(p -> {
+                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
+                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                                    Message.STATS_DAMAGEDONE.asString(entry.getValue()),5,60,5);
+                                        }));
                         i++;
                         break;
                     case 2:
@@ -119,7 +128,11 @@ public class PartecipantsManager {
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
                                 .ifPresent(entry -> partecipants.stream()
                                         .filter(Player::isOnline)
-                                        .forEach(p -> p.sendMessage(Message.STATS_DAMAGETAKEN.asString(entry.getKey(),entry.getValue()))));
+                                        .forEach(p -> {
+                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
+                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                                    Message.STATS_DAMAGETAKEN.asString(entry.getValue()),5,60,5);
+                                        }));
                         i++;
                         break;
                     case 3:
@@ -129,7 +142,11 @@ public class PartecipantsManager {
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
                                 .ifPresent(entry -> partecipants.stream()
                                         .filter(Player::isOnline)
-                                        .forEach(p -> p.sendMessage(Message.STATS_TOWERREWARDS.asString(entry.getKey(),entry.getValue()))));
+                                        .forEach(p -> {
+                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
+                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                                    Message.STATS_TOWERREWARDS.asString(entry.getValue()),5,60,5);
+                                        }));
                         i++;
                         break;
                     case 4:
@@ -139,13 +156,17 @@ public class PartecipantsManager {
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
                                 .ifPresent(entry -> partecipants.stream()
                                         .filter(Player::isOnline)
-                                        .forEach(p -> p.sendMessage(Message.STATS_TARGETREWARDS.asString(entry.getKey(),entry.getValue()))));
+                                        .forEach(p -> {
+                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
+                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                                    Message.STATS_TARGETREWARDS.asString(entry.getValue()),5,60,5);
+                                        }));
                         resetPartecipantsStats();
                         this.cancel();
                         break;
                 }
             }
-        }.runTaskTimer(FWRiv.getPlugin(FWRiv.class),20L,40);
+        }.runTaskTimer(FWRiv.getPlugin(FWRiv.class),100L,80);
     }
 
 

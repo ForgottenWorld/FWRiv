@@ -33,6 +33,7 @@ public class CommandManager implements TabExecutor{
         subcommands.add(new StartCommand());
         subcommands.add(new LeaveCommand());
         subcommands.add(new GameCommand());
+        subcommands.add(new ArenaCommand());
     }
 
     @SuppressWarnings("NullableProblems")

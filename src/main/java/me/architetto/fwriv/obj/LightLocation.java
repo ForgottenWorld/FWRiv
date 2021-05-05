@@ -1,6 +1,7 @@
 package me.architetto.fwriv.obj;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -66,6 +67,13 @@ public class LightLocation {
 
     public Location loc() {
         return vector.toLocation(Objects.requireNonNull(Bukkit.getWorld(worldUUID)));
+    }
+
+    public String formatted() {
+        return ChatColor.AQUA + "X " + ChatColor.YELLOW + vector.getX()
+                + ChatColor.AQUA + " Y " + ChatColor.YELLOW + vector.getY()
+                + ChatColor.AQUA + " Z " + ChatColor.YELLOW + vector.getZ()
+                + ChatColor.AQUA + " W " + ChatColor.YELLOW + worldName;
     }
 
     @Override

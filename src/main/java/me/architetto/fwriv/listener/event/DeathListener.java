@@ -2,9 +2,9 @@ package me.architetto.fwriv.listener.event;
 
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.partecipant.PartecipantStats;
+import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.event.EventService;
-import me.architetto.fwriv.event.EventStatus;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -21,18 +21,15 @@ public class DeathListener implements Listener{
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
 
-        EventService eventService = EventService.getInstance();
-
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) return;
-
-        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
-
-        partecipantsManager.getPartecipant(event.getEntity()).ifPresent(partecipant -> {
+        PartecipantsManager pm = PartecipantsManager.getInstance();
+        pm.getPartecipant(event.getEntity()).ifPresent(partecipant -> {
+            if (!partecipant.getPartecipantStatus().equals(PartecipantStatus.PLAYING))
+                return;
             event.setCancelled(true);
-            eventService.partecipantDeath(event.getEntity());
+            EventService.getInstance().partecipantDeath(event.getEntity());
             Player killer = event.getEntity().getKiller();
             if (killer != null)
-                partecipantsManager.getPartecipantStats(killer).ifPresent(PartecipantStats::addKill);
+                pm.getPartecipantStats(killer).ifPresent(PartecipantStats::addKill);
         });
 
     }
@@ -40,29 +37,20 @@ public class DeathListener implements Listener{
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerResurection(EntityResurrectEvent event) {
 
-        EventService eventService = EventService.getInstance();
-
         if (!(event.getEntity() instanceof Player)) return;
 
-        if (eventService.getEventStatus().equals(EventStatus.INACTIVE)) return;
-
-        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
-
-        //Eventuali plugin che bloccano i teleport come DeluxeCombat devono essere disabilitati nel
-        // mondo in cui si svolge l'evento.
-
-        partecipantsManager.getPartecipant(event.getEntity().getUniqueId()).ifPresent(partecipant -> {
-
+        PartecipantsManager pm = PartecipantsManager.getInstance();
+        pm.getPartecipant(event.getEntity().getUniqueId()).ifPresent(partecipant -> {
+            if (!partecipant.getPartecipantStatus().equals(PartecipantStatus.PLAYING))
+                return;
+            EventService es = EventService.getInstance();
             Player player = (Player) event.getEntity();
-
             Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.getPlugin(FWRiv.class),() -> {
-                player.teleport(eventService.getArena().getTower());
-                player.getWorld().playSound(eventService.getArena().getTower(), Sound.ENTITY_GENERIC_EXPLODE,5,1);
+                player.teleport(es.getArena().getTower());
+                player.getWorld().playSound(es.getArena().getTower(), Sound.ENTITY_GENERIC_EXPLODE,5,1);
                 player.getWorld().spawnParticle(Particle.EXPLOSION_LARGE,player.getLocation(),1);
             },5);
-
         });
-
     }
 
 }

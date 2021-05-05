@@ -21,7 +21,7 @@ public class LeaveCommand extends SubCommand{
 
     @Override
     public String getDescription(){
-        return "placeholder";
+        return Message.LEAVE_COMMAND.asString();
     }
 
     @Override

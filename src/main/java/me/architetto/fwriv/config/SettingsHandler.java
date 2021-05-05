@@ -32,9 +32,10 @@ public class SettingsHandler {
     private double snowballKnockbackPower;
     private double snowballHitDamage;
 
-    public List<ItemStack> startEquipItems = new ArrayList<>();
+    private List<ItemStack> startEquipItems = new ArrayList<>();
 
-    public double fishingRodPower;
+    private double fishingRodPullPower;
+    private int honeyHealth;
 
 
 
@@ -76,7 +77,8 @@ public class SettingsHandler {
         this.snowballKnockbackPower = fc.getDouble("SNOWBALL.KNOCKBACK",1);
         this.snowballHitDamage = fc.getDouble("SNOWBALL.DAMAGE",0.1);
 
-        this.fishingRodPower = fc.getDouble("FISHINGROD_POWER",7);
+        this.fishingRodPullPower = fc.getDouble("FISHING_ROD.PULL_POWER",7);
+        this.honeyHealth = fc.getInt("HONEY_COMB.HEALTH",1);
 
 
     }
@@ -163,5 +165,17 @@ public class SettingsHandler {
 
     public double getSnowballHitDamage() {
         return snowballHitDamage;
+    }
+
+    public double getFishingRodPullPower() {
+        return fishingRodPullPower;
+    }
+
+    public int getHoneyHealth() {
+        return honeyHealth;
+    }
+
+    public List<ItemStack> getStartEquipItems() {
+        return startEquipItems;
     }
 }

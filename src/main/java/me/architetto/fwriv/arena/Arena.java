@@ -4,6 +4,7 @@ import me.architetto.fwriv.obj.LightLocation;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,23 @@ public class Arena {
 
     public Location getTower() {
         return tower.loc();
+    }
+
+    public String formattedLoc(int id) {
+        switch (id) {
+            case 1:
+                return spawn1.formatted();
+            case 2:
+                return spawn2.formatted();
+            case 3:
+                return spawn3.formatted();
+            case 4:
+                return spawn4.formatted();
+            case 5:
+                return tower.formatted();
+            default:
+                throw new IllegalStateException("Unexpected value: " + id);
+        }
     }
 
     public List<Block> getSpawnDoors() {

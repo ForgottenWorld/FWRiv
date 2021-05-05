@@ -3,6 +3,7 @@ package me.architetto.fwriv.arena;
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.localization.Message;
+import me.architetto.fwriv.particles.ParticlesManager;
 import org.bukkit.*;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -94,7 +95,7 @@ public class ArenaManager {
                 Message.CREATION_MODE_STEP.send(sender,"SPAWN 2");
 
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                particleEffect(location);
+                ParticlesManager.getInstance().arenaPointEffect(location,100);
                 break;
             case SPAWN2:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN2, location.add(0,1,0));
@@ -103,7 +104,7 @@ public class ArenaManager {
                 Message.CREATION_MODE_STEP.send(sender,"SPAWN 3");
 
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                particleEffect(location);
+                ParticlesManager.getInstance().arenaPointEffect(location,100);
                 break;
             case SPAWN3:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN3, location.add(0,1,0));
@@ -112,7 +113,7 @@ public class ArenaManager {
                 Message.CREATION_MODE_STEP.send(sender,"SPAWN 4");
 
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                particleEffect(location);
+                ParticlesManager.getInstance().arenaPointEffect(location,100);
                 break;
             case SPAWN4:
                 playerArenaCoordinates.get(sender.getUniqueId()).put(SPAWN4, location.add(0,1,0));
@@ -121,7 +122,7 @@ public class ArenaManager {
                 Message.CREATION_MODE_STEP.send(sender,"TOWER");
 
                 location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
-                particleEffect(location);
+                ParticlesManager.getInstance().arenaPointEffect(location,100);
                 break;
             case TOWER:
                 Material material = location.getBlock().getType();
@@ -139,7 +140,7 @@ public class ArenaManager {
 
                 Message.CREATION_MODE_LOCATION.send(sender,location.getX(),location.getY(),location.getZ());
                 location.getWorld().playSound(location, Sound.ENTITY_PLAYER_LEVELUP,1,1);
-                particleEffect(location);
+                ParticlesManager.getInstance().arenaPointEffect(location,100);
 
                 if (saveArena(playerArenaNameCreation.get(sender.getUniqueId()),
                         playerArenaCoordinates.get(sender.getUniqueId()).get(SPAWN1),
@@ -179,12 +180,6 @@ public class ArenaManager {
 
     public List<String> getArenaNameList() {
         return new ArrayList<>(arenaContainer.keySet());
-    }
-
-    public void particleEffect(Location loc) {
-        Location location = loc.toCenterLocation();
-        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(255, 69, 0), 5);
-        location.getWorld().spawnParticle(Particle.REDSTONE,location,5,dustOptions);
     }
 
     public void removeArena(String arenaName) {

@@ -7,24 +7,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class DamageListener implements Listener{
 
     @EventHandler
     public void onPlayerDamageByPlayer(EntityDamageByEntityEvent event) {
 
-        EventService eventService = EventService.getInstance();
-        EventStatus eventStatus =  eventService.getEventStatus();
-
-        if (eventStatus.equals(EventStatus.INACTIVE)) return;
-
         if (!(event.getDamager() instanceof Player)
                 || !(event.getEntity() instanceof Player)) return;
 
-        PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
-
-        partecipantsManager.getPartecipant(event.getDamager().getUniqueId()).ifPresent(partecipant -> {
-            if (!eventStatus.equals(EventStatus.RUNNING)) {
+        PartecipantsManager pm = PartecipantsManager.getInstance();
+        pm.getPartecipant(event.getDamager().getUniqueId()).ifPresent(partecipant -> {
+            if (!EventService.getInstance().getEventStatus().equals(EventStatus.RUNNING)) {
                 event.setCancelled(true);
                 return;
             }
@@ -32,12 +31,53 @@ public class DamageListener implements Listener{
             Player damager = (Player) event.getDamager();
             Player damageTaker = (Player) event.getEntity();
 
-            partecipantsManager.getPartecipantStats(damager)
+            pm.getPartecipantStats(damager)
                     .ifPresent(stats -> stats.addDamageDealt(event.getFinalDamage()));
-            partecipantsManager.getPartecipantStats(damageTaker)
+            pm.getPartecipantStats(damageTaker)
                     .ifPresent(stats -> stats.addDamageTaken(event.getFinalDamage()));
 
+
+            ItemStack itemStack = damager.getInventory().getItemInMainHand();
+
+            switch (itemStack.getType()) {
+                case LEAD:
+                    pickpoket(damager,damageTaker);
+                    break;
+                case SHEARS:
+                    armorshred(damager,damageTaker);
+            }
+
         });
+    }
+
+    private void pickpoket(Player damager, Player damageTaker) {
+        ItemStack[] inv = damageTaker.getInventory().getContents();
+        List<Integer> avaible = new ArrayList<>();
+        for (int i = 0; i < inv.length; i++) {
+            if (inv[i] != null)
+                avaible.add(i);
+        }
+        if (avaible.isEmpty()) return;
+        int pick = avaible.get(new Random().nextInt(avaible.size()));
+        damager.getInventory().setItemInMainHand(inv[pick]);
+        damageTaker.getInventory().setItem(pick,null);
+        damager.sendMessage("Sei un mariuolo!");
+        damageTaker.sendMessage("Ti hanno derubato!");
+    }
+
+    private void armorshred(Player damager, Player damageTaker) {
+        ItemStack[] inv = damageTaker.getInventory().getContents();
+        List<Integer> avaible = new ArrayList<>();
+        for (int i = 36; i < inv.length - 1; i++) {
+            if (inv[i] != null)
+                avaible.add(i);
+        }
+        if (avaible.isEmpty()) return;
+        int pick = avaible.get(new Random().nextInt(avaible.size()));
+        damager.getInventory().setItemInMainHand(null);
+        damageTaker.getInventory().setItem(pick,null);
+        damager.sendMessage("Tricche e tracche hai scassato tutto!");
+        damageTaker.sendMessage("Ti hanno scassato l'armatura!");
 
     }
 }

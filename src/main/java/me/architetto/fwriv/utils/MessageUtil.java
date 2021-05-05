@@ -45,7 +45,7 @@ public class MessageUtil {
                 .append("INFO")
                 .bold(true)
                 .color(net.md_5.bungee.api.ChatColor.LIGHT_PURPLE)
-                .event(new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv gameplay"))
+                .event(new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/fwriv game rules"))
                 .append("]")
                 .bold(false)
                 .color(net.md_5.bungee.api.ChatColor.GRAY).create());

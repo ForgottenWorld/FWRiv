@@ -219,7 +219,7 @@ public class EventService {
                             .map(Bukkit::getPlayer)
                             .filter(Objects::nonNull)
                             .forEach(p -> {
-                                p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,1200,6));
+                                p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,600,3));
                                 p.sendTitle(new Title(ChatColor.DARK_RED + "GO !", "", 1, 18, 1));
                                 Message.START_MESSAGE.send(p);
                             });
@@ -250,7 +250,7 @@ public class EventService {
         for (PotionEffect potionEffect : player.getActivePotionEffects())
             player.removePotionEffect(potionEffect.getType());
 
-        SettingsHandler.getInstance().startEquipItems.forEach(is -> player.getInventory().addItem(is));
+        SettingsHandler.getInstance().getStartEquipItems().forEach(is -> player.getInventory().addItem(is));
 
     }
 

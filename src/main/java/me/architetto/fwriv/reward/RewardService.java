@@ -133,6 +133,9 @@ public class RewardService {
             this.targetBlockWeightSum += weight;
         });
 
+        //towerRewardsWeightMap.keySet().forEach(r -> Bukkit.getConsoleSender().sendMessage("TOWER : " + r.getName()));
+        //targetBlockRewardsMap.keySet().forEach(r -> Bukkit.getConsoleSender().sendMessage("TARGET : " + r.getName()));
+
     }
 
     public void reloadRewards() {
@@ -145,8 +148,9 @@ public class RewardService {
 
     public void pickNextTowerReward() {
 
+        double randomvalue = ThreadLocalRandom.current().nextDouble(2,4);
         double weightSum = ThreadLocalRandom.current()
-                .nextDouble(this.towerRewardsWeightSum, this.towerRewardsWeightSum * 2);
+                .nextDouble(this.towerRewardsWeightSum, this.towerRewardsWeightSum * randomvalue);
 
         while (weightSum > 0) {
             for (Map.Entry<Reward, Double> entry : towerRewardsWeightMap.entrySet()) {
@@ -168,8 +172,9 @@ public class RewardService {
     }
 
     public void giveRandomTowerReward(Player player) {
+        double randomvalue = ThreadLocalRandom.current().nextDouble(2,4);
         double weightSum = ThreadLocalRandom.current()
-                .nextDouble(this.towerRewardsWeightSum, this.towerRewardsWeightSum * 2.3);
+                .nextDouble(this.towerRewardsWeightSum, this.towerRewardsWeightSum * randomvalue);
         while (weightSum > 0) {
             for (Map.Entry<Reward, Double> entry : towerRewardsWeightMap.entrySet()) {
                 weightSum -= entry.getValue();
@@ -182,8 +187,9 @@ public class RewardService {
     }
 
     public void giveTargetBlockReward(Player player) {
+        double randomvalue = ThreadLocalRandom.current().nextDouble(2,4);
         double weightSum = ThreadLocalRandom.current()
-                .nextDouble(this.targetBlockWeightSum, this.targetBlockWeightSum * 2);
+                .nextDouble(this.targetBlockWeightSum, this.targetBlockWeightSum * randomvalue);
 
         if (weightSum % 23 == 0) {
             double value = SettingsHandler.getInstance().getTargetBlockExplosionPower();

@@ -21,7 +21,7 @@ public class GameCommand extends SubCommand {
 
     @Override
     public String getDescription(){
-        return "placeholder";
+        return Message.GAME_COMMAND.asString();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class GameCommand extends SubCommand {
         return 2;
     }
 
-    private static final List<String> params = Arrays.asList(
+    private final List<String> params = Arrays.asList(
             "rules",
             "partecipants"
     );

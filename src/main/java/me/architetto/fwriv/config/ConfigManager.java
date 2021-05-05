@@ -128,9 +128,9 @@ public class ConfigManager{
         Bukkit.getServer().createWorld(new WorldCreator(worldName));
 
         World world = Bukkit.getWorld(worldName);
-        int x = getInt(conf, String.format("%s.x", path));
-        int y = getInt(conf, String.format("%s.y", path));
-        int z = getInt(conf, String.format("%s.z", path));
+        double x = getDouble(conf, String.format("%s.x", path));
+        double y = getDouble(conf, String.format("%s.y", path));
+        double z = getDouble(conf, String.format("%s.z", path));
 
         return new Location(world, x, y, z);
     }

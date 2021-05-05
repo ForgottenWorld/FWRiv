@@ -10,6 +10,7 @@ public class CommandName {
     public static String START_COMMAND = "start";
     public static String RESTART_COMMAND = "restart";
     public static String STOP_COMMAND = "stop";
+    public static String ARENA_COMMAND = "arena";
 
     public static String JOIN_COMMAND = "join";
     public static String LEAVE_COMMAND = "leave";

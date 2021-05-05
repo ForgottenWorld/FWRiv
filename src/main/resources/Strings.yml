@@ -14,7 +14,7 @@ strings:
   \n            - &c{2}&r partecipanti eliminati "
 
   countdown_start: "L'evento inizierà tra 10 secondi!"
-  start_message: "&bPer i prossimi &e&l60&r &bsecondi tutti i partecipanti sono immuni a qualsiasi danno"
+  start_message: "I danni sono disabilitati per &e&l30&r secondi "
 
   anticamper_start: "&7Anti-camper attivato. Altezza minima consentita : &e{0}"
   anticamper_height_change: "&7Altezza minima consentita : &e{0}"
@@ -67,11 +67,11 @@ strings:
   err_gamecommand_stats: "&cLe statistiche sono disponibili solo al termine della competizione"
 
   #Stats
-  stats_kills: "{0} e' stato il giocatore con il maggior numero di uccisioni ({1})"
-  stats_damagedone: "{0} e' stato il giocatore che ha inflitto piu' danno ({1})"
-  stats_damagetaken: "{0} e' stato il giocatore che ha subito piu' danni ({1})"
-  stats_towerrewards: "{0} e' stato il giocatore che ha ricevuto piu' rewards ({1})"
-  stats_targetrewards: "{0} e' stato il giocatore che ha utilizzato piu' target block ({1})"
+  stats_kills: "ha fatto piu' vittime : &e&b{0} uccisioni"
+  stats_damagedone: "ha inflitto piu' danni : &e&b{0} litri di sangue"
+  stats_damagetaken: "ha ricevuto piu' danni totali : &e&b{0} litri di sangue buttato"
+  stats_towerrewards: "ha ricevuto piu' premi della torre : &e&b{0} regalini"
+  stats_targetrewards: "ha utilizzato piu' target block : &e&b{0} regalucci"
 
   #Broadcast
   broadcast_playerjoinevent: "&o&b{0} &asta partecipando all'evento."
@@ -79,25 +79,35 @@ strings:
   broadcast_event_ended: "Evento 'RIV' terminato"
 
   #Command description
-  create_command: "&7Comando per la creazione di una nuova arena RIV"
-  delete_command: "&7Comando per l'eliminazione di un'arena RIV"
-  reload_command: "&7Comando per ricaricare tutti i file di configurazione"
+  create_command: "&7Crea nuova arena"
+  delete_command: "&7Elimina arena"
+  reload_command: "&7Ricaricare i file di configurazione"
 
-  init_command: "&7Comando per inizializzare un evento RIV"
-  restart_command: "&7Comando per reinizializzare un evento RIV in corso"
-  start_command: "&7Comando per far iniziare l'evento"
+  init_command: "&7Inizializza evento RIV"
+  restart_command: "&7Ripristina evento RIV in corso"
+  start_command: "&7Inizia la competizione"
+  stop_command: "&7Termina evento RIV"
+  arena_command: "&7Informazioni sulle arene"
 
-  join_command: "&7Comando per partecipare ad un evento RIV in corso"
+  join_command: "&7Partecipa all'evento RIV"
+  leave_command: "&7Abbandona l'evento RIV"
+  game_command: "&7Info sull'evento RIV in corso"
 
   #Component messages
-  comp_event_join: " Partecipa all'evento &eRESTA IN VETTA&r &be dimostra a tutti chi è il RE della torre!
+  comp_event_join: " &aPartecipa all'evento &eRESTA IN VETTA&r &ae dimostra a tutti chi è il RE della torre!&r
    \n       - Per partecipare all'evento: §*§
    \n       - Per informazioni sul riv: §*§
-   \n       Non lasciarti scappare il premio che spetta al vincitore!"
+   \n       &aNon lasciarti scappare il &epremio&a che spetta al vincitore!"
   comp_event_start: " Evento inizializzato correttamente. §*"
-  comp_event_ended_broadcast: " L'evento si e' concluso.
+  comp_event_ended_broadcast: " &aL'evento si e' concluso.&r
   \n      - Per riavviare l'evento §*§
   \n      - Per terminare levento §*"
+  comp_arenacmd_points: " Clicca sul nome del punto per attivare un breve effetto particellare :
+  \n  - §*§ : §*§ §*§
+  \n  - §*§ : §*§ §*§
+  \n  - §*§ : §*§ §*§
+  \n  - §*§ : §*§ §*§
+  \n  - §*§ : §*§ §*"
 
 gameplay_info_strings:
   - "&1&lGuida 'Resta in vetta'&r\n\nLo scopo del riv e' scalare la torre e sconfiggere tutti gli avversari.\n\nRaggiungendo
