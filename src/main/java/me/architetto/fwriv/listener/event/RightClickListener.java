@@ -3,7 +3,6 @@ package me.architetto.fwriv.listener.event;
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.localization.Message;
-import me.architetto.fwriv.partecipant.PartecipantStats;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.reward.RewardService;
@@ -49,7 +48,6 @@ public class RightClickListener implements Listener{
                 }
 
                 RewardService.getInstance().giveTargetBlockReward(player);
-                pm.getPartecipantStats(player).ifPresent(PartecipantStats::addTargetBlockReward);
                 this.cooldown.add(player.getUniqueId());
                 scheduleCooldown(player);
                 return;
@@ -62,20 +60,14 @@ public class RightClickListener implements Listener{
                 switch (player.getInventory().getItemInMainHand().getType()) {
                     case FIREWORK_ROCKET:
                         event.setCancelled(true);
-                        player.getInventory().getItemInMainHand()
-                                .setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-                        player.setVelocity(new Vector(0,1.3,0));
-                        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 3, 1);
+                        rocketeer(player);
                         return;
                     case HONEYCOMB:
                         if (player.getHealth() >= 20) return;
-                        player.getInventory().getItemInMainHand()
-                                .setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-                        player.setHealth(Math.min(player.getHealth() + SettingsHandler.getInstance().getHoneyHealth(), 20));
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, 2, 1);
+                        honeyheal(player);
                         break;
                     case LEAD:
-                        event.setCancelled(true);
+                        event.setCancelled(true); //
                 }
             }
 
@@ -93,6 +85,20 @@ public class RightClickListener implements Listener{
 
         }, SettingsHandler.getInstance().getTargetBlockCooldown());
 
+    }
+
+    private void rocketeer(Player player) {
+        player.getInventory().getItemInMainHand()
+                .setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+        player.setVelocity(new Vector(0,1.3,0));
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 3, 1);
+    }
+
+    private void honeyheal(Player player) {
+        player.getInventory().getItemInMainHand()
+                .setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+        player.setHealth(Math.min(player.getHealth() + SettingsHandler.getInstance().getHoneyHealth(), 20));
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, 2, 1);
     }
 
 }

@@ -2,6 +2,8 @@ package me.architetto.fwriv.listener.event;
 
 import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
+import me.architetto.fwriv.localization.Message;
+import me.architetto.fwriv.partecipant.PartecipantStats;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,8 +63,9 @@ public class DamageListener implements Listener{
         int pick = avaible.get(new Random().nextInt(avaible.size()));
         damager.getInventory().setItemInMainHand(inv[pick]);
         damageTaker.getInventory().setItem(pick,null);
-        damager.sendMessage("Sei un mariuolo!");
-        damageTaker.sendMessage("Ti hanno derubato!");
+        Message.PICKPOKET1.send(damager,inv[pick].getI18NDisplayName());
+        Message.PICKPOKET2.send(damageTaker,inv[pick].getI18NDisplayName());
+        PartecipantsManager.getInstance().getPartecipantStats(damager).ifPresent(PartecipantStats::addPickpocket);
     }
 
     private void armorshred(Player damager, Player damageTaker) {
@@ -76,8 +79,8 @@ public class DamageListener implements Listener{
         int pick = avaible.get(new Random().nextInt(avaible.size()));
         damager.getInventory().setItemInMainHand(null);
         damageTaker.getInventory().setItem(pick,null);
-        damager.sendMessage("Tricche e tracche hai scassato tutto!");
-        damageTaker.sendMessage("Ti hanno scassato l'armatura!");
+        Message.ARMORSHRED1.send(damager,inv[pick].getI18NDisplayName());
+        Message.ARMORSHRED2.send(damageTaker,inv[pick].getI18NDisplayName());
 
     }
 }

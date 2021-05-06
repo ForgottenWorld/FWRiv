@@ -4,12 +4,13 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class PartecipantStats {
 
     private final String playerName;
     private final UUID uuid;
 
-    private int towerRewards = 0,kills = 0, targetBlockReward = 0;
+    private int towerRewards = 0,kills = 0, pickpocket = 0;
     private double damageDealt = 0, damageTaken = 0;
 
     public PartecipantStats(Player player) {
@@ -17,16 +18,16 @@ public class PartecipantStats {
         this.uuid = player.getUniqueId();
     }
 
+    public int getPickpocket() {
+        return pickpocket;
+    }
+
+    public void addPickpocket() {
+        this.pickpocket += 1;
+    }
+
     public String getPlayerName() {
         return playerName;
-    }
-
-    public int getTargetBlockReward() {
-        return targetBlockReward;
-    }
-
-    public void addTargetBlockReward() {
-        this.targetBlockReward += 1;
     }
 
     public double getDamageDealt() {
@@ -61,12 +62,16 @@ public class PartecipantStats {
         kills += 1;
     }
 
+    public UUID getUUID() {
+        return uuid;
+    }
+
     public void reset() {
         this.kills = 0;
         this.towerRewards = 0;
-        this.targetBlockReward = 0;
         this.damageDealt = 0;
         this.damageTaken = 0;
+        this.pickpocket = 0;
     }
 
 

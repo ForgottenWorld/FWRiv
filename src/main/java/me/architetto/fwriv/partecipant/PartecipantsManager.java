@@ -98,13 +98,15 @@ public class PartecipantsManager {
                                 .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getKills))
                                 .entrySet().stream()
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> partecipants.stream()
-                                        .filter(Player::isOnline)
-                                        .forEach(p -> {
-                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
-                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                .ifPresent(entry -> {
+                                    if (entry.getValue() != 0) {
+                                        for (Player player : partecipants) {
+                                            if (player.isOnline()) continue;
+                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
                                                     Message.STATS_KILLS.asString(entry.getValue()),5,60,5);
-                                        }));
+                                        }
+                                    }
+                                });
                         i++;
                         break;
                     case 1:
@@ -112,13 +114,16 @@ public class PartecipantsManager {
                                 .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getDamageDealt))
                                 .entrySet().stream()
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> partecipants.stream()
-                                        .filter(Player::isOnline)
-                                        .forEach(p -> {
-                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
-                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
-                                                    Message.STATS_DAMAGEDONE.asString(entry.getValue()),5,60,5);
-                                        }));
+                                .ifPresent(entry -> {
+                                    if (entry.getValue() != 0) {
+                                        for (Player player : partecipants) {
+                                            if (player.isOnline()) continue;
+                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                                    Message.STATS_DAMAGEDONE.asString((int)(Math
+                                                            .round(entry.getValue() * 10))/10.0),5,60,5);
+                                        }
+                                    }
+                                });
                         i++;
                         break;
                     case 2:
@@ -126,13 +131,16 @@ public class PartecipantsManager {
                                 .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getDamageTaken))
                                 .entrySet().stream()
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> partecipants.stream()
-                                        .filter(Player::isOnline)
-                                        .forEach(p -> {
-                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
-                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
-                                                    Message.STATS_DAMAGETAKEN.asString(entry.getValue()),5,60,5);
-                                        }));
+                                .ifPresent(entry -> {
+                                    if (entry.getValue() != 0) {
+                                        for (Player player : partecipants) {
+                                            if (player.isOnline()) continue;
+                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                                    Message.STATS_DAMAGETAKEN.asString((int)(Math
+                                                            .round(entry.getValue() * 10))/10.0),5,60,5);
+                                        }
+                                    }
+                                });
                         i++;
                         break;
                     case 3:
@@ -140,30 +148,33 @@ public class PartecipantsManager {
                                 .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getTowerRewards))
                                 .entrySet().stream()
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> partecipants.stream()
-                                        .filter(Player::isOnline)
-                                        .forEach(p -> {
-                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
-                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                .ifPresent(entry -> {
+                                    if (entry.getValue() != 0) {
+                                        for (Player player : partecipants) {
+                                            if (player.isOnline()) continue;
+                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
                                                     Message.STATS_TOWERREWARDS.asString(entry.getValue()),5,60,5);
-                                        }));
+                                        }
+                                    }
+                                });
                         i++;
                         break;
                     case 4:
                         stats.stream()
-                                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getTargetBlockReward))
+                                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getPickpocket))
                                 .entrySet().stream()
                                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> partecipants.stream()
-                                        .filter(Player::isOnline)
-                                        .forEach(p -> {
-                                            //p.sendMessage(Message.STATS_KILLS.asString(entry.getKey(),entry.getValue()));
-                                            p.sendTitle(ChatColor.GOLD + entry.getKey(),
-                                                    Message.STATS_TARGETREWARDS.asString(entry.getValue()),5,60,5);
-                                        }));
+                                .ifPresent(entry -> {
+                                    if (entry.getValue() != 0) {
+                                        for (Player player : partecipants) {
+                                            if (player.isOnline()) continue;
+                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
+                                                    Message.STATS_PICKPOKET.asString(entry.getValue()),5,60,5);
+                                        }
+                                    }
+                                });
                         resetPartecipantsStats();
                         this.cancel();
-                        break;
                 }
             }
         }.runTaskTimer(FWRiv.getPlugin(FWRiv.class),100L,80);

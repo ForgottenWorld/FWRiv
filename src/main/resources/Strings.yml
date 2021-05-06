@@ -34,6 +34,12 @@ strings:
   fishingrod_1: "WoW! Hai preso un pesce bello grosso ..."
   fishingrod_2: "WoW! Hai abboccato all'amo come un pesce ..."
 
+  pickpoket1: "Sei un mariuolo! Ti sei sgrafignato : &e{0}"
+  pickpoket2: "Sei un pollo! Ti hanno sottratto : &e{0}"
+
+  armorshred1: "Tricche e tracche hai scassato qualcosa : &e{0}"
+  armorshred2: "Ti hanno scassato un pezzo di armatura : &e{0}"
+
   #Success messages
   success_arena_creation: "&bArena &e{0}&r &bcorrettamente creata"
   success_arena_deleted: "&bArena &e{0}&r &bcorrettamente eliminata"
@@ -67,11 +73,11 @@ strings:
   err_gamecommand_stats: "&cLe statistiche sono disponibili solo al termine della competizione"
 
   #Stats
-  stats_kills: "ha fatto piu' vittime : &e&b{0} uccisioni"
-  stats_damagedone: "ha inflitto piu' danni : &e&b{0} litri di sangue"
-  stats_damagetaken: "ha ricevuto piu' danni totali : &e&b{0} litri di sangue buttato"
+  stats_kills: "ha un intenso istinto omicida : &e&b{0} uccisioni"
+  stats_damagedone: "ha dato botte a non finire : &e&b{0} litri di sangue"
+  stats_damagetaken: "ha preso schiaffi a destra e a manca : &e&b{0} litri di sangue buttato"
   stats_towerrewards: "ha ricevuto piu' premi della torre : &e&b{0} regalini"
-  stats_targetrewards: "ha utilizzato piu' target block : &e&b{0} regalucci"
+  stats_pickpoket: "e' il piu' mariulo di tutti : &e&b{0} colpacci"
 
   #Broadcast
   broadcast_playerjoinevent: "&o&b{0} &asta partecipando all'evento."
@@ -131,11 +137,9 @@ special_item_lore:
     - "Applica un forte &eknockback&r al bersaglio"
     - "&f&oSono molto piu' forti di quello che sembrano"
   FISHING_ROD:
+    - "&e[UNICO]"
     - "&eTira verso di te&r il giocatore"
     - "che 'abbocca' all'amo"
-    - "&f&oUtile per schiodare il maledetto che ti guarda"
-    - "&f&odalla cima della torre"
-    - "&cSi consuma dopo l'utilizzo"
   ENDER_PEARL:
     - "Permette di teletrasportarti"
     - "sulla cima della torre"
@@ -148,5 +152,12 @@ special_item_lore:
     - "Mangiandolo recuperi instantaneamente vita"
     - "&f&oUn cibo ... &esalutare"
   TOTEM_OF_UNDYING:
+    - "&e[UNICO]"
     - "In caso di morte, oltre a rianimarti"
     - "ti teletrasporta sulla cima della torre"
+  SHEARS:
+    - "&e[UNICO]"
+    - "Rompe un pezzo di armatura all'avversario"
+  LEAD:
+    - "&e[UNICO]"
+    - "Ruba un oggetto dalla tasca dell'avversario"

@@ -36,6 +36,12 @@ public enum Message {
     FISHINGROD_1("fishingrod_1", true),
     FISHINGROD_2("fishingrod_2", true),
 
+    PICKPOKET1("pickpoket1", true),
+    PICKPOKET2("pickpoket2", true),
+
+    ARMORSHRED1("armorshred1", true),
+    ARMORSHRED2("armorshred1", true),
+
     ANTICAMPER_START("anticamper_start", true),
     ANTICAMPER_HEIGHT_CHANGE("anticamper_height_change", true),
     ANTICAMPER_MAX_HEIGHT("anticamper_max_height", true),
@@ -46,6 +52,8 @@ public enum Message {
     SUCCESS_ARENA_CREATION("success_arena_creation", true),
     SUCCESS_ARENA_DELETED("success_arena_deleted", true),
     SUCCESS_CONFIG_RELOAD("success_config_reloaded", true),
+
+    //ERROR
 
     ERR_PERMISSION("err_permission",true),
     ERR_SYNTAX("err_syntax",true),
@@ -70,11 +78,11 @@ public enum Message {
     ERR_RESTART_DONE("err_restart_done", true),
 
     //STATS
-    STATS_KILLS("stats_kills",true),
-    STATS_DAMAGEDONE("stats_damagedone", true),
-    STATS_DAMAGETAKEN("stats_damagetaken", true),
-    STATS_TOWERREWARDS("stats_towerrewards", true),
-    STATS_TARGETREWARDS("stats_targetrewards", true),
+    STATS_KILLS("stats_kills",false),
+    STATS_DAMAGEDONE("stats_damagedone", false),
+    STATS_DAMAGETAKEN("stats_damagetaken", false),
+    STATS_TOWERREWARDS("stats_towerrewards", false),
+    STATS_PICKPOKET("stats_pickpoket", false),
 
     //BROADCAST
     BROADCAST_PLAYERJOINEVENT("broadcast_playerjoinevent", true),

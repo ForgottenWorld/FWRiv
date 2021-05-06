@@ -29,7 +29,7 @@ public class Partecipant {
         return name;
     }
 
-    public UUID getUuid() {
+    public UUID getUUID() {
         return uuid;
     }
 

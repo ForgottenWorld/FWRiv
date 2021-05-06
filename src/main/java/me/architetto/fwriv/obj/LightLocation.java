@@ -8,6 +8,7 @@ import org.bukkit.util.Vector;
 import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class LightLocation {
 
     private final String worldName;
