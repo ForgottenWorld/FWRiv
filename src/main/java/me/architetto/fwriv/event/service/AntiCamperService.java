@@ -1,6 +1,5 @@
 package me.architetto.fwriv.event.service;
 
-import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.CircleEffect;
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.config.SettingsHandler;
@@ -9,6 +8,7 @@ import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.obj.timer.Repeater;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
+import me.architetto.fwriv.particles.ParticlesManager;
 import org.bukkit.*;
 
 import java.util.Objects;
@@ -16,8 +16,6 @@ import java.util.Objects;
 public class AntiCamperService {
 
     private static AntiCamperService instance;
-
-    private EffectManager effectManager;
 
     private CircleEffect circleEffect;
     private Location centeredLocation;
@@ -35,20 +33,6 @@ public class AntiCamperService {
         if(instance != null)
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
 
-        this.effectManager = new EffectManager(FWRiv.getPlugin(FWRiv.class));
-
-        circleEffect = new CircleEffect(this.effectManager);
-        circleEffect.particle = Particle.REDSTONE;
-        circleEffect.color = Color.RED;
-        circleEffect.particleSize = 15;
-        circleEffect.particleCount = 4;
-        circleEffect.period = 1;
-        circleEffect.iterations = -1;
-        circleEffect.particles = 50;
-        circleEffect.radius = 20;
-        circleEffect.visibleRange = 100;
-        circleEffect.enableRotation = false;
-
     }
 
     public static AntiCamperService getInstance() {
@@ -63,8 +47,10 @@ public class AntiCamperService {
         EventService eventService = EventService.getInstance();
         SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
-        this.centeredLocation = eventService.getArena().getCenteredLowestLocation();
-        this.centeredLocation.add(0,5,0);
+        this.centeredLocation = eventService.getArena().getCenteredLowestLocation().add(0,5,0);
+
+        initializeCircleEffect();
+
         this.acY = this.centeredLocation.getBlockY();
 
         this.acYMax = eventService.getArena().getTower().getBlockY() - settingsHandler.getAcMaxYDiff();
@@ -78,12 +64,30 @@ public class AntiCamperService {
 
     }
 
+    private void initializeCircleEffect() {
+
+        circleEffect = new CircleEffect(ParticlesManager.getInstance().getEffectManager());
+        circleEffect.particle = Particle.REDSTONE;
+        circleEffect.wholeCircle = true;
+        circleEffect.particleSize = 5f;
+        circleEffect.color = Color.RED;
+        circleEffect.particleSize = 15;
+        circleEffect.period = 10;
+        circleEffect.iterations = -1;
+        circleEffect.particles = 50;
+        circleEffect.radius = 20;
+        circleEffect.visibleRange = 150;
+        circleEffect.enableRotation = false;
+        this.circleEffect.setLocation(this.centeredLocation);
+
+    }
+
     private void startAntiCamperSystem() {
         this.repeater = new Repeater(FWRiv.getPlugin(FWRiv.class),
                 SettingsHandler.getInstance().getAcDelay(),
                 () -> {
             //
-                    this.circleEffect.setLocation(this.centeredLocation);
+
                     this.circleEffect.start();
 
                     PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.PLAYING).stream()
@@ -127,7 +131,7 @@ public class AntiCamperService {
 
     public void stopAntiCamperSystem() {
         if (this.repeater != null && this.repeater.isStarted()) {
-            if(this.repeater.getTotalSeconds() != 0)
+            if (this.repeater.getTotalSeconds() != 0)
                 this.circleEffect.cancel();
             this.repeater.cancelTimer();
         }

@@ -167,16 +167,16 @@ public class EventService {
                 victoryAnimation(partecipant.getName());
                 Message.VICOTRY_SERVER_BROADCAST.broadcast(partecipant.getName());
             });
-
-            PartecipantsManager.getInstance().printStats();
-
             victoryFireworksEffect(2);
         }
 
         if (uuidSet.size() == 0)
             eventStatus = EventStatus.ENDED;
 
+
         if (eventStatus.equals(EventStatus.ENDED)) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.getPlugin(FWRiv.class),
+                    () -> PartecipantsManager.getInstance().printStats(),40);
             stopEventServices();
             Message.COMP_EVENT_ENDED_BROADCAST.broadcastComponent("fwriv.echo", MessageUtil.restartComponent(),MessageUtil.stopComponent());
         }

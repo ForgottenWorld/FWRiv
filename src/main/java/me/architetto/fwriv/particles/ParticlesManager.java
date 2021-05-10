@@ -42,4 +42,7 @@ public class ParticlesManager {
         circleEffect.start();
     }
 
+    public EffectManager getEffectManager() {
+        return effectManager;
+    }
 }

@@ -25,6 +25,9 @@ strings:
   partecipant_restart_message: "Evento restartato. Sei stato automaticamente aggiunto alla lista dei partecipanti"
   partecipant_leave: "Hai abbandonato l'evento"
 
+  player_death1: "&e{0}&r e' stato eliminato da &e{1}&r. Partecipanti rimasti : &e{2}&r"
+  player_death2: "&e{0}&r e' stato eliminato. Partecipanti rimasti : &e{1}&r"
+
   victory_subtitle: "Congratulazioni sei il vincitore!"
   victory_server_broadcast: "Congratulazioni a &e&l{0}&r che ha vinto l'evento RIV"
 
@@ -73,11 +76,11 @@ strings:
   err_gamecommand_stats: "&cLe statistiche sono disponibili solo al termine della competizione"
 
   #Stats
-  stats_kills: "ha un intenso istinto omicida : &e&b{0} uccisioni"
-  stats_damagedone: "ha dato botte a non finire : &e&b{0} litri di sangue"
-  stats_damagetaken: "ha preso schiaffi a destra e a manca : &e&b{0} litri di sangue buttato"
-  stats_towerrewards: "ha ricevuto piu' premi della torre : &e&b{0} regalini"
-  stats_pickpoket: "e' il piu' mariulo di tutti : &e&b{0} colpacci"
+  stats_kills: "&e&b{0}&r ha un intenso istinto omicida : &e&b{1} uccisioni&r\n"
+  stats_damagedone: "&e&b{0}&r ha dato botte a non finire : &e&b{1} litri di sangue&r\n"
+  stats_damagetaken: "&e&b{0}&r ha preso schiaffi a destra e a manca : &e&b{1} litri di sangue buttato&r\n"
+  stats_towerrewards: "&e&b{0}&r ha ricevuto piu' premi della torre : &e&b{1} regalini&r\n"
+  stats_pickpoket: "&e&b{0}&r e' il piu' mariuolo di tutti : &e&b{1} colpacci&r\n"
 
   #Broadcast
   broadcast_playerjoinevent: "&o&b{0} &asta partecipando all'evento."

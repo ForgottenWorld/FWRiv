@@ -9,10 +9,16 @@ import java.util.Collections;
 
 public class MessageUtil {
 
-    public static String commandsInfo() {
+    public static String commandsInfoHeader() {
         return  ChatColor.YELLOW + "[*]----------------[ " +
                 ChatColor.DARK_AQUA + ChatColor.BOLD + "COMMANDS INFO" +
                 ChatColor.YELLOW + " ]----------------[*]";
+    }
+
+    public static String eventStatsHeader() {
+        return  ChatColor.YELLOW + "[*]-----------------[ " +
+                ChatColor.DARK_AQUA + ChatColor.BOLD + "EVENT STATS" +
+                ChatColor.YELLOW + " ]-----------------[*]";
     }
 
     public static TextComponent joinComponent() {

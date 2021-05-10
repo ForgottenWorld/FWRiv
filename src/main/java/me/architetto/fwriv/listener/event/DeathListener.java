@@ -1,6 +1,7 @@
 package me.architetto.fwriv.listener.event;
 
 import me.architetto.fwriv.FWRiv;
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.partecipant.PartecipantStats;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
@@ -28,8 +29,14 @@ public class DeathListener implements Listener{
             event.setCancelled(true);
             EventService.getInstance().partecipantDeath(event.getEntity());
             Player killer = event.getEntity().getKiller();
-            if (killer != null)
+            if (killer != null) {
                 pm.getPartecipantStats(killer).ifPresent(PartecipantStats::addKill);
+                Message.PLAYER_DEATH1.sendToPartecipants(partecipant.getName(),
+                        killer.getDisplayName(),
+                        pm.getPartecipantsUUID(PartecipantStatus.PLAYING).size());
+            } else
+                Message.PLAYER_DEATH2.sendToPartecipants(partecipant.getName(),
+                        pm.getPartecipantsUUID(PartecipantStatus.PLAYING).size());
         });
 
     }

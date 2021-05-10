@@ -1,12 +1,10 @@
 package me.architetto.fwriv.partecipant;
 
-import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.localization.Message;
+import me.architetto.fwriv.utils.MessageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -83,101 +81,63 @@ public class PartecipantsManager {
         });
     }
 
+    @SuppressWarnings("ComparatorMethodParameterNotUsed")
     public void printStats() {
 
-        new BukkitRunnable() {
-            private int i = 0;
-            private Set<Player> partecipants = uuidPartecipantMap.keySet().stream()
-                    .map(Bukkit::getPlayer).collect(Collectors.toSet());
-            private Set<PartecipantStats> stats = new HashSet<>(partecipantStatsHashMap.values());
-            @Override
-            public void run() {
-                switch (i) {
-                    case 0:
-                        stats.stream()
-                                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getKills))
-                                .entrySet().stream()
-                                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> {
-                                    if (entry.getValue() != 0) {
-                                        for (Player player : partecipants) {
-                                            if (player.isOnline()) continue;
-                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
-                                                    Message.STATS_KILLS.asString(entry.getValue()),5,60,5);
-                                        }
-                                    }
-                                });
-                        i++;
-                        break;
-                    case 1:
-                        stats.stream()
-                                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getDamageDealt))
-                                .entrySet().stream()
-                                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> {
-                                    if (entry.getValue() != 0) {
-                                        for (Player player : partecipants) {
-                                            if (player.isOnline()) continue;
-                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
-                                                    Message.STATS_DAMAGEDONE.asString((int)(Math
-                                                            .round(entry.getValue() * 10))/10.0),5,60,5);
-                                        }
-                                    }
-                                });
-                        i++;
-                        break;
-                    case 2:
-                        stats.stream()
-                                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getDamageTaken))
-                                .entrySet().stream()
-                                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> {
-                                    if (entry.getValue() != 0) {
-                                        for (Player player : partecipants) {
-                                            if (player.isOnline()) continue;
-                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
-                                                    Message.STATS_DAMAGETAKEN.asString((int)(Math
-                                                            .round(entry.getValue() * 10))/10.0),5,60,5);
-                                        }
-                                    }
-                                });
-                        i++;
-                        break;
-                    case 3:
-                        stats.stream()
-                                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getTowerRewards))
-                                .entrySet().stream()
-                                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> {
-                                    if (entry.getValue() != 0) {
-                                        for (Player player : partecipants) {
-                                            if (player.isOnline()) continue;
-                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
-                                                    Message.STATS_TOWERREWARDS.asString(entry.getValue()),5,60,5);
-                                        }
-                                    }
-                                });
-                        i++;
-                        break;
-                    case 4:
-                        stats.stream()
-                                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getPickpocket))
-                                .entrySet().stream()
-                                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
-                                .ifPresent(entry -> {
-                                    if (entry.getValue() != 0) {
-                                        for (Player player : partecipants) {
-                                            if (player.isOnline()) continue;
-                                            player.sendTitle(ChatColor.GOLD + entry.getKey(),
-                                                    Message.STATS_PICKPOKET.asString(entry.getValue()),5,60,5);
-                                        }
-                                    }
-                                });
-                        resetPartecipantsStats();
-                        this.cancel();
-                }
-            }
-        }.runTaskTimer(FWRiv.getPlugin(FWRiv.class),100L,80);
+        Set<Player> partecipants = uuidPartecipantMap.keySet().stream()
+                .map(Bukkit::getPlayer).collect(Collectors.toSet());
+        Set<PartecipantStats> stats = new HashSet<>(partecipantStatsHashMap.values());
+
+        StringBuilder stringBuilder = new StringBuilder(MessageUtil.eventStatsHeader() + "\n");
+
+
+        stats.stream()
+                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getKills))
+                .entrySet().stream()
+                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
+                .ifPresent(entry -> {
+                    if (entry.getValue() != 0)
+                        stringBuilder.append(Message.STATS_KILLS.asString(entry.getKey(), entry.getValue()));
+                    });
+        stats.stream()
+                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getDamageDealt))
+                .entrySet().stream()
+                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
+                .ifPresent(entry -> {
+                    if (entry.getValue() != 0)
+                        stringBuilder.append(Message.STATS_DAMAGEDONE.asString(entry.getKey(), entry.getValue()));
+                });
+        stats.stream()
+                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getDamageTaken))
+                .entrySet().stream()
+                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
+                .ifPresent(entry -> {
+                    if (entry.getValue() != 0)
+                        stringBuilder.append(Message.STATS_DAMAGETAKEN.asString(entry.getKey(), entry.getValue()));
+                });
+        stats.stream()
+                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getTowerRewards))
+                .entrySet().stream()
+                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
+                .ifPresent(entry -> {
+                    if (entry.getValue() != 0)
+                        stringBuilder.append(Message.STATS_TOWERREWARDS.asString(entry.getKey(), entry.getValue()));
+                });
+        stats.stream()
+                .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getPickpocket))
+                .entrySet().stream()
+                .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
+                .ifPresent(entry -> {
+                    if (entry.getValue() != 0)
+                        stringBuilder.append(Message.STATS_PICKPOKET.asString(entry.getKey(), entry.getValue()));
+                });
+
+        stringBuilder.append(MessageUtil.chatFooter());
+
+        partecipants.forEach(p -> p.sendMessage(stringBuilder.toString()));
+        resetPartecipantsStats();
+
+
     }
 
 

@@ -1,5 +1,7 @@
 package me.architetto.fwriv.localization;
 
+import me.architetto.fwriv.partecipant.PartecipantStatus;
+import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.utils.MessageUtil;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -8,6 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Objects;
 
 public enum Message {
 
@@ -32,6 +36,9 @@ public enum Message {
 
     TARGETBLOCK_READY("targetblock_ready", true),
     TARGETBLOCK_COOLDOWN("targetblock_cooldown", true),
+
+    PLAYER_DEATH1("player_death1", true),
+    PLAYER_DEATH2("player_death2", true),
 
     FISHINGROD_1("fishingrod_1", true),
     FISHINGROD_2("fishingrod_2", true),
@@ -194,16 +201,24 @@ public enum Message {
     }
 
     public void specialBroadcastComponent(Object... objects) {
+        TextComponent txt = new TextComponent(asComponent(objects));
         Bukkit.getServer().getOnlinePlayers().forEach(player -> {
-            TextComponent txt = new TextComponent(asComponent(objects));
             player.sendMessage(txt);
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1 ,1);
-
         });
     }
 
     public void sendSpecialComponent(Player sender, Object... objects) {
         sender.sendMessage(asComponent(objects));
         sender.playSound(sender.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1 ,1);
+    }
+
+    public void sendToPartecipants(Object...objects) {
+        String msg = asString(objects);
+        PartecipantsManager.getInstance().getPartecipantsUUID(PartecipantStatus.ALL).stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .filter(Player::isOnline)
+                .forEach(player -> player.sendMessage(msg));
     }
 }
