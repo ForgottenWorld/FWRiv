@@ -14,6 +14,8 @@ public class SettingsHandler {
 
     private boolean echelonSupport;
 
+    private int noDamagePeriod;
+
     private long rewarDelay;
     private long rewardPeriod;
     private boolean allrandom;
@@ -58,6 +60,8 @@ public class SettingsHandler {
         FileConfiguration fc = ConfigManager.getInstance().getConfig("Settings.yml");
 
         loadStartEquip();
+
+        this.noDamagePeriod = fc.getInt("NO_DAMAGE_PERIOD",30) * 20;
 
         this.allrandom = fc.getBoolean("REWARD_SYSTEM.ALLRANDOM", false);
         this.rewarDelay = fc.getLong("REWARD_SYSTEM.DELAY",30) * 20;
@@ -113,6 +117,10 @@ public class SettingsHandler {
 
     public boolean isEchelonEnabled() {
         return echelonSupport;
+    }
+
+    public int getNoDamagePeriod() {
+        return noDamagePeriod;
     }
 
     public long getRewarDelay() {

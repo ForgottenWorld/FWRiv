@@ -48,7 +48,7 @@ public class ItemReward extends Reward {
             itemStack.setAmount(Math.min(itemStack.getMaxStackSize(), ThreadLocalRandom.current().nextInt(1,maxAmount)));
 
         player.getInventory().addItem(itemStack);
-        Message.REWARD_OBTAINED.send(player, getName() + " (" + itemStack.getAmount() + ")");
+        Message.REWARD_OBTAINED.send(player, getName() + " (qty. " + itemStack.getAmount() + ")");
         player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC,1,1);
 
 

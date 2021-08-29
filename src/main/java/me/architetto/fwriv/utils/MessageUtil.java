@@ -9,6 +9,14 @@ import java.util.Collections;
 
 public class MessageUtil {
 
+    public static String fwrivHeader() {
+        return "=====================[      "
+                + ChatColor.DARK_AQUA
+                + "FWRiv"
+                + ChatColor.RESET
+                + "      ]=====================";
+    }
+
     public static String commandsInfoHeader() {
         return  ChatColor.YELLOW + "[*]----------------[ " +
                 ChatColor.DARK_AQUA + ChatColor.BOLD + "COMMANDS INFO" +

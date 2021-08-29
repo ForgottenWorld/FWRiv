@@ -2,9 +2,7 @@ package me.architetto.fwriv.reward;
 
 import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.config.SettingsHandler;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -89,7 +87,9 @@ public class RewardService {
             this.towerRewardsWeightSum += weight;
         });
 
-        //////
+        this.towerRewardsWeightMap.forEach((key, value) -> Bukkit.getConsoleSender()
+                .sendMessage(ChatColor.DARK_GREEN + "        -- [TOWER] "
+                        + key.getName() + " (" + value + ")"));
 
         List<String> itemsTargetblockRewards = fc.getStringList("TARGETBLOCK_REWARDS.ITEMS");
 
@@ -133,8 +133,9 @@ public class RewardService {
             this.targetBlockWeightSum += weight;
         });
 
-        //towerRewardsWeightMap.keySet().forEach(r -> Bukkit.getConsoleSender().sendMessage("TOWER : " + r.getName()));
-        //targetBlockRewardsMap.keySet().forEach(r -> Bukkit.getConsoleSender().sendMessage("TARGET : " + r.getName()));
+        this.targetBlockRewardsMap.forEach((key, value) -> Bukkit.getConsoleSender()
+                .sendMessage(ChatColor.DARK_GREEN + "        -- [TARGET] "
+                        + key.getName() + " (" + value + ")"));
 
     }
 

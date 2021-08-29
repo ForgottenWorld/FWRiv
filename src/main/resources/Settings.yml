@@ -16,6 +16,8 @@ START_LOADOUT:
   - 'COOKED_PORKCHOP,15'
   - 'HONEYCOMB,10'
 
+NO_DAMAGE_PERIOD: 30
+
 REWARD_SYSTEM:
   DELAY: 30
   PERIOD: 60
@@ -37,33 +39,35 @@ ANTI_CAMPER_SYSTEM:
 # [PotionEffectType LIST--->] https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
 # [DyeColor LIST--->] https://hub.spigotmc.org/javadocs/spigot/org/bukkit/DyeColor.html
 
+# SPECIAL ITEMS LIST: ENDER PEARL, SNOWBALL, TOTEM OF UNDYING, FISHING ROD, LEAD (pickpoket), SHEARS (armor shred)
+
 TOWER_REWARDS:
   EFFECTS:
-    - 'REGENERATION,3.5,100,300,2'
-    - 'WEAKNESS,2.5,200,400,1'
-    - 'INCREASE_DAMAGE,2,200,300,1'
-    - 'ABSORPTION,2,200,300,1'
-    - 'DAMAGE_RESISTANCE,8.5,400,600,2'
+    - 'REGENERATION,1.5,100,300,2'
+    - 'WEAKNESS,1.5,200,400,1'
+    - 'INCREASE_DAMAGE,1.5,200,300,1'
+    - 'ABSORPTION,1.5,200,300,1'
+    - 'DAMAGE_RESISTANCE,3,400,600,2'
   ITEMS:
-    - 'SNOWBALL,20.5,10,false'
+    - 'SNOWBALL,13.5,10,false'
     - 'LEATHER_LEGGINGS,5.5,1,true'
     - 'LEATHER_BOOTS,5.5,1,true'
     - 'LEATHER_HELMET,5.5,1,true'
-    - 'LEATHER_CHESTPLATE,10,1,true'
+    - 'LEATHER_CHESTPLATE,8,1,true'
     - 'GOLDEN_APPLE,3.5,1,false'
     - 'ENDER_PEARL,3,1,true'
     - 'MILK_BUCKET,3,1,true'
     - 'LEAD,1.9,1,true'
-    - 'COOKED_PORKCHOP,15.5,16,false'
+    - 'COOKED_PORKCHOP,10.5,16,false'
     - 'FISHING_ROD,7.5,1,true'
     - 'ENCHANTED_GOLDEN_APPLE,0.5,1,true'
     - 'TOTEM_OF_UNDYING,1.4,1,true'
-    - 'HONEYCOMB,8,10,false'
+    - 'HONEYCOMB,5,10,false'
     - 'FIREWORK_ROCKET,5,7,false'
   POTIONS:
     - 'REGENERATION,2,100,300,2,LIGHT_BLUE'
-    - 'SLOW,4,200,400,2,LIGHT_GRAY'
-    - 'BLINDNESS,7,100,400,1,GRAY'
+    - 'SLOW,2,200,400,2,LIGHT_GRAY'
+    - 'BLINDNESS,4,100,400,1,GRAY'
     - 'SLOW_FALLING,3.5,600,1200,1,PINK'
 
 
@@ -82,12 +86,11 @@ TARGETBLOCK_REWARDS:
     - 'SHEARS,1.8,1,true'
     - 'LEAD,1.3,1,true'
     - 'MILK_BUCKET,2.5,1,true'
-    - 'COOKED_PORKCHOP,9.5,14,false'
+    - 'COOKED_PORKCHOP,8.5,14,false'
     - 'FISHING_ROD,5,1,true'
-    - 'HONEYCOMB,8.5,10,false'
+    - 'HONEYCOMB,6.5,10,false'
     - 'FIREWORK_ROCKET,5,5,false'
     - 'LEAD,1.5,1,true'
-    - 'SHEARS,2,1,true'
   POTIONS:
     - 'WITHER,2.5,100,500,1,BLACK'
     - 'CONFUSION,2.5,200,500,2,BROWN'
