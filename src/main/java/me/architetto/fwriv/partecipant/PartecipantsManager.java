@@ -82,7 +82,7 @@ public class PartecipantsManager {
     }
 
     @SuppressWarnings("ComparatorMethodParameterNotUsed")
-    public void printStats() {
+    public void printStatistics() {
 
         Set<Player> partecipants = uuidPartecipantMap.keySet().stream()
                 .map(Bukkit::getPlayer).collect(Collectors.toSet());

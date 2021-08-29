@@ -12,6 +12,7 @@ import me.architetto.fwriv.listener.event.*;
 import me.architetto.fwriv.localization.LocalizationManager;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.reward.RewardService;
+import me.architetto.fwriv.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -29,14 +30,15 @@ public final class FWRiv extends JavaPlugin {
         plugin = this;
         ConfigManager.getInstance().setPlugin(plugin);
 
-        Bukkit.getConsoleSender().sendMessage("=====================[      " + ChatColor.DARK_AQUA + "FWRiv"
-                + ChatColor.RESET + "      ]=====================");
+        Bukkit.getConsoleSender().sendMessage(MessageUtil.fwrivHeader());
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Strings.yml...");
         LocalizationManager.getInstance().loadLanguageFile();
 
         Bukkit.getConsoleSender().sendMessage( ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Settings.yml...");
         SettingsHandler.getInstance().load();
+
+        Bukkit.getConsoleSender().sendMessage( ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading rewards...");
         RewardService.getInstance().loadRewards();
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading commands & listeners...");

@@ -45,6 +45,6 @@ public class EffectReward extends Reward {
 
     @Override
     public String getName() {
-        return StringUtils.capitalize(this.potionEffectType.getName().toLowerCase()) + " effect";
+        return StringUtils.replace(this.potionEffectType.getName().toUpperCase(), "_", " ") + " EFFECT";
     }
 }

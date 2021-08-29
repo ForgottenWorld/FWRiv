@@ -176,7 +176,7 @@ public class EventService {
 
         if (eventStatus.equals(EventStatus.ENDED)) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(FWRiv.getPlugin(FWRiv.class),
-                    () -> PartecipantsManager.getInstance().printStats(),40);
+                    () -> PartecipantsManager.getInstance().printStatistics(),40);
             stopEventServices();
             Message.COMP_EVENT_ENDED_BROADCAST.broadcastComponent("fwriv.echo", MessageUtil.restartComponent(),MessageUtil.stopComponent());
         }
@@ -219,9 +219,9 @@ public class EventService {
                             .map(Bukkit::getPlayer)
                             .filter(Objects::nonNull)
                             .forEach(p -> {
-                                p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,600,3));
+                                p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,SettingsHandler.getInstance().getNoDamagePeriod(),3));
                                 p.sendTitle(new Title(ChatColor.DARK_RED + "GO !", "", 1, 18, 1));
-                                Message.START_MESSAGE.send(p);
+                                Message.START_MESSAGE.send(p, SettingsHandler.getInstance().getNoDamagePeriod());
                             });
 
                     this.arenaDoors.open();
