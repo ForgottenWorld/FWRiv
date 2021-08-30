@@ -221,7 +221,7 @@ public class EventService {
                             .forEach(p -> {
                                 p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,SettingsHandler.getInstance().getNoDamagePeriod(),3));
                                 p.sendTitle(new Title(ChatColor.DARK_RED + "GO !", "", 1, 18, 1));
-                                Message.START_MESSAGE.send(p, SettingsHandler.getInstance().getNoDamagePeriod());
+                                Message.START_MESSAGE.send(p, SettingsHandler.getInstance().getNoDamagePeriod() / 20);
                             });
 
                     this.arenaDoors.open();

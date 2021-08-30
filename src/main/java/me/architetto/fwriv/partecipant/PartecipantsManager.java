@@ -90,7 +90,6 @@ public class PartecipantsManager {
 
         StringBuilder stringBuilder = new StringBuilder(MessageUtil.eventStatsHeader() + "\n");
 
-
         stats.stream()
                 .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getKills))
                 .entrySet().stream()
@@ -135,6 +134,7 @@ public class PartecipantsManager {
         stringBuilder.append(MessageUtil.chatFooter());
 
         partecipants.forEach(p -> p.sendMessage(stringBuilder.toString()));
+        partecipants.clear();
         resetPartecipantsStats();
 
 

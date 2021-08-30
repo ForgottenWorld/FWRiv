@@ -173,6 +173,7 @@ public class RewardService {
     }
 
     public void giveRandomTowerReward(Player player) {
+        //todo: sono pigro (see pickNextTowerReward)
         double randomvalue = ThreadLocalRandom.current().nextDouble(2,4);
         double weightSum = ThreadLocalRandom.current()
                 .nextDouble(this.towerRewardsWeightSum, this.towerRewardsWeightSum * randomvalue);
@@ -188,14 +189,15 @@ public class RewardService {
     }
 
     public void giveTargetBlockReward(Player player) {
+
         double randomvalue = ThreadLocalRandom.current().nextDouble(2,4);
         double weightSum = ThreadLocalRandom.current()
                 .nextDouble(this.targetBlockWeightSum, this.targetBlockWeightSum * randomvalue);
 
-        if (weightSum % 23 == 0) {
+        if (isPrime((int) weightSum)) {
             double value = SettingsHandler.getInstance().getTargetBlockExplosionPower();
-        player.setVelocity(player.getLocation().getDirection().multiply(-value));
-        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 3, 1);
+            player.setVelocity(player.getLocation().getDirection().multiply(-value));
+            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 3, 1);
             return;
         }
 
@@ -209,5 +211,10 @@ public class RewardService {
             }
         }
     }
+
+    private boolean isPrime(int n) {
+        return !new String(new char[n]).matches(".?|(..+?)\\1+");
+    }
+
 
 }
