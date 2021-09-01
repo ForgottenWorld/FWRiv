@@ -10,5 +10,3 @@ E' importante considerare che occupando la cima della torre si ricevono oggetti 
 ATTENZIONE : FWRiv non mette a disposizione arene di gioco prefabbricate!
 
 LISTA COMANDI: WIP
-
-
