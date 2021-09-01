@@ -1,68 +1,108 @@
-**FWRiv** - Plugin per la gestione dell'evento "Resta in vetta" (RIV)
+<p align="center">
+  <img src="https://i.ibb.co/bXHNGdZ/Senza-titolo-1-1x.png">
+</p>
 
-### LISTA COMANDI
+<hr>
 
-(permesso necessario: rivevent.admin)
+Plugin per la gestione e l'automatizzazione del minigioco chiamato
+"Resta In Vetta" (aka. RIV).
+
+Un gruppo di giocatori si sfidano per dimostrare chi è il re della torre.  
+Gli sfidanti dovranno scalare la torre dell'arena provando ad eliminare tutti
+gli altri partecipanti e sfruttando gli oggetti che si ottendono stando in cima.  
+Il vincitore è l'ultimo giocatore che rimane in vita.    
+
+<hr>
+
+## COMANDI GESTIONE ARENA
+
 ```sh
-/fwriv create <nome _arena>
+/fwriv create <nome_arena>
 ```
-Inizia la procedura di creazione di una nuova arena.
+Comando per la creazione di una nuova arena. _Dopo aver eseguito il comando seguire 
+le istruzioni a schermo._  
+
 ```sh
 /fwriv delete <nome_arena>
 ```
-Rimuove l'arena.
-```sh
-/fwriv reload
-```
-Ricarica tutti i file di configurazione (Setting.yml, RespawnPoint.yml, Preset.yml).
 
-(permesso necessario: rivevent.eventmanager)
+Comando per eliminare un'arena precedentemente creata.
 
 ```sh
-/fwriv setrespawn
+/fwriv arena <nome_arena> <tp/points/showpoint> <p>
 ```
-Imposta il punto di respawn sicuro.
-```sh
-/fwriv arena <nome_arena>
-```
-Stampa a schermo le coordinate dei punti salvati per l'arena indicata.
+
+Comando per ottenere informazioni sulle arene.  
+`<p>` è il punto dell'arena a cui ci si riferisce. Da 1 a 4 sono gli spawn, 5 è la cima della torre.
+- **tp** _teletrasporta al punto indicato dell'arena indicata [1,2,3,4,5]_
+- **points** _mostra la lista delle coordinate dei punti dell'arena_
+- **showpoint** _mostra un effeto particellare nel punto dell'arena o in tutti i punti dell'arena [1,2,3,4,5,all]_
+
+![img.png](img.png)
+
+## COMANDI GESTIONE EVENTO (STAFF ONLY)
+
 ```sh
 /fwriv init <nome_arena>
 ```
-Inizializza l'evento RIV per l'arena indicata (da questo momento i players potranno partecipare all'evento tramite il comando /fwriv join).
-```sh
-/fwriv eventinfo
-```
-Mostra i nomi dei players partecipanti all'evento (se l'evento è in corso mostra anche la lista dei players ancora in gioco).
+Comando per inizializzare un nuovo evento RIV.  
+Non possono esserci più eventi RIV contemporaneamente.   
+Dopo l'inizializzazione i player potranno partecipare all'evento.
+
+![img_1.png](img_1.png)   
+
 ```sh
 /fwriv start
 ```
-Fa partire l'evento RIV.
+Comando da utilizzare dopo aver inizializzato l'evento RIV, quando si decide 
+di dare il via alla competizione.   
+Tutti i player che joineranno l'evento dopo lo start della competizione saranno 
+aggiunti solo come spettatori.
+
 ```sh
 /fwriv restart
 ```
-Ripristina l'evento riportando i partecipanti ai punti di spawn.
+
+Comando per restartare l'evento. Con il restart tutti i partecipanti 
+(spettatori compresi) vengono riposizionati nei punti di partenza. Dopo il restart 
+è comunque necessario utilizzare nuovamente il comando `/fwriv start ` 
+per dare il via alla competizione.
 ```sh
 /fwriv stop
 ```
-Termina l'evento e teletrasporta tutti i partecipanti nel punto in cui avevano eseguito /fwriv join. (Se la posizione è ostruita il player viene teletrasportano nel punto di respawn sicuro).
 
-(permesso necessario: rivevent.user)
+Comando per terminare l'evento RIV in corso. Tutti i partecipannti 
+vengono teletrasportati nell'esatta posizione in cui hanno precedentemente 
+utilizzato il comando per partecipare all'evento `/fwriv join` ed anche i loro 
+inventari vengono ripristinati.
+
+## COMANDI UTENTE
 
 ```sh
 /fwriv join
 ```
-Teletrasporta il player nell'arena dell'evento e lo inserisce nella lista dei partecipanti.
+Comando per partecipare ad un evento RIV (se inizializzato). Partecipando all'evento 
+si viene teletrasportati all'arena ed il proprio inventario viene azzarato.
+Al termine dell'evento si viene teletrasportati indietro e
+l'inventario viene ripristinato.
 ```sh
 /fwriv leave
 ```
-Teletrasporta il player nel punto in cui aveva eseguito /fwriv join (se la posizione è ostruita il player viene teletrasportato nel punto di respawn sicuro).
+Comando per abbandonare l'evento RIV. L'utente viene riportato indietro e
+l'inventario viene ripristinato.
+
+## ALTRI COMANDI
+
 ```sh
-/fwriv info
+/fwriv game rules
 ```
-Stampa a schermo le principali caratteristiche del gameplay del RIV.
+Descrizione di tutte le meccaniche di gioco del RIV.
+```sh
+/fwriv game partecipants
+```
+Informazioni sui partecipanti dell'evento RIV in corso.
 
-
-
-
-
+```sh
+/fwriv reload
+```
+Ricarica i files di configurazione (STAFF only)
