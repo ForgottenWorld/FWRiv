@@ -10,9 +10,7 @@ Plugin per la gestione e l'automatizzazione del minigioco chiamato
 Un gruppo di giocatori si sfidano per dimostrare chi è il re della torre.  
 Gli sfidanti dovranno scalare la torre dell'arena provando ad eliminare tutti
 gli altri partecipanti e sfruttando gli oggetti che si ottendono stando in cima.  
-Il vincitore è l'ultimo giocatore che rimane in vita.    
-
-<hr>
+Il vincitore è l'ultimo giocatore che rimane in vita.
 
 ## COMANDI GESTIONE ARENA
 
@@ -38,8 +36,7 @@ Comando per ottenere informazioni sulle arene.
 - **points** _mostra la lista delle coordinate dei punti dell'arena_
 - **showpoint** _mostra un effeto particellare nel punto dell'arena o in tutti i punti dell'arena [1,2,3,4,5,all]_
 
-![img.png](img.png)
-
+![](riv_showpoint.png)
 ## COMANDI GESTIONE EVENTO (STAFF ONLY)
 
 ```sh
@@ -48,8 +45,7 @@ Comando per ottenere informazioni sulle arene.
 Comando per inizializzare un nuovo evento RIV.  
 Non possono esserci più eventi RIV contemporaneamente.   
 Dopo l'inizializzazione i player potranno partecipare all'evento.
-
-![img_1.png](img_1.png)   
+![](riv_init.png)
 
 ```sh
 /fwriv start
