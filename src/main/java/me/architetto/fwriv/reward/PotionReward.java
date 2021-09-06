@@ -1,7 +1,6 @@
 package me.architetto.fwriv.reward;
 
 import me.architetto.fwriv.localization.Message;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,13 +15,18 @@ public class PotionReward extends Reward {
     private ItemStack itemStack;
 
     private final PotionEffectType potionEffectType;
+    private String potionName;
     private final int minDuration, maxDuration, maxAmplifier;
     private final Color potionColor;
 
     public PotionReward(PotionEffectType potionEffectType, int minDuration, int maxDuration, int maxAmplifier, DyeColor color) {
         this.itemStack = new ItemStack(Material.SPLASH_POTION,1);
         this.potionEffectType = potionEffectType;
-        this.minDuration = minDuration;
+
+        this.potionName = potionEffectType.getName().toLowerCase().replace("_"," ");
+        this.potionName = ChatColor.YELLOW + potionName.substring(0,1).toUpperCase() + potionName.substring(1) + " potion";
+
+    this.minDuration = minDuration;
         this.maxDuration = maxDuration;
         this.maxAmplifier = maxAmplifier;
         this.potionColor = color.getColor();
@@ -41,13 +45,10 @@ public class PotionReward extends Reward {
         if (minDuration != maxDuration)
             duration = ThreadLocalRandom.current().nextInt(minDuration, maxDuration);
 
-
-
         PotionMeta potionMeta = (PotionMeta) this.itemStack.getItemMeta();
-
         potionMeta.addCustomEffect(new PotionEffect(potionEffectType, duration, amplifier), true);
         potionMeta.setColor(this.potionColor);
-        potionMeta.setDisplayName(ChatColor.YELLOW + this.potionEffectType.getName());
+        potionMeta.setDisplayName(this.potionName);
         this.itemStack.setItemMeta(potionMeta);
 
         player.getInventory().addItem(itemStack);
@@ -58,6 +59,6 @@ public class PotionReward extends Reward {
 
     @Override
     public String getName() {
-        return StringUtils.replace(this.potionEffectType.getName().toUpperCase(), "_", " ") + " POTION";
+        return this.potionName;
     }
 }

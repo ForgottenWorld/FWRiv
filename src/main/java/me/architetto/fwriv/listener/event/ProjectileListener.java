@@ -20,8 +20,6 @@ import org.bukkit.util.Vector;
 
 public class ProjectileListener implements Listener {
 
-    final double ipsilon = 0.7;
-
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
 
@@ -45,8 +43,10 @@ public class ProjectileListener implements Listener {
             switch (pj.getType()) {
                 case SNOWBALL:
                     playerHitted.damage(settings.getSnowballHitDamage());
-                    playerHitted.setVelocity(playerShooter.getLocation()
-                            .getDirection().multiply(settings.getSnowballKnockbackPower()));
+                    Vector snowballDirection = playerShooter.getLocation().getDirection().normalize();
+                    snowballDirection.setY(settings.getSnowballYOffSet());
+                    snowballDirection.multiply(settings.getSnowballKnockbackPower());
+                    playerHitted.setVelocity(snowballDirection);
                     break;
                 case FISHING_HOOK:
                     if (playerShooter.getInventory().getItemInMainHand().getType() == Material.FISHING_ROD)
@@ -58,8 +58,7 @@ public class ProjectileListener implements Listener {
 
                     Vector direction = playerHitted.getLocation().toVector()
                             .subtract(playerShooter.getLocation().toVector()).normalize();
-                    if (direction.getY() < 0)
-                        direction.setY(ipsilon);
+                    direction.setY(settings.getFishingRodYOffSet());
                     direction.multiply(settings.getFishingRodPullPower());
                     playerHitted.setVelocity(direction);
 

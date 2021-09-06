@@ -104,7 +104,7 @@ public class PartecipantsManager {
                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
                 .ifPresent(entry -> {
                     if (entry.getValue() != 0)
-                        stringBuilder.append(Message.STATS_DAMAGEDONE.asString(entry.getKey(), entry.getValue()));
+                        stringBuilder.append(Message.STATS_DAMAGEDONE.asString(entry.getKey(), entry.getValue().intValue()));
                 });
         stats.stream()
                 .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getDamageTaken))
@@ -112,7 +112,7 @@ public class PartecipantsManager {
                 .max((entry1,entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
                 .ifPresent(entry -> {
                     if (entry.getValue() != 0)
-                        stringBuilder.append(Message.STATS_DAMAGETAKEN.asString(entry.getKey(), entry.getValue()));
+                        stringBuilder.append(Message.STATS_DAMAGETAKEN.asString(entry.getKey(), entry.getValue().intValue()));
                 });
         stats.stream()
                 .collect(Collectors.toMap(PartecipantStats::getPlayerName,PartecipantStats::getTowerRewards))

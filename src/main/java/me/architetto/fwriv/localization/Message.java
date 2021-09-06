@@ -45,9 +45,12 @@ public enum Message {
 
     PICKPOKET1("pickpoket1", true),
     PICKPOKET2("pickpoket2", true),
+    PICKPOKET3("pickpoket3", true),
 
     ARMORSHRED1("armorshred1", true),
-    ARMORSHRED2("armorshred1", true),
+    ARMORSHRED2("armorshred2", true),
+    ARMORSHRED3("armorshred3", true),
+
 
     ANTICAMPER_START("anticamper_start", true),
     ANTICAMPER_HEIGHT_CHANGE("anticamper_height_change", true),

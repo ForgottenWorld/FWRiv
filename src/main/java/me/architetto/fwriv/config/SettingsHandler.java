@@ -33,11 +33,15 @@ public class SettingsHandler {
 
     private double snowballKnockbackPower;
     private double snowballHitDamage;
+    private double snowballYOffSet;
 
     private List<ItemStack> startEquipItems = new ArrayList<>();
 
     private double fishingRodPullPower;
+    private double fishingRodYOffSet;
     private int honeyHealth;
+
+    private boolean pickpoketEntireSlot;
 
 
 
@@ -79,10 +83,14 @@ public class SettingsHandler {
         this.targetBlockCooldown = fc.getInt("TARGET_BLOCK.COOLDOWN",15) * 20;
 
         this.snowballKnockbackPower = fc.getDouble("SNOWBALL.KNOCKBACK",1);
+        this.snowballYOffSet = fc.getDouble("SNOWBALL.Y_OFFSET",0.2);
         this.snowballHitDamage = fc.getDouble("SNOWBALL.DAMAGE",0.1);
 
-        this.fishingRodPullPower = fc.getDouble("FISHING_ROD.PULL_POWER",7);
+        this.fishingRodPullPower = fc.getDouble("FISHING_ROD.PULL_POWER",4);
+        this.fishingRodYOffSet = fc.getDouble("FISHING_ROD.Y_OFFSET",0.7);
         this.honeyHealth = fc.getInt("HONEY_COMB.HEALTH",1);
+
+        this.pickpoketEntireSlot = fc.getBoolean("PICKPOKET_ENTIRE_SLOT", true);
 
 
     }
@@ -171,6 +179,10 @@ public class SettingsHandler {
         return snowballKnockbackPower;
     }
 
+    public double getSnowballYOffSet() {
+        return snowballYOffSet;
+    }
+
     public double getSnowballHitDamage() {
         return snowballHitDamage;
     }
@@ -181,6 +193,14 @@ public class SettingsHandler {
 
     public int getHoneyHealth() {
         return honeyHealth;
+    }
+
+    public double getFishingRodYOffSet() {
+        return fishingRodYOffSet;
+    }
+
+    public boolean isPickpoketEntireSlot() {
+        return pickpoketEntireSlot;
     }
 
     public List<ItemStack> getStartEquipItems() {

@@ -1,7 +1,7 @@
 package me.architetto.fwriv.reward;
 
 import me.architetto.fwriv.localization.Message;
-import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -13,11 +13,16 @@ import java.util.concurrent.ThreadLocalRandom;
 public class EffectReward extends Reward {
 
     private final PotionEffectType potionEffectType;
+    private String effectName;
     private final int minDuration, maxDuration, maxAmplifier;
 
 
     public EffectReward(PotionEffectType potionEffectType, int minDuration, int maxDuration, int maxAmplifier) {
         this.potionEffectType = potionEffectType;
+
+        this.effectName = potionEffectType.getName().toLowerCase().replace("_"," ");
+        this.effectName = ChatColor.YELLOW + effectName.substring(0,1).toUpperCase() + effectName.substring(1) + " effect";
+
         this.minDuration = minDuration;
         this.maxDuration = maxDuration;
         this.maxAmplifier = maxAmplifier;
@@ -45,6 +50,6 @@ public class EffectReward extends Reward {
 
     @Override
     public String getName() {
-        return StringUtils.replace(this.potionEffectType.getName().toUpperCase(), "_", " ") + " EFFECT";
+        return this.effectName;
     }
 }

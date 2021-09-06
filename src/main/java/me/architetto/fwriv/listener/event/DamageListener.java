@@ -1,5 +1,6 @@
 package me.architetto.fwriv.listener.event;
 
+import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.localization.Message;
@@ -59,10 +60,21 @@ public class DamageListener implements Listener{
             if (inv[i] != null)
                 avaible.add(i);
         }
-        if (avaible.isEmpty()) return;
+
+        if (avaible.isEmpty()) {
+            Message.PICKPOKET3.send(damager,damageTaker.getName());
+            return;
+        }
+
         int pick = avaible.get(new Random().nextInt(avaible.size()));
-        damager.getInventory().setItemInMainHand(inv[pick]);
-        damageTaker.getInventory().setItem(pick,null);
+        int qty = inv[pick].getAmount();
+
+        if (qty != 1 && SettingsHandler.getInstance().isPickpoketEntireSlot())
+            qty = new Random().nextInt(qty) + 1;
+
+        damager.getInventory().setItemInMainHand(inv[pick].asQuantity(qty));
+        damageTaker.getInventory().setItem(pick,inv[pick].subtract(qty));
+
         Message.PICKPOKET1.send(damager,inv[pick].getI18NDisplayName());
         Message.PICKPOKET2.send(damageTaker,inv[pick].getI18NDisplayName());
         PartecipantsManager.getInstance().getPartecipantStats(damager).ifPresent(PartecipantStats::addPickpocket);
@@ -75,10 +87,17 @@ public class DamageListener implements Listener{
             if (inv[i] != null)
                 avaible.add(i);
         }
-        if (avaible.isEmpty()) return;
+
+        if (avaible.isEmpty()) {
+            Message.ARMORSHRED3.send(damager,damageTaker.getName());
+            return;
+        }
+
         int pick = avaible.get(new Random().nextInt(avaible.size()));
+
         damager.getInventory().setItemInMainHand(null);
         damageTaker.getInventory().setItem(pick,null);
+
         Message.ARMORSHRED1.send(damager,inv[pick].getI18NDisplayName());
         Message.ARMORSHRED2.send(damageTaker,inv[pick].getI18NDisplayName());
 
