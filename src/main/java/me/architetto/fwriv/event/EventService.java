@@ -97,22 +97,28 @@ public class EventService {
     public void partecipantJoin(Player player) {
         PartecipantsManager partecipantsManager = PartecipantsManager.getInstance();
 
-        if (!eventStatus.equals(EventStatus.READY)) {
-            partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.DEAD);
-            player.getInventory().clear();
-            player.setGameMode(GameMode.SPECTATOR);
-            player.teleport(summonedArena.getTower().add(0,5,0));
-            Message.JOIN_STARTED_EVENT.send(player);
-
-        } else {
-            partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.PLAYING);
-            player.getInventory().clear();
-            player.setGameMode(GameMode.SURVIVAL);
-            arenaRoundTeleport(player);
-            Message.JOIN_READY_EVENT.send(player);
+        switch (eventStatus) {
+            case INACTIVE:
+                return;
+            case READY:
+                partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.PLAYING);
+                arenaRoundTeleport(player);
+                player.setGameMode(GameMode.SURVIVAL);
+                Message.JOIN_READY_EVENT.send(player);
+                break;
+            case PRE_RUNNING:
+            case RUNNING:
+            case ENDED:
+                partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.DEAD);
+                player.getInventory().clear();
+                player.teleport(summonedArena.getTower().add(0,5,0));
+                player.setGameMode(GameMode.SPECTATOR);
+                Message.JOIN_STARTED_EVENT.send(player);
         }
 
         RewardSystemService.getInstance().addPlayerToRewardBar(player);
+        player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+        Message.BROADCAST_PLAYERJOINEVENT.broadcast("fwriv.echo",player.getName());
     }
 
     public void partecipantDeath(Player player) {
@@ -134,8 +140,8 @@ public class EventService {
         partecipantsManager.getPartecipant(player).ifPresent(partecipant -> {
 
             player.getInventory().clear();
-            player.setGameMode(GameMode.SURVIVAL);
             player.teleport(partecipant.getReturnLocation());
+            player.setGameMode(GameMode.SURVIVAL);
             player.getInventory().setContents(partecipant.getInventory());
             mutexActivityLeaveSupport(player);
 

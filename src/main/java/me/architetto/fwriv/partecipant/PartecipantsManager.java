@@ -46,6 +46,10 @@ public class PartecipantsManager {
         return uuidPartecipantMap.containsKey(player.getUniqueId());
     }
 
+    public boolean isPresent(UUID playerUUID) {
+        return uuidPartecipantMap.containsKey(playerUUID);
+    }
+
     public Optional<Partecipant> getPartecipant(Player player) {
         return uuidPartecipantMap.containsKey(player.getUniqueId()) ? Optional.of(uuidPartecipantMap.get(player.getUniqueId())) : Optional.empty();
     }

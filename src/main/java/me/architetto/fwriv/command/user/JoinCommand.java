@@ -72,12 +72,6 @@ public class JoinCommand extends SubCommand {
 
         eventService.partecipantJoin(sender);
 
-        RewardSystemService.getInstance().addPlayerToRewardBar(sender);
-
-        sender.playSound(sender.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-
-        Message.BROADCAST_PLAYERJOINEVENT.broadcast("fwriv.echo",sender.getDisplayName());
-
     }
 
     @Override

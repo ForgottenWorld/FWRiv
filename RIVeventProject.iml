@@ -47,5 +47,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm-analysis:9.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.ForgottenWorld.FWEchelon:fwechelon-api:v0.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.elmakers.mine.bukkit:EffectLib:9.3" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.alessiodp.parties:parties-api:3.1.12" level="project" />
   </component>
 </module>

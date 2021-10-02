@@ -9,6 +9,7 @@ import me.architetto.fwriv.event.EventService;
 import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.listener.arena.ArenaCreationListener;
 import me.architetto.fwriv.listener.event.*;
+import me.architetto.fwriv.listener.parties.FriendlyFireListener;
 import me.architetto.fwriv.localization.LocalizationManager;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.reward.RewardService;
@@ -48,7 +49,9 @@ public final class FWRiv extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>" + ChatColor.RESET + " Loading Arena.yml ...");
         ArenaManager.getInstance().loadArenas();
 
-        loadEchelon();
+        hookIntoEchelon();
+
+        hookIntoParties();
 
         Bukkit.getConsoleSender().sendMessage("=============================================================");
 
@@ -84,7 +87,7 @@ public final class FWRiv extends JavaPlugin {
 
     }
 
-    public void loadEchelon() {
+    public void hookIntoEchelon() {
         SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
         if (Bukkit.getPluginManager().getPlugin("FWEchelon") != null) {
@@ -100,6 +103,22 @@ public final class FWRiv extends JavaPlugin {
                         + "        -- Error on register mutex activity, FWEchelon not enabled!");
         }
         settingsHandler.enableEchelon(false);
+    }
+
+    public void hookIntoParties() {
+        if (getServer().getPluginManager().getPlugin("Parties") != null) {
+            if (getServer().getPluginManager().getPlugin("Parties").isEnabled()) {
+                // Parties is enabled
+                ConfigManager configManager = ConfigManager.getInstance();
+                if (configManager.getBoolean(configManager.getConfig("Settings.yml"),
+                        "ENABLE_PARTIES_FRINDLY_FIRE")) {
+                    getServer().getPluginManager().registerEvents(new FriendlyFireListener(),this);
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " >>"
+                            + ChatColor.RESET + " Hooked into Paries!");
+                }
+            }
+        }
+
     }
 
     public  void secureInventoryClear() {

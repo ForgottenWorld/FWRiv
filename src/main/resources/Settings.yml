@@ -11,6 +11,10 @@
 ## ------------------------------------------------------------ ##
 ##################################################################
 
+#If 'Parties' plugin is enabled, FWRiv hook into it and enable friendly fire even if it is disabled
+# !! restart server is needed if you change this value
+ENABLE_PARTIES_FRINDLY_FIRE: true
+
 #ITEM LOADOUT: {Material material, int amount}
 START_LOADOUT:
   - 'COOKED_PORKCHOP,15'
@@ -115,9 +119,3 @@ HONEY_COMB:
   HEALTH: 2
 
 PICKPOKET_ENTIRE_SLOT: true
-
-
-
-
-
-

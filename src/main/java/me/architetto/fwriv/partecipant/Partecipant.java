@@ -18,7 +18,7 @@ public class Partecipant {
     private PartecipantStatus partecipantStatus;
 
     public Partecipant(Player player, Location returnLocation, PartecipantStatus partecipantStatus) {
-        this.name = player.getDisplayName();
+        this.name = player.getName();
         this.uuid = player.getUniqueId();
         this.returnLocation = new LightLocation(returnLocation);
         this.partecipantStatus = partecipantStatus;
@@ -29,6 +29,7 @@ public class Partecipant {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public UUID getUUID() {
         return uuid;
     }
