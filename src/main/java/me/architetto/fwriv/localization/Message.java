@@ -32,7 +32,7 @@ public enum Message {
     REWARD_OBTAINED("reward_obtained", true),
 
     VICTORY_SUBTITLE("victory_subtitle",false),
-    VICOTRY_SERVER_BROADCAST("victory_server_broadcast",true),
+    VICTORY_SERVER_BROADCAST("victory_server_broadcast",true),
 
     TARGETBLOCK_READY("targetblock_ready", true),
     TARGETBLOCK_COOLDOWN("targetblock_cooldown", true),
@@ -136,7 +136,7 @@ public enum Message {
         Bukkit.getServer().broadcastMessage(asString(objects));
     }
 
-    public void broadcast(String permission, Object... objects) {
+    public void broadcastWithPermission(String permission, Object... objects) {
         Bukkit.getServer().broadcast(asString(objects),permission);
     }
 

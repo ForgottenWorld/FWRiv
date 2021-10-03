@@ -171,7 +171,7 @@ public class EventService {
             partecipantsManager
                     .getPartecipant(uuidSet.get(0)).ifPresent(partecipant -> {
                 victoryAnimation(partecipant.getName());
-                Message.VICOTRY_SERVER_BROADCAST.broadcast(partecipant.getName());
+                Message.VICTORY_SERVER_BROADCAST.broadcast(partecipant.getName());
             });
             victoryFireworksEffect(2);
         }

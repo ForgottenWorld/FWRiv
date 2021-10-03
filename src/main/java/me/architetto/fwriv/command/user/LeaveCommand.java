@@ -61,7 +61,7 @@ public class LeaveCommand extends SubCommand{
 
         sender.playSound(sender.getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1,1);
         Message.PARTECIPANT_LEAVE.send(sender);
-        Message.BROADCAST_PLAYERLEAVEEVENT.broadcast("riveven.echo",sender.getDisplayName());
+        Message.BROADCAST_PLAYERLEAVEEVENT.broadcastWithPermission("riveven.echo",sender.getName());
 
     }
 
