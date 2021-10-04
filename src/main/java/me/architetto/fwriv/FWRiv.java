@@ -10,6 +10,7 @@ import me.architetto.fwriv.event.EventStatus;
 import me.architetto.fwriv.listener.arena.ArenaCreationListener;
 import me.architetto.fwriv.listener.event.*;
 import me.architetto.fwriv.listener.notrollerino.SpectatingEvent;
+import me.architetto.fwriv.listener.notrollerino.TeleportEvent;
 import me.architetto.fwriv.listener.parties.FriendlyFireListener;
 import me.architetto.fwriv.localization.LocalizationManager;
 import me.architetto.fwriv.localization.Message;
@@ -86,6 +87,8 @@ public final class FWRiv extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new QuitListener(),this);
         getServer().getPluginManager().registerEvents(new RightClickListener(),this);
         getServer().getPluginManager().registerEvents(new SpectatingEvent(),this);
+        getServer().getPluginManager().registerEvents(new TeleportEvent(),this);
+
 
     }
 

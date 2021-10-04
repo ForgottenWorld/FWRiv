@@ -118,7 +118,7 @@ public class EventService {
 
         RewardSystemService.getInstance().addPlayerToRewardBar(player);
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-        Message.BROADCAST_PLAYERJOINEVENT.broadcast("fwriv.echo",player.getName());
+        Message.BROADCAST_PLAYERJOINEVENT.broadcastWithPermission("fwriv.echo",player.getName());
     }
 
     public void partecipantDeath(Player player) {
