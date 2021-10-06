@@ -19,7 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class DeathListener implements Listener{
 
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDeath(PlayerDeathEvent event) {
 
         PartecipantsManager pm = PartecipantsManager.getInstance();

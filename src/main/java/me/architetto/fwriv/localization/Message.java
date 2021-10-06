@@ -87,6 +87,8 @@ public enum Message {
 
     ERR_RESTART_DONE("err_restart_done", true),
 
+    ERR_TPDISABLED("err_tpdisabled", true),
+
     //STATS
     STATS_KILLS("stats_kills",false),
     STATS_DAMAGEDONE("stats_damagedone", false),

@@ -1,5 +1,6 @@
 package me.architetto.fwriv.partecipant;
 
+import io.papermc.paper.chat.ChatFormatter;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.utils.MessageUtil;
 import org.bukkit.Bukkit;
@@ -15,6 +16,8 @@ public class PartecipantsManager {
 
     private HashMap<UUID, Partecipant> uuidPartecipantMap;
     private HashMap<UUID, PartecipantStats> partecipantStatsHashMap;
+
+    private HashMap<String,HashMap<String,String>> inOutPlayerInventoryLong;
 
     private PartecipantsManager() {
         if(partecipantsManager != null) {
@@ -143,6 +146,5 @@ public class PartecipantsManager {
 
 
     }
-
 
 }

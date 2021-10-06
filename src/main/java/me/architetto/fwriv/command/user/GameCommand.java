@@ -62,16 +62,12 @@ public class GameCommand extends SubCommand {
                 int playing = partecipantsManager.getPartecipantsUUID(PartecipantStatus.PLAYING).size();
                 Message.PARTECIPANT_INFO.send(sender,total,playing,total - playing);
         }
-
-
     }
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args){
-
         if (args.length == 2)
             return params;
-
         return null;
     }
 }

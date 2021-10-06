@@ -77,6 +77,8 @@ strings:
 
   err_gamecommand_stats: "&cLe statistiche sono disponibili solo al termine della competizione"
 
+  err_tpdisabled: "&cQuesta funzione e' disabilitata"
+
   #Stats
   stats_kills: "&e&b{0}&r ha un intenso istinto omicida : &e&b{1} uccisioni&r\n"
   stats_damagedone: "&e&b{0}&r ha dato botte a non finire : &e&b{1} litri di sangue&r\n"

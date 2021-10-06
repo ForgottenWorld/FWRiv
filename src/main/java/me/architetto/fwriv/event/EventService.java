@@ -3,12 +3,14 @@ package me.architetto.fwriv.event;
 import com.destroystokyo.paper.Title;
 import me.architetto.fwriv.FWRiv;
 import me.architetto.fwriv.arena.Arena;
+import me.architetto.fwriv.config.ConfigManager;
 import me.architetto.fwriv.config.SettingsHandler;
 import me.architetto.fwriv.echelon.EchelonHolder;
 import me.architetto.fwriv.event.service.AntiCamperService;
 import me.architetto.fwriv.event.service.RewardSystemService;
 import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.obj.ArenaDoors;
+import me.architetto.fwriv.partecipant.Partecipant;
 import me.architetto.fwriv.partecipant.PartecipantStatus;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import me.architetto.fwriv.obj.timer.Countdown;
@@ -103,6 +105,7 @@ public class EventService {
             case READY:
                 partecipantsManager.addPartecipant(player, player.getLocation(), PartecipantStatus.PLAYING);
                 arenaRoundTeleport(player);
+                player.getInventory().clear();
                 player.setGameMode(GameMode.SURVIVAL);
                 Message.JOIN_READY_EVENT.send(player);
                 break;

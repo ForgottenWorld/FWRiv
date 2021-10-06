@@ -1,5 +1,6 @@
 package me.architetto.fwriv.listener.notrollerino;
 
+import me.architetto.fwriv.localization.Message;
 import me.architetto.fwriv.partecipant.PartecipantsManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,7 +12,7 @@ public class TeleportEvent implements Listener {
     public void onTeleport(PlayerTeleportEvent event) {
         if (PartecipantsManager.getInstance().isPresent(event.getPlayer())
                 && event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE) {
-            //event.getPlayer().sendMessage(ChatColor.RED + "Ti sparo!");
+            Message.ERR_TPDISABLED.send(event.getPlayer());
             event.setCancelled(true);
         }
     }
